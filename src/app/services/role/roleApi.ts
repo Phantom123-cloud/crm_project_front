@@ -6,12 +6,13 @@ export const roleApi = api.injectEndpoints({
   endpoints: (builder) => ({
     createRole: builder.mutation<
       ApiResponse,
-      { name: string; descriptions: string }
+      { name: string; descriptions: string; roleTypeId: string }
     >({
-      query: ({ name, descriptions }) => ({
+      query: ({ name, descriptions, roleTypeId }) => ({
         url: `/role/create`,
         method: METHODS.POST,
         body: { name, descriptions },
+        params: { roleTypeId },
       }),
     }),
 
@@ -24,12 +25,17 @@ export const roleApi = api.injectEndpoints({
 
     updateRole: builder.mutation<
       ApiResponse,
-      { name: string | undefined; id: string; descriptions: string | undefined }
+      {
+        name: string | undefined;
+        id: string;
+        descriptions: string | undefined;
+        roleTypeId: string | undefined;
+      }
     >({
-      query: ({ id, name, descriptions }) => ({
+      query: ({ id, name, descriptions, roleTypeId }) => ({
         url: `/role/update/${id}`,
         method: METHODS.PUT,
-        body: { name, descriptions },
+        body: { name, descriptions, roleTypeId },
       }),
     }),
 

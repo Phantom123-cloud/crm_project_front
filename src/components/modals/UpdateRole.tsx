@@ -1,14 +1,14 @@
-import { Button, Flex, Form, Input, Modal } from "antd";
+import { Button, Flex, Form, Input, Modal, Select } from "antd";
 import { useEffect, type SetStateAction } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
-import {
-  useLazyAllRolesTypeQuery,
-  useUpdateRolesTypeMutation,
-} from "@/app/services/roles-type/rolesTypeApi";
 import { errorMessages } from "@/utils/is-error-message";
+import {
+  useLazyAllRoleQuery,
+  useUpdateRoleMutation,
+} from "@/app/services/role/roleApi";
 
 type Props = {
   isOpen: boolean;
@@ -16,7 +16,14 @@ type Props = {
   name: string;
   descriptions: string;
   id: string;
+  roleTypeId: string;
   modalType: "UPDATE" | "DELETE";
+  limit: number;
+  page: number;
+  roleTypes: {
+    value: string;
+    label: string;
+  }[];
 };
 
 const schema = z.object({
@@ -30,17 +37,22 @@ const schema = z.object({
     .nonempty("Обязательное поле")
     .min(5, "Минимальная длина - 5")
     .max(35, "Максимальная длина - 35"),
+  roleTypeId: z.string(),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-const UpdateRoleType: React.FC<Props> = ({
+const UpdateRole: React.FC<Props> = ({
   isOpen,
   setOpen,
   id,
   name,
   modalType,
   descriptions,
+  roleTypeId,
+  limit,
+  page,
+  roleTypes,
 }) => {
   const {
     handleSubmit,
@@ -52,13 +64,14 @@ const UpdateRoleType: React.FC<Props> = ({
     defaultValues: {
       name,
       descriptions,
+      roleTypeId,
     },
     mode: "onChange",
   });
 
   const { callMessage } = useUiContext();
-  const [updateTypeRole] = useUpdateRolesTypeMutation();
-  const [triggerRoleTypes] = useLazyAllRolesTypeQuery();
+  const [updateRole] = useUpdateRoleMutation();
+  const [triggerRole] = useLazyAllRoleQuery();
 
   const onCancel = () => {
     setOpen(false);
@@ -74,9 +87,14 @@ const UpdateRoleType: React.FC<Props> = ({
           data.descriptions !== descriptions && data.descriptions.length > 0
             ? data.descriptions
             : undefined,
+        roleTypeId:
+          data.roleTypeId !== roleTypeId && data.roleTypeId.length > 0
+            ? data.roleTypeId
+            : undefined,
       };
-      const { message } = await updateTypeRole({ ...resultData, id }).unwrap();
-      await triggerRoleTypes().unwrap();
+
+      const { message } = await updateRole({ ...resultData, id }).unwrap();
+      await triggerRole({ limit, page }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
@@ -86,8 +104,8 @@ const UpdateRoleType: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    reset({ name, descriptions });
-  }, [name, descriptions, reset]);
+    reset({ name, descriptions, roleTypeId });
+  }, [name, descriptions, roleTypeId, reset]);
 
   return (
     modalType === "UPDATE" && (
@@ -118,14 +136,39 @@ const UpdateRoleType: React.FC<Props> = ({
           </Form.Item>
           <Form.Item
             label="Описание"
-            validateStatus={errors.name ? "error" : ""}
-            help={errors.name?.message}
+            validateStatus={errors.descriptions ? "error" : ""}
+            help={errors.descriptions?.message}
             required={true}
           >
             <Controller
               name="descriptions"
               control={control}
               render={({ field }) => <Input {...field} />}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Тип роли"
+            validateStatus={errors.roleTypeId ? "error" : ""}
+            help={errors.roleTypeId?.message}
+            required={true}
+          >
+            <Controller
+              name="roleTypeId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  showSearch
+                  optionFilterProp="label"
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={roleTypes}
+                />
+              )}
             />
           </Form.Item>
 
@@ -152,4 +195,4 @@ const UpdateRoleType: React.FC<Props> = ({
   );
 };
 
-export default UpdateRoleType;
+export default UpdateRole;

@@ -4,29 +4,12 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DeleteRoleType from "../modals/DeleteRoleType";
 import { useState } from "react";
 import UpdateRoleType from "../modals/UpdateRoleType";
-
-type TRoleTypeInfo = {
-  id: string;
-  name: string;
-  descriptions?: string;
-  modalType: "CHANGE_NAME" | "DELETE";
-};
+import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 
 const RolesTypeData = () => {
   const [isOpen, setOpen] = useState(false);
-  const [roleTypeInfo, setRoleTypeInfo] = useState<TRoleTypeInfo>({
-    id: "",
-    name: "",
-    descriptions: "",
-    modalType: "DELETE",
-  });
-  const getTypeInfo = (
-    item: { id: string; name: string },
-    modalType: "CHANGE_NAME" | "DELETE"
-  ) => {
-    setRoleTypeInfo((prev) => ({ ...prev, ...item, modalType }));
-    setOpen(true);
-  };
+  const { getInfo, roleTypeInfo } = useGetRoleModalsInfo(setOpen);
+
   const { data, isLoading } = useAllRolesTypeQuery();
   const dataSource = (data?.data ?? []).map((item) => {
     return {
@@ -39,7 +22,7 @@ const RolesTypeData = () => {
             color="primary"
             variant="outlined"
             icon={<EditOutlined />}
-            onClick={() => getTypeInfo(item, "CHANGE_NAME")}
+            onClick={() => getInfo(item, "UPDATE")}
           >
             изменить
           </Button>
@@ -47,7 +30,7 @@ const RolesTypeData = () => {
             color="danger"
             variant="outlined"
             icon={<DeleteOutlined />}
-            onClick={() => getTypeInfo(item, "DELETE")}
+            onClick={() => getInfo(item, "DELETE")}
           >
             удалить
           </Button>

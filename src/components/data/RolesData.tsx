@@ -1,13 +1,35 @@
 import { useAllRoleQuery } from "@/app/services/role/roleApi";
 import { Table, Button } from "antd";
-import { useState } from "react";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import DeleteRole from "../modals/DeleteRole";
+import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
+import { useState } from "react";
+import UpdateRole from "../modals/UpdateRole";
 
-const RolesData = () => {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const { data, isLoading } = useAllRoleQuery({ page, limit: pageSize });
+type Props = {
+  page: number;
+  setPage(page: number): void;
 
+  limit: number;
+  setLimit(page: number): void;
+
+  roleTypes: {
+    value: string;
+    label: string;
+  }[];
+};
+
+const RolesData: React.FC<Props> = ({
+  page,
+  setPage,
+  limit,
+  setLimit,
+  roleTypes,
+}) => {
+  const { data, isLoading } = useAllRoleQuery({ page, limit });
+  const [isOpen, setOpen] = useState(false);
+  const { getInfo, roleTypeInfo } = useGetRoleModalsInfo(setOpen);
+  const [roleTypeId, setRoleTypeId] = useState("");
   const dataSource = (data?.data?.roles ?? []).map((item) => {
     return {
       key: item.id,
@@ -20,7 +42,10 @@ const RolesData = () => {
             color="primary"
             variant="outlined"
             icon={<EditOutlined />}
-            //   onClick={() => getTypeInfo(item, "CHANGE_NAME")}
+            onClick={() => {
+              setRoleTypeId(item.typeId);
+              getInfo(item, "UPDATE");
+            }}
           >
             изменить
           </Button>
@@ -28,7 +53,7 @@ const RolesData = () => {
             color="danger"
             variant="outlined"
             icon={<DeleteOutlined />}
-            //   onClick={() => getTypeInfo(item, "DELETE")}
+            onClick={() => getInfo(item, "DELETE")}
           >
             удалить
           </Button>
@@ -59,25 +84,48 @@ const RolesData = () => {
     },
   ];
 
-  const total = data?.data?.total ?? 1;
+  const { name, id, modalType, descriptions } = roleTypeInfo;
+
   return (
-    <>
+    <div>
       <Table
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
         pagination={{
-          pageSize,
-          total,
+          pageSize: limit,
+          total: data?.data?.total ?? 1,
           current: page,
-          onChange: (page, pageSize) => {
+          onChange: (page, limit) => {
             setPage(page);
-            setPageSize(pageSize);
+            setLimit(limit);
           },
           showSizeChanger: true,
         }}
       />
-    </>
+      <DeleteRole
+        isOpen={isOpen}
+        setOpen={setOpen}
+        name={name}
+        id={id}
+        modalType={modalType}
+        limit={limit}
+        page={page}
+      />
+
+      <UpdateRole
+        isOpen={isOpen}
+        setOpen={setOpen}
+        name={name}
+        id={id}
+        modalType={modalType}
+        limit={limit}
+        page={page}
+        descriptions={descriptions as string}
+        roleTypeId={roleTypeId}
+        roleTypes={roleTypes}
+      />
+    </div>
   );
 };
 

@@ -1,11 +1,11 @@
 import { Button, Flex, Modal } from "antd";
 import type { SetStateAction } from "react";
 import { useUiContext } from "@/UIContext";
-import {
-  useDeleteRolesTypeMutation,
-  useLazyAllRolesTypeQuery,
-} from "@/app/services/roles-type/rolesTypeApi";
 import { errorMessages } from "@/utils/is-error-message";
+import {
+  useDeleteRoleMutation,
+  useLazyAllRoleQuery,
+} from "@/app/services/role/roleApi";
 
 type Props = {
   isOpen: boolean;
@@ -13,18 +13,22 @@ type Props = {
   name: string;
   id: string;
   modalType: "UPDATE" | "DELETE";
+  limit: number;
+  page: number;
 };
 
-const DeleteRoleType: React.FC<Props> = ({
+const DeleteRole: React.FC<Props> = ({
   isOpen,
   setOpen,
   id,
   name,
   modalType,
+  limit,
+  page,
 }) => {
   const { callMessage } = useUiContext();
-  const [deleteRoleType] = useDeleteRolesTypeMutation();
-  const [triggerRoleTypes] = useLazyAllRolesTypeQuery();
+  const [deleteRole] = useDeleteRoleMutation();
+  const [triggerRole] = useLazyAllRoleQuery();
 
   const onCancel = () => {
     setOpen(false);
@@ -32,8 +36,8 @@ const DeleteRoleType: React.FC<Props> = ({
 
   const handleDelete = async () => {
     try {
-      const { message } = await deleteRoleType(id).unwrap();
-      await triggerRoleTypes().unwrap();
+      const { message } = await deleteRole(id).unwrap();
+      await triggerRole({ limit, page }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
@@ -45,7 +49,7 @@ const DeleteRoleType: React.FC<Props> = ({
   return (
     modalType === "DELETE" && (
       <Modal
-        title={`Вы уверены в удалении типа - '${name}'`}
+        title={`Вы уверены в удалении роли - '${name}'`}
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}
@@ -65,4 +69,4 @@ const DeleteRoleType: React.FC<Props> = ({
   );
 };
 
-export default DeleteRoleType;
+export default DeleteRole;
