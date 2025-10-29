@@ -8,7 +8,7 @@ import { errorMessages } from "@/utils/is-error-message";
 import {
   useLazyAllRoleQuery,
   useUpdateRoleMutation,
-} from "@/app/services/role/roleApi";
+} from "@/app/services/roles/rolesApi";
 
 type Props = {
   isOpen: boolean;

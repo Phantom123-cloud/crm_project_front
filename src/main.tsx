@@ -8,20 +8,21 @@ import Login from "./pages/Login.tsx";
 import { AntUIProvider } from "./UIContext.tsx";
 import RoleTypes from "./pages/RoleTypes.tsx";
 import Roles from "./pages/Roles.tsx";
+import Templates from "./pages/RoleTemplates.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/login", element: <Login /> },
+      { path: "login", element: <Login /> },
       {
         path: "/",
         element: <Main />,
         children: [
-          { path: "/role-types", element: <RoleTypes /> },
-          { path: "/roles", element: <Roles /> },
-          // { path: "users/user/:id", element: <User /> },
+          { path: "role-types", element: <RoleTypes /> },
+          { path: "roles", element: <Roles /> },
+          { path: "role-templates", element: <Templates /> },
           // { path: "projects", element: <Projects /> },
           // { path: "projects/project/:id", element: <Project /> },
           // { path: "/task/:id", element: <Task /> },

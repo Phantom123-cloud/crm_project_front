@@ -2,14 +2,14 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 
-export const roleApi = api.injectEndpoints({
+export const rolesApi = api.injectEndpoints({
   endpoints: (builder) => ({
     createRole: builder.mutation<
       ApiResponse,
       { name: string; descriptions: string; roleTypeId: string }
     >({
       query: ({ name, descriptions, roleTypeId }) => ({
-        url: `/role/create`,
+        url: `/roles/create`,
         method: METHODS.POST,
         body: { name, descriptions },
         params: { roleTypeId },
@@ -18,7 +18,7 @@ export const roleApi = api.injectEndpoints({
 
     deleteRole: builder.mutation<ApiResponse, string>({
       query: (id) => ({
-        url: `/role/delete/${id}`,
+        url: `/roles/delete/${id}`,
         method: METHODS.DELETE,
       }),
     }),
@@ -33,7 +33,7 @@ export const roleApi = api.injectEndpoints({
       }
     >({
       query: ({ id, name, descriptions, roleTypeId }) => ({
-        url: `/role/update/${id}`,
+        url: `/roles/update/${id}`,
         method: METHODS.PUT,
         body: { name, descriptions, roleTypeId },
       }),
@@ -56,7 +56,7 @@ export const roleApi = api.injectEndpoints({
       { page: number; limit: number }
     >({
       query: ({ page, limit }) => ({
-        url: `/role/all`,
+        url: `/roles/all`,
         method: METHODS.GET,
         params: { page, limit },
       }),
@@ -70,4 +70,4 @@ export const {
   useDeleteRoleMutation,
   useLazyAllRoleQuery,
   useUpdateRoleMutation,
-} = roleApi;
+} = rolesApi;

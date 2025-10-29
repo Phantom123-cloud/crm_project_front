@@ -5,7 +5,7 @@ import { errorMessages } from "@/utils/is-error-message";
 import {
   useDeleteRoleMutation,
   useLazyAllRoleQuery,
-} from "@/app/services/role/roleApi";
+} from "@/app/services/roles/rolesApi";
 
 type Props = {
   isOpen: boolean;

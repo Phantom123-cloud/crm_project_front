@@ -1,4 +1,4 @@
-import { useAllRolesTypeQuery } from "@/app/services/roles-type/rolesTypeApi";
+import { useAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 import { Button, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DeleteRoleType from "../modals/DeleteRoleType";
@@ -6,7 +6,7 @@ import { useState } from "react";
 import UpdateRoleType from "../modals/UpdateRoleType";
 import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 
-const RolesTypeData = () => {
+const RoleTypesData = () => {
   const [isOpen, setOpen] = useState(false);
   const { getInfo, roleTypeInfo } = useGetRoleModalsInfo(setOpen);
 
@@ -84,4 +84,4 @@ const RolesTypeData = () => {
   );
 };
 
-export default RolesTypeData;
+export default RoleTypesData;

@@ -1,4 +1,4 @@
-import RolesTypeData from "@/components/data/RolesTypeData";
+import RoleTypesData from "@/components/data/RoleTypesData";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -19,7 +19,7 @@ const RoleTypes = () => {
           Добавить
         </Button>
       </div>
-      <RolesTypeData />
+      <RoleTypesData />
       <AddRoleType isOpen={isOpen} setOpen={setOpen} />
     </div>
   );

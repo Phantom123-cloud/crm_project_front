@@ -7,12 +7,16 @@ export const pageStructure = [
     Icon: LockOutlined,
     children: [
       {
-        label: "Типы",
+        label: "типы",
         path: "role-types",
       },
       {
-        label: "Роли",
+        label: "роли",
         path: "roles",
+      },
+      {
+        label: "шаблоны",
+        path: "templates",
       },
     ],
   },

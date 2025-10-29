@@ -7,7 +7,7 @@ import { useUiContext } from "@/UIContext";
 import {
   useCreateRolesTypeMutation,
   useLazyAllRolesTypeQuery,
-} from "@/app/services/roles-type/rolesTypeApi";
+} from "@/app/services/role-types/roleTypesApi";
 import { errorMessages } from "@/utils/is-error-message";
 
 type Props = {

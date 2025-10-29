@@ -9,7 +9,7 @@ export const rolesTypeApi = api.injectEndpoints({
       { name: string; descriptions: string }
     >({
       query: ({ name, descriptions }) => ({
-        url: `/roles-type/create`,
+        url: `/role-types/create`,
         method: METHODS.POST,
         body: { name, descriptions },
       }),
@@ -17,7 +17,7 @@ export const rolesTypeApi = api.injectEndpoints({
 
     deleteRolesType: builder.mutation<ApiResponse, string>({
       query: (id) => ({
-        url: `/roles-type/delete/${id}`,
+        url: `/role-types/delete/${id}`,
         method: METHODS.DELETE,
       }),
     }),
@@ -27,7 +27,7 @@ export const rolesTypeApi = api.injectEndpoints({
       { name: string | undefined; id: string; descriptions: string | undefined }
     >({
       query: ({ id, name, descriptions }) => ({
-        url: `/roles-type/update/${id}`,
+        url: `/role-types/update/${id}`,
         method: METHODS.PUT,
         body: { name, descriptions },
       }),
@@ -44,7 +44,7 @@ export const rolesTypeApi = api.injectEndpoints({
       void
     >({
       query: () => ({
-        url: `/roles-type/all`,
+        url: `/role-types/all`,
         method: METHODS.GET,
       }),
     }),

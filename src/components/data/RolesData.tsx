@@ -1,4 +1,4 @@
-import { useAllRoleQuery } from "@/app/services/role/roleApi";
+import { useAllRoleQuery } from "@/app/services/roles/rolesApi";
 import { Table, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DeleteRole from "../modals/DeleteRole";

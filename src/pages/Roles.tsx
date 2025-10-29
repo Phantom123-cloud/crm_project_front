@@ -3,7 +3,7 @@ import { Button } from "antd";
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import AddRole from "@/components/modals/AddRole";
-import { useAllRolesTypeQuery } from "@/app/services/roles-type/rolesTypeApi";
+import { useAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 
 const Roles = () => {
   const [page, setPage] = useState(1);
