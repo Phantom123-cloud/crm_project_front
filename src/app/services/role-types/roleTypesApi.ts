@@ -24,7 +24,7 @@ export const rolesTypeApi = api.injectEndpoints({
 
     updateRolesType: builder.mutation<
       ApiResponse,
-      { name: string | undefined; id: string; descriptions: string | undefined }
+      { name?: string; id: string; descriptions?: string }
     >({
       query: ({ id, name, descriptions }) => ({
         url: `/role-types/update/${id}`,

@@ -53,7 +53,7 @@ export const rolesApi = api.injectEndpoints({
         page: number;
         limit: number;
       }>,
-      { page: number; limit: number }
+      { page?: number; limit?: number }
     >({
       query: ({ page, limit }) => ({
         url: `/roles/all`,

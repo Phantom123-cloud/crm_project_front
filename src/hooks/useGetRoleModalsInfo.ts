@@ -2,7 +2,7 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 
 type TModal = "UPDATE" | "DELETE";
 
-type TRoleTypeInfo = {
+type TitemInfo = {
   id: string;
   name: string;
   descriptions?: string;
@@ -12,7 +12,7 @@ type TRoleTypeInfo = {
 export const useGetRoleModalsInfo = (
   setOpen: Dispatch<SetStateAction<boolean>>
 ) => {
-  const [roleTypeInfo, setRoleTypeInfo] = useState<TRoleTypeInfo>({
+  const [itemInfo, setItemInfo] = useState<TitemInfo>({
     id: "",
     name: "",
     descriptions: "",
@@ -20,9 +20,9 @@ export const useGetRoleModalsInfo = (
   });
 
   const getInfo = (item: { id: string; name: string }, modalType: TModal) => {
-    setRoleTypeInfo((prev) => ({ ...prev, ...item, modalType }));
+    setItemInfo((prev) => ({ ...prev, ...item, modalType }));
     setOpen(true);
   };
 
-  return { getInfo, roleTypeInfo };
+  return { getInfo, itemInfo };
 };

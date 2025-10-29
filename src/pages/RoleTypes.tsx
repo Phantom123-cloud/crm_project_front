@@ -2,7 +2,7 @@ import RoleTypesData from "@/components/data/RoleTypesData";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import AddRoleType from "@/components/modals/AddRoleType";
+import AddRoleType from "@/components/modals/add/AddRoleType";
 
 const RoleTypes = () => {
   const [isOpen, setOpen] = useState(false);

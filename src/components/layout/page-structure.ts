@@ -16,7 +16,7 @@ export const pageStructure = [
       },
       {
         label: "шаблоны",
-        path: "templates",
+        path: "role-templates",
       },
     ],
   },
