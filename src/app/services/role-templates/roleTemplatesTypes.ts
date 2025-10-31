@@ -11,19 +11,33 @@ export type RolesAddObj = {
   descriptions: string;
 };
 
-export type AllRoleTemplates = {
-  templates: {
-    id: string;
-    name: string;
-    roles: Role[];
-  }[];
+export type Templates = {
+  id: string;
+  name: string;
+  roles: Role[];
+};
 
+export type AllRoleTemplates = {
+  templates: Templates[];
   roles: RolesAddObj[];
 };
 
 export type UpdateRoleTemplates = {
   id: string;
-  key?: "connect" | "disconnect";
-  array?: string[];
+  arrayConnect?: string[];
+  arrayDisconnect?: string[];
   name?: string;
+};
+
+export type TemplateDataById = {
+  roles: {
+    id: string;
+    type: string;
+    roles: {
+      name: string;
+      descriptions: string;
+      id: string;
+    }[];
+    descriptions: string;
+  }[];
 };

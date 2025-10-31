@@ -21,12 +21,12 @@ export const authApi = api.injectEndpoints({
       }),
     }),
 
-    // logoutMe: builder.mutation<ApiResponse, void>({
-    //   query: () => ({
-    //     url: `/auth/logout/me`,
-    //     method: METHODS.POST,
-    //   }),
-    // }),
+    logoutMe: builder.mutation<ApiResponse, void>({
+      query: () => ({
+        url: `/auth/logout/me`,
+        method: METHODS.POST,
+      }),
+    }),
 
     // logoutById: builder.mutation<ApiResponse, string>({
     //   query: (id) => ({
@@ -51,4 +51,4 @@ export const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useGetMeQuery } = authApi;
+export const { useLoginMutation, useGetMeQuery, useLogoutMeMutation } = authApi;

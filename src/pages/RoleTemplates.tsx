@@ -24,6 +24,7 @@ const RoleTemplates = () => {
       <RoleTemplatesData
         templates={data?.data?.templates ?? []}
         isLoading={isLoading}
+        roles={data?.data?.roles ?? []}
       />
       <AddRoleTemplate
         isOpen={isOpen}

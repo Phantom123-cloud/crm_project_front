@@ -5,6 +5,7 @@ import DeleteRole from "../modals/delete/DeleteRole";
 import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
 import UpdateRole from "../modals/update/UpdateRole";
+import { useLogoutMeMutation } from "@/app/services/auth/authApi";
 
 type Props = {
   page: number;
@@ -85,7 +86,6 @@ const RolesData: React.FC<Props> = ({
   ];
 
   const { name, id, modalType, descriptions } = itemInfo;
-
   return (
     <div>
       <Table

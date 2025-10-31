@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useUiContext } from "@/UIContext";
 import { useLoginMutation } from "@/app/services/auth/authApi";
 import { errorMessages } from "@/utils/is-error-message";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   email: z.email("Некоректный email"),
@@ -34,11 +35,13 @@ const Login = () => {
 
   const { callMessage } = useUiContext();
   const [login] = useLoginMutation();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FormValues) => {
     try {
       const { message } = await login(data).unwrap();
       callMessage.success(message);
+      navigate("/");
     } catch (err) {
       callMessage.error(errorMessages(err));
     } finally {

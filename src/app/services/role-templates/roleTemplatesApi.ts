@@ -3,6 +3,7 @@ import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type {
   AllRoleTemplates,
+  TemplateDataById,
   UpdateRoleTemplates,
 } from "./roleTemplatesTypes";
 
@@ -27,16 +28,23 @@ export const roleTemplatesApi = api.injectEndpoints({
     }),
 
     updateRoleTemplate: builder.mutation<ApiResponse, UpdateRoleTemplates>({
-      query: ({ id, key, array, name }) => ({
+      query: ({ id, arrayConnect, arrayDisconnect, name }) => ({
         url: `/role-templates/update/${id}`,
         method: METHODS.PUT,
-        body: { key, array, name },
+        body: { arrayConnect, arrayDisconnect, name },
       }),
     }),
 
     allRoleTemplates: builder.query<ApiResponse<AllRoleTemplates>, void>({
       query: () => ({
         url: `/role-templates/all`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    allRoleTemplatesById: builder.query<ApiResponse<TemplateDataById>, string>({
+      query: (id) => ({
+        url: `/role-templates/all-by/${id}`,
         method: METHODS.GET,
       }),
     }),
@@ -49,4 +57,6 @@ export const {
   useDeleteRoleTemplateMutation,
   useUpdateRoleTemplateMutation,
   useLazyAllRoleTemplatesQuery,
+  useAllRoleTemplatesByIdQuery,
+  useLazyAllRoleTemplatesByIdQuery,
 } = roleTemplatesApi;
