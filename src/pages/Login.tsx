@@ -3,7 +3,10 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUiContext } from "@/UIContext";
-import { useLoginMutation } from "@/app/services/auth/authApi";
+import {
+  useLazyGetMeQuery,
+  useLoginMutation,
+} from "@/app/services/auth/authApi";
 import { errorMessages } from "@/utils/is-error-message";
 import { useNavigate } from "react-router-dom";
 
@@ -36,12 +39,14 @@ const Login = () => {
   const { callMessage } = useUiContext();
   const [login] = useLoginMutation();
   const navigate = useNavigate();
+  const [triggerMe] = useLazyGetMeQuery();
 
   const onSubmit = async (data: FormValues) => {
     try {
       const { message } = await login(data).unwrap();
+      await triggerMe().unwrap();
+      navigate("/role-types");
       callMessage.success(message);
-      navigate("/");
     } catch (err) {
       callMessage.error(errorMessages(err));
     } finally {

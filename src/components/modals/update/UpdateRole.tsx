@@ -9,6 +9,7 @@ import {
   useLazyAllRoleQuery,
   useUpdateRoleMutation,
 } from "@/app/services/roles/rolesApi";
+import type { TModal, TSelect } from "@/types";
 
 type Props = {
   isOpen: boolean;
@@ -17,13 +18,11 @@ type Props = {
   descriptions: string;
   id: string;
   roleTypeId: string;
-  modalType: "UPDATE" | "DELETE";
+  modalType: TModal;
   limit: number;
   page: number;
-  roleTypes: {
-    value: string;
-    label: string;
-  }[];
+  roleTypes: TSelect[];
+  loading: boolean;
 };
 
 const schema = z.object({
@@ -53,6 +52,7 @@ const UpdateRole: React.FC<Props> = ({
   limit,
   page,
   roleTypes,
+  loading,
 }) => {
   const {
     handleSubmit,
@@ -115,6 +115,7 @@ const UpdateRole: React.FC<Props> = ({
         open={isOpen}
         footer={null}
         onCancel={onCancel}
+        loading={loading}
       >
         <Form
           name="basic"

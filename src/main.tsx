@@ -13,17 +13,16 @@ import ErrorPage from "./pages/ErrorPage.tsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
     element: <Layout />,
     children: [
-      { path: "login", element: <Login /> },
+      { path: "/login", element: <Login /> },
       {
-        path: "/",
         element: <Main />,
+        path: "/",
         children: [
-          { path: "role-types", element: <RoleTypes /> },
-          { path: "roles", element: <Roles /> },
-          { path: "role-templates", element: <RoleTemplates /> },
+          { path: "/role-types", element: <RoleTypes /> },
+          { path: "/roles", element: <Roles /> },
+          { path: "/role-templates", element: <RoleTemplates /> },
           // { path: "projects", element: <Projects /> },
           // { path: "projects/project/:id", element: <Project /> },
           // { path: "/task/:id", element: <Task /> },
@@ -34,7 +33,7 @@ const router = createBrowserRouter([
 
   {
     path: "*",
-     element: <ErrorPage />,
+    element: <ErrorPage />,
   },
 ]);
 

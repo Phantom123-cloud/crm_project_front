@@ -2,6 +2,7 @@ import { useGetMeQuery } from "@/app/services/auth/authApi";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Loader from "../UI/Loader";
+import Login from "@/pages/Login";
 
 type Props = { children: React.ReactNode };
 export const AuthGuard: React.FC<Props> = ({ children }) => {
@@ -19,7 +20,15 @@ export const AuthGuard: React.FC<Props> = ({ children }) => {
     if (data && pathname === "/login") {
       navigate("/");
     }
-  }, [data]);
+  }, [data, isLoading]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (!isLoading && !data) {
+    return <Login />;
+  }
 
   return <>{isLoading ? <Loader /> : children}</>;
 };

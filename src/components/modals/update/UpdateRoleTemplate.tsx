@@ -10,7 +10,7 @@ import {
   useLazyAllRoleTemplatesQuery,
   useUpdateRoleTemplateMutation,
 } from "@/app/services/role-templates/roleTemplatesApi";
-import type { RolesAddObj } from "@/app/services/role-templates/roleTemplatesTypes";
+import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import RolesCheckboxGroup from "@/components/RolesCheckboxGroup";
 
 type Props = {
@@ -23,7 +23,8 @@ type Props = {
     value: string;
     label: string;
   }[];
-  roles: RolesAddObj[];
+  roles: RolesObj[];
+  loading: boolean;
 };
 
 const schema = z.object({
@@ -45,6 +46,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   name,
   modalType,
   roles,
+  loading,
 }) => {
   const {
     handleSubmit,
@@ -85,7 +87,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
     .filter(Boolean);
 
   const tabItems: {
-    array: (RolesAddObj | null)[];
+    array: (RolesObj | null)[];
     name: "arrayConnect" | "arrayDisconnect";
     label: string;
     key: "connect" | "disconnect";
@@ -141,6 +143,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
         footer={null}
         onCancel={onCancel}
         width={600}
+        loading={loading}
       >
         <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
           <Form.Item

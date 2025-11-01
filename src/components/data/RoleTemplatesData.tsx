@@ -1,23 +1,17 @@
-import { useAllRoleQuery } from "@/app/services/roles/rolesApi";
-import { Table, Button, Collapse, Space } from "antd";
+import { Table, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
-import { useAllRoleTemplatesQuery } from "@/app/services/role-templates/roleTemplatesApi";
-import { fa } from "zod/v4/locales";
 import type {
-  AllRoleTemplates,
-  Role,
-  RolesAddObj,
+  RolesObj,
   Templates,
 } from "@/app/services/role-templates/roleTemplatesTypes";
-import type { ApiResponse } from "@/types";
 import DeleteRoleTemplate from "../modals/delete/DeleteRoleRoleTemplate";
 import UpdateRoleTemplate from "../modals/update/UpdateRoleTemplate";
 
 type Props = {
   templates: Templates[];
-  roles: RolesAddObj[];
+  roles: RolesObj[];
   isLoading: boolean;
 };
 const RoleTemplatesData: React.FC<Props> = ({
@@ -30,29 +24,7 @@ const RoleTemplatesData: React.FC<Props> = ({
   const dataSource = (templates ?? []).map((item) => {
     return {
       key: item.id,
-      template: (
-        <Collapse
-          bordered={false}
-          style={{ maxWidth: 800 }}
-          size="small"
-          items={[
-            {
-              key: item.id,
-              label: `Имя: ${item.name}`,
-              children: (
-                <div className="grid gap-2">
-                  {item.roles.map((r) => (
-                    <strong
-                      key={r.id}
-                    >{`— ${r.descriptions} [${r.name}]`}</strong>
-                  ))}
-                </div>
-              ),
-            },
-          ]}
-        />
-      ),
-      name: item.name,
+      template: item.name,
       actions: (
         <div className="flex gap-5">
           <Button
@@ -116,6 +88,7 @@ const RoleTemplatesData: React.FC<Props> = ({
           modalType={modalType}
           roleTypes={[]}
           roles={roles}
+          loading={isLoading}
         />
       )}
     </div>

@@ -9,8 +9,8 @@ const ErrorPage = () => {
       title="404"
       subTitle="Вы перешли на неизвестный сайту маршрут."
       extra={
-        <Button type="primary" onClick={() => navigate("/")}>
-          На главную
+        <Button type="primary" onClick={() => navigate(-1)}>
+          Назад
         </Button>
       }
     />

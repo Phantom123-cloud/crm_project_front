@@ -8,16 +8,14 @@ import {
   useCreateRoleMutation,
   useLazyAllRoleQuery,
 } from "@/app/services/roles/rolesApi";
+import type { TSelect } from "@/types";
 
 type Props = {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
   limit: number;
   page: number;
-  roleTypes: {
-    value: string;
-    label: string;
-  }[];
+  roleTypes: TSelect[];
 };
 
 const schema = z.object({

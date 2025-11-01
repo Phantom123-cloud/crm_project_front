@@ -5,19 +5,14 @@ import DeleteRole from "../modals/delete/DeleteRole";
 import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
 import UpdateRole from "../modals/update/UpdateRole";
-import { useLogoutMeMutation } from "@/app/services/auth/authApi";
+import type { TSelect } from "@/types";
 
 type Props = {
   page: number;
   setPage(page: number): void;
-
   limit: number;
   setLimit(page: number): void;
-
-  roleTypes: {
-    value: string;
-    label: string;
-  }[];
+  roleTypes: TSelect[];
 };
 
 const RolesData: React.FC<Props> = ({
@@ -124,6 +119,7 @@ const RolesData: React.FC<Props> = ({
         descriptions={descriptions as string}
         roleTypeId={roleTypeId}
         roleTypes={roleTypes}
+        loading={isLoading}
       />
     </div>
   );

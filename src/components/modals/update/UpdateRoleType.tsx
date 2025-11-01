@@ -17,6 +17,7 @@ type Props = {
   descriptions: string;
   id: string;
   modalType: "UPDATE" | "DELETE";
+  loading: boolean;
 };
 
 const schema = z.object({
@@ -41,6 +42,7 @@ const UpdateRoleType: React.FC<Props> = ({
   name,
   modalType,
   descriptions,
+  loading,
 }) => {
   const {
     handleSubmit,
@@ -97,6 +99,7 @@ const UpdateRoleType: React.FC<Props> = ({
         open={isOpen}
         footer={null}
         onCancel={onCancel}
+        loading={loading}
       >
         <Form
           name="basic"

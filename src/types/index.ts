@@ -8,3 +8,10 @@ export type ApiResponse<T = undefined> = {
 };
 
 export type MenuItem = Required<MenuProps>["items"][number];
+
+export type TSelect = {
+  value: string;
+  label: string;
+};
+
+export type TModal = "UPDATE" | "DELETE";

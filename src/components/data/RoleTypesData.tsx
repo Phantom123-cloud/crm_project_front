@@ -79,6 +79,7 @@ const RoleTypesData = () => {
         descriptions={descriptions as string}
         id={id}
         modalType={modalType}
+        loading={isLoading}
       />
     </>
   );

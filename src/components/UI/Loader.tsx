@@ -1,7 +1,20 @@
 import { Spin } from "antd";
 
 const Loader = () => {
-  return <Spin tip="Loading..." size="large" fullscreen></Spin>;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Spin size="large" />
+    </div>
+  );
 };
 
 export default Loader;

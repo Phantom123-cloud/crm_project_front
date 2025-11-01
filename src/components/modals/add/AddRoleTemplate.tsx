@@ -8,13 +8,13 @@ import {
   useCreateRoleTemplateMutation,
   useLazyAllRoleTemplatesQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
-import type { RolesAddObj } from "@/app/services/role-templates/roleTemplatesTypes";
+import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import CheckboxGroup from "@/components/CheckboxGroup";
 
 type Props = {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
-  roles: RolesAddObj[];
+  roles: RolesObj[];
 };
 const schema = z.object({
   name: z
