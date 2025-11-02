@@ -24,12 +24,12 @@ const schema = z.object({
   name: z
     .string()
     .nonempty("Обязательное поле")
-    .min(5, "Минимальная длина - 5")
+    // .min(5, "Минимальная длина - 5")
     .max(20, "Максимальная длина - 20"),
   descriptions: z
     .string()
     .nonempty("Обязательное поле")
-    .min(5, "Минимальная длина - 5")
+    // .min(5, "Минимальная длина - 5")
     .max(35, "Максимальная длина - 35"),
 });
 
@@ -70,10 +70,9 @@ const UpdateRoleType: React.FC<Props> = ({
   const onSubmit = async (data: FormValues) => {
     try {
       const resultData = {
-        name:
-          data.name !== name && data.name.length > 0 ? data.name : undefined,
+        name: data.name !== name && data.name?.length ? data.name : undefined,
         descriptions:
-          data.descriptions !== descriptions && data.descriptions.length > 0
+          data.descriptions !== descriptions && data.descriptions?.length
             ? data.descriptions
             : undefined,
       };
@@ -121,8 +120,8 @@ const UpdateRoleType: React.FC<Props> = ({
           </Form.Item>
           <Form.Item
             label="Описание"
-            validateStatus={errors.name ? "error" : ""}
-            help={errors.name?.message}
+            validateStatus={errors.descriptions ? "error" : ""}
+            help={errors.descriptions?.message}
             required={true}
           >
             <Controller

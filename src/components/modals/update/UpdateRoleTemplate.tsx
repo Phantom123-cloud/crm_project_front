@@ -109,10 +109,9 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   const onSubmit = async (data: FormValues) => {
     try {
       const resultData = {
-        name:
-          data.name !== name && data.name.length > 0 ? data.name : undefined,
-        arrayConnect: data.arrayConnect.length ? data.arrayConnect : undefined,
-        arrayDisconnect: data.arrayDisconnect.length
+        name: data.name !== name && data.name?.length ? data.name : undefined,
+        arrayConnect: data.arrayConnect?.length ? data.arrayConnect : undefined,
+        arrayDisconnect: data.arrayDisconnect?.length
           ? data.arrayDisconnect
           : undefined,
       };

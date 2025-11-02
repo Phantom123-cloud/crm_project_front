@@ -18,14 +18,14 @@ type Props = {
 const schema = z.object({
   name: z
     .string()
-    .nonempty("Обязательное поле")
-    .min(5, "Минимальная длина - 5")
-    .max(20, "Максимальная длина - 20"),
+    .nonempty("Обязательное поле"),
+    // .min(5, "Минимальная длина - 5")
+    // .max(20, "Максимальная длина - 20"),
   descriptions: z
     .string()
     .nonempty("Обязательное поле")
-    .min(5, "Минимальная длина - 5")
-    .max(35, "Максимальная длина - 35"),
+    // .min(5, "Минимальная длина - 5")
+    // .max(35, "Максимальная длина - 35"),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -93,8 +93,8 @@ const AddRoleType: React.FC<Props> = ({ isOpen, setOpen }) => {
         </Form.Item>
         <Form.Item
           label="Описание"
-          validateStatus={errors.name ? "error" : ""}
-          help={errors.name?.message}
+          validateStatus={errors.descriptions ? "error" : ""}
+          help={errors.descriptions?.message}
           required={true}
         >
           <Controller

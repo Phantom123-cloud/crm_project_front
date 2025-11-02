@@ -81,14 +81,13 @@ const UpdateRole: React.FC<Props> = ({
   const onSubmit = async (data: FormValues) => {
     try {
       const resultData = {
-        name:
-          data.name !== name && data.name.length > 0 ? data.name : undefined,
+        name: data.name !== name && data.name?.length ? data.name : undefined,
         descriptions:
-          data.descriptions !== descriptions && data.descriptions.length > 0
+          data.descriptions !== descriptions && data.descriptions?.length
             ? data.descriptions
             : undefined,
         roleTypeId:
-          data.roleTypeId !== roleTypeId && data.roleTypeId.length > 0
+          data.roleTypeId !== roleTypeId && data.roleTypeId?.length
             ? data.roleTypeId
             : undefined,
       };
