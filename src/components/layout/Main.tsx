@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   MoonOutlined,
@@ -12,6 +13,11 @@ import UiButton from "../UI/buttons/UiButton";
 import { Outlet, useNavigate } from "react-router-dom";
 import { pageStructure } from "./page-structure";
 import type { MenuItem } from "@/types";
+import {
+  useLazyGetMeQuery,
+  useLogoutMeMutation,
+} from "@/app/services/auth/authApi";
+import { errorMessages } from "@/utils/is-error-message";
 const { Header, Sider, Content } = Layout;
 
 const Main = () => {
@@ -54,7 +60,20 @@ const Main = () => {
     }
   );
 
-  const { handleToggleTheme, isDark } = useUiContext();
+  const { handleToggleTheme, isDark, callMessage } = useUiContext();
+
+  const [logoutMe] = useLogoutMeMutation();
+  const [triggerMe] = useLazyGetMeQuery();
+
+  const logoutSession = async () => {
+    try {
+      const { message } = await logoutMe().unwrap();
+      callMessage.success(message);
+      await triggerMe().unwrap();
+    } catch (err) {
+      navigate("/login");
+    }
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -63,21 +82,26 @@ const Main = () => {
       </Sider>
       <Layout>
         <Header
-          style={{ background: colorBgContainer, padding: 0 }}
-          className="flex justify-between"
+          style={{ background: colorBgContainer, padding: `0 10px` }}
+          className="flex justify-between items-center"
         >
           <UiButton
             onClick={handleCollapse}
-            isBool={collapsed}
-            IconTrue={MenuUnfoldOutlined}
-            IconFalse={MenuFoldOutlined}
+            Icon={collapsed ? MenuUnfoldOutlined : MenuFoldOutlined}
+            text={"меню"}
           />
-          <UiButton
-            onClick={handleToggleTheme}
-            isBool={isDark}
-            IconTrue={SunOutlined}
-            IconFalse={MoonOutlined}
-          />
+          <div className="">
+            <UiButton
+              onClick={handleToggleTheme}
+              Icon={isDark ? SunOutlined : MoonOutlined}
+              text={"смена темы"}
+            />
+            <UiButton
+              onClick={logoutSession}
+              Icon={LogoutOutlined}
+              text={"выйти"}
+            />
+          </div>
         </Header>
         <Content
           style={{

@@ -1,31 +1,27 @@
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import type React from "react";
 import { FileOutlined as IconType } from "@ant-design/icons";
 
 type Props = {
-  isBool: boolean;
-  IconTrue: typeof IconType;
-  IconFalse: typeof IconType;
+  Icon: typeof IconType;
   onClick: () => void;
+  text: string;
 };
 
-const UiButton: React.FC<Props> = ({
-  isBool,
-  IconTrue,
-  IconFalse,
-  onClick,
-}) => {
+const UiButton: React.FC<Props> = ({ onClick, Icon, text }) => {
   return (
-    <Button
-      type="text"
-      icon={isBool ? <IconTrue /> : <IconFalse />}
-      onClick={onClick}
-      style={{
-        fontSize: "16px",
-        width: 64,
-        height: 64,
-      }}
-    />
+    <Tooltip placement="bottom" title={text}>
+      <Button
+        type="text"
+        icon={<Icon />}
+        onClick={onClick}
+        style={{
+          fontSize: "14px",
+          width: 40,
+          height: 40,
+        }}
+      />
+    </Tooltip>
   );
 };
 

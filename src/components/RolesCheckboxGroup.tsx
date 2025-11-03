@@ -1,9 +1,6 @@
 import { Divider } from "antd";
 import CheckboxGroup from "./CheckboxGroup";
-import type {
-  Role,
-  RolesObj,
-} from "@/app/services/role-templates/roleTemplatesTypes";
+import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 type Props<T extends FieldValues> = {

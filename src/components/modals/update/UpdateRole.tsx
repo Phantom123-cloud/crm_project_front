@@ -1,8 +1,8 @@
-import { Button, Flex, Form, Input, Modal, Select } from "antd";
+import { Modal } from "antd";
 import { useEffect, type SetStateAction } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import {
@@ -10,6 +10,7 @@ import {
   useUpdateRoleMutation,
 } from "@/app/services/roles/rolesApi";
 import type { TModal, TSelect } from "@/types";
+import RoleForm from "@/components/forms/RoleForm";
 
 type Props = {
   isOpen: boolean;
@@ -116,80 +117,17 @@ const UpdateRole: React.FC<Props> = ({
         onCancel={onCancel}
         loading={loading}
       >
-        <Form
-          name="basic"
-          onFinish={handleSubmit(onSubmit)}
-          autoComplete="off"
-          labelCol={{ span: 5 }}
-        >
-          <Form.Item
-            label="Имя"
-            validateStatus={errors.name ? "error" : ""}
-            help={errors.name?.message}
-            required={true}
-          >
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Описание"
-            validateStatus={errors.descriptions ? "error" : ""}
-            help={errors.descriptions?.message}
-            required={true}
-          >
-            <Controller
-              name="descriptions"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Тип роли"
-            validateStatus={errors.roleTypeId ? "error" : ""}
-            help={errors.roleTypeId?.message}
-            required={true}
-          >
-            <Controller
-              name="roleTypeId"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  showSearch
-                  optionFilterProp="label"
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
-                  }
-                  options={roleTypes}
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Flex justify="space-between">
-            <Form.Item label={null}>
-              <Button
-                variant="solid"
-                color="blue"
-                htmlType="submit"
-                loading={isSubmitting}
-                disabled={!isDirty}
-              >
-                Сохранить
-              </Button>
-            </Form.Item>
-
-            <Button variant="solid" color="default" onClick={onCancel}>
-              Закрыть
-            </Button>
-          </Flex>
-        </Form>
+        <RoleForm
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          errors={errors}
+          control={control}
+          isSubmitting={isSubmitting}
+          onCancel={onCancel}
+          text={"Сохранить"}
+          roleTypes={roleTypes}
+          isDirty={isDirty}
+        />
       </Modal>
     )
   );

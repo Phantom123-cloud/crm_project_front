@@ -1,14 +1,15 @@
-import { Button, Flex, Form, Input, Modal } from "antd";
+import { Modal } from "antd";
 import { useEffect, type SetStateAction } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import {
   useLazyAllRolesTypeQuery,
   useUpdateRolesTypeMutation,
 } from "@/app/services/role-types/roleTypesApi";
 import { errorMessages } from "@/utils/is-error-message";
+import RoleTypeForm from "@/components/forms/RoleTypeForm";
 
 type Props = {
   isOpen: boolean;
@@ -24,12 +25,12 @@ const schema = z.object({
   name: z
     .string()
     .nonempty("Обязательное поле")
-    // .min(5, "Минимальная длина - 5")
+    .min(5, "Минимальная длина - 5")
     .max(20, "Максимальная длина - 20"),
   descriptions: z
     .string()
     .nonempty("Обязательное поле")
-    // .min(5, "Минимальная длина - 5")
+    .min(5, "Минимальная длина - 5")
     .max(35, "Максимальная длина - 35"),
 });
 
@@ -100,55 +101,16 @@ const UpdateRoleType: React.FC<Props> = ({
         onCancel={onCancel}
         loading={loading}
       >
-        <Form
-          name="basic"
-          onFinish={handleSubmit(onSubmit)}
-          autoComplete="off"
-          labelCol={{ span: 5 }}
-        >
-          <Form.Item
-            label="Имя"
-            validateStatus={errors.name ? "error" : ""}
-            help={errors.name?.message}
-            required={true}
-          >
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Описание"
-            validateStatus={errors.descriptions ? "error" : ""}
-            help={errors.descriptions?.message}
-            required={true}
-          >
-            <Controller
-              name="descriptions"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-
-          <Flex justify="space-between">
-            <Form.Item label={null}>
-              <Button
-                variant="solid"
-                color="blue"
-                htmlType="submit"
-                loading={isSubmitting}
-                disabled={!isDirty}
-              >
-                Сохранить
-              </Button>
-            </Form.Item>
-
-            <Button variant="solid" color="default" onClick={onCancel}>
-              Закрыть
-            </Button>
-          </Flex>
-        </Form>
+        <RoleTypeForm
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          errors={errors}
+          control={control}
+          isSubmitting={isSubmitting}
+          isDirty={isDirty}
+          onCancel={onCancel}
+          text="Сохранить"
+        />
       </Modal>
     )
   );

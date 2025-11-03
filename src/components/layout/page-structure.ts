@@ -1,4 +1,9 @@
-import { FontColorsOutlined, GlobalOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  FontColorsOutlined,
+  GlobalOutlined,
+  LockOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
 
 export const pageStructure = [
   {
@@ -20,21 +25,22 @@ export const pageStructure = [
       },
     ],
   },
-  // {
-  //   label: "Team",
-  //   path: null,
-  //   Icon: TeamOutlined,
-  //   children: [
-  //     {
-  //       label: "Team 1",
-  //       path: "t-1",
-  //     },
-  //     {
-  //       label: "Team 2",
-  //       path: "t-2",
-  //     },
-  //   ],
-  // },
+  {
+    label: "Люди",
+    path: null,
+    Icon: TeamOutlined,
+    children: [
+      {
+        label: "аккаунты",
+        path: "accounts",
+      },
+      {
+        label: "сотрудники",
+        path: "employees",
+      },
+    ],
+  },
   { label: "Страны", path: "citizenships", Icon: GlobalOutlined },
   { label: "Языки", path: "languages", Icon: FontColorsOutlined },
+  // { label: "Языки", path: "languages", Icon: FontColorsOutlined },
 ];

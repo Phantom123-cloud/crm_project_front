@@ -1,5 +1,6 @@
-import type { CitizenshipAndLanguage } from "@/app/services/citizenships/citizenshipType";
-import { Button, Flex, Form, Input } from "antd";
+import type { CreateRole } from "@/app/services/roles/rolesType";
+import type { TSelect } from "@/types";
+import { Button, Flex, Form, Input, Select } from "antd";
 import {
   Controller,
   type Control,
@@ -8,69 +9,84 @@ import {
 } from "react-hook-form";
 
 type Props = {
-  handleSubmit: UseFormHandleSubmit<CitizenshipAndLanguage>;
-  onSubmit: (data: CitizenshipAndLanguage) => Promise<void>;
-  errors: FieldErrors<CitizenshipAndLanguage>;
-  control: Control<CitizenshipAndLanguage>;
+  handleSubmit: UseFormHandleSubmit<CreateRole>;
+  onSubmit: (data: CreateRole) => Promise<void>;
+  errors: FieldErrors<CreateRole>;
+  control: Control<CreateRole>;
   isSubmitting: boolean;
   isDirty?: boolean;
   onCancel: () => void;
   text: string;
   required?: boolean;
+  roleTypes: TSelect[];
 };
 
-const CitizenshipAndLanguagesForm: React.FC<Props> = ({
+const RoleForm: React.FC<Props> = ({
   handleSubmit,
   onSubmit,
-  errors,
   control,
   isSubmitting,
   isDirty = true,
   onCancel,
   text,
   required = false,
+  errors,
+  roleTypes,
 }) => {
   return (
     <Form
       name="basic"
       onFinish={handleSubmit(onSubmit)}
       autoComplete="off"
-      labelCol={{ span: 6 }}
+      labelCol={{ span: 5 }}
     >
       <Form.Item
-        label="Код"
-        validateStatus={errors.code ? "error" : ""}
-        help={errors.code?.message}
+        label="Имя"
+        validateStatus={errors.name ? "error" : ""}
+        help={errors.name?.message}
         required={required}
       >
         <Controller
-          name="code"
+          name="name"
           control={control}
           render={({ field }) => <Input {...field} />}
         />
       </Form.Item>
       <Form.Item
-        label="Название (ру)"
-        validateStatus={errors.localeRu ? "error" : ""}
-        help={errors.localeRu?.message}
+        label="Описание"
+        validateStatus={errors.descriptions ? "error" : ""}
+        help={errors.descriptions?.message}
         required={required}
       >
         <Controller
-          name="localeRu"
+          name="descriptions"
           control={control}
           render={({ field }) => <Input {...field} />}
         />
       </Form.Item>
+
       <Form.Item
-        label="Название (eng)"
-        validateStatus={errors.localeEn ? "error" : ""}
-        help={errors.localeEn?.message}
+        label="Тип роли"
+        validateStatus={errors.roleTypeId ? "error" : ""}
+        help={errors.roleTypeId?.message}
         required={required}
       >
         <Controller
-          name="localeEn"
+          name="roleTypeId"
           control={control}
-          render={({ field }) => <Input {...field} />}
+          render={({ field }) => (
+            <Select
+              {...field}
+              showSearch
+              optionFilterProp="label"
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
+              options={roleTypes}
+            />
+          )}
         />
       </Form.Item>
 
@@ -95,4 +111,4 @@ const CitizenshipAndLanguagesForm: React.FC<Props> = ({
   );
 };
 
-export default CitizenshipAndLanguagesForm;
+export default RoleForm;

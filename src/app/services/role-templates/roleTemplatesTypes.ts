@@ -1,4 +1,4 @@
-export type Role = {
+type RoleItem = {
   name: string;
   descriptions: string;
   id: string;
@@ -7,14 +7,14 @@ export type Role = {
 export type RolesObj = {
   id: string;
   type: string;
-  roles: Role[];
+  roles: RoleItem[];
   descriptions: string;
 };
 
 export type Templates = {
   id: string;
   name: string;
-  roles: Role[];
+  roles: RoleItem[];
 };
 
 export type AllRoleTemplates = {

@@ -1,6 +1,7 @@
 import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
+import type { Roles } from "./rolesType";
 
 export const rolesApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -41,13 +42,7 @@ export const rolesApi = api.injectEndpoints({
 
     allRole: builder.query<
       ApiResponse<{
-        roles: {
-          id: string;
-          name: string;
-          descriptions: string;
-          typeName: string;
-          typeId: string;
-        }[];
+        roles: Roles[];
         total: number;
         countPages: number;
         page: number;
