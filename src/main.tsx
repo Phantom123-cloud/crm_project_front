@@ -10,6 +10,8 @@ import RoleTypes from "./pages/RoleTypes.tsx";
 import Roles from "./pages/Roles.tsx";
 import RoleTemplates from "./pages/RoleTemplates.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
+import Citizenships from "./pages/Citizenships.tsx";
+import Languages from "./pages/Languages.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,8 @@ const router = createBrowserRouter([
           { path: "/role-types", element: <RoleTypes /> },
           { path: "/roles", element: <Roles /> },
           { path: "/role-templates", element: <RoleTemplates /> },
+          { path: "/citizenships", element: <Citizenships /> },
+          { path: "/languages", element: <Languages /> },
           // { path: "projects", element: <Projects /> },
           // { path: "projects/project/:id", element: <Project /> },
           // { path: "/task/:id", element: <Task /> },

@@ -4,9 +4,9 @@ type TModal = "UPDATE" | "DELETE";
 
 type TitemInfo = {
   id: string;
-  name: string;
-  descriptions?: string;
+  name?: string;
   modalType: TModal;
+  descriptions?: string;
 };
 
 export const useGetRoleModalsInfo = (

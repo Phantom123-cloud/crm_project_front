@@ -1,4 +1,4 @@
-import { LockOutlined } from "@ant-design/icons";
+import { FontColorsOutlined, GlobalOutlined, LockOutlined } from "@ant-design/icons";
 
 export const pageStructure = [
   {
@@ -35,5 +35,6 @@ export const pageStructure = [
   //     },
   //   ],
   // },
-  // { label: "Files", path: "files", Icon: FileOutlined },
+  { label: "Страны", path: "citizenships", Icon: GlobalOutlined },
+  { label: "Языки", path: "languages", Icon: FontColorsOutlined },
 ];
