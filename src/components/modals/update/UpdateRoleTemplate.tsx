@@ -12,6 +12,7 @@ import {
 } from "@/app/services/role-templates/roleTemplatesApi";
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import RolesCheckboxGroup from "@/components/RolesCheckboxGroup";
+import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 
 type Props = {
   isOpen: boolean;
@@ -166,16 +167,10 @@ const UpdateRoleTemplate: React.FC<Props> = ({
                 forceRender: true,
                 children: (
                   <Form.Item>
-                    <Controller
+                    <CheckboxRolesGroupContoller
                       name={item.name}
                       control={control}
-                      defaultValue={[]}
-                      render={({ field }) => (
-                        <RolesCheckboxGroup<FormValues>
-                          array={item.array}
-                          field={field}
-                        />
-                      )}
+                      roles={item?.array as RolesObj[]}
                     />
                   </Form.Item>
                 ),

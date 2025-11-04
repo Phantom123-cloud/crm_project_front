@@ -1,4 +1,4 @@
-type RoleItem = {
+export type RoleItem = {
   name: string;
   descriptions: string;
   id: string;
@@ -14,12 +14,9 @@ export type RolesObj = {
 export type Templates = {
   id: string;
   name: string;
-  roles: RoleItem[];
 };
 
-export type AllRoleTemplates = {
-  templates: Templates[];
-};
+export type AllRoleTemplates = { roles: RolesObj[]; templates: Templates[] };
 
 export type UpdateRoleTemplates = {
   id: string;
@@ -28,6 +25,3 @@ export type UpdateRoleTemplates = {
   name?: string;
 };
 
-export type TemplateDataById = {
-  roles: RolesObj[];
-};

@@ -31,8 +31,8 @@ export const pageStructure = [
     Icon: TeamOutlined,
     children: [
       {
-        label: "аккаунты",
-        path: "accounts",
+        label: "пользователи",
+        path: "users",
       },
       {
         label: "сотрудники",

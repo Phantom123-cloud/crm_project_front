@@ -6,3 +6,7 @@
     background: rgba(255, 255, 255, 0.3);
     border-radius: 6px;
 }
+
+.ant-table-cell {
+    padding: 10px !important;
+}

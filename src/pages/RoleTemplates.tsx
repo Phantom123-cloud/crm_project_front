@@ -8,6 +8,7 @@ import { useAllRoleTemplatesQuery } from "@/app/services/role-templates/roleTemp
 const RoleTemplates = () => {
   const [isOpen, setOpen] = useState(false);
   const { data, isLoading } = useAllRoleTemplatesQuery();
+  console.log(data?.data?.templates);
 
   return (
     <div>
@@ -26,6 +27,7 @@ const RoleTemplates = () => {
         isLoading={isLoading}
         roles={data?.data?.roles ?? []}
       />
+
       <AddRoleTemplate
         isOpen={isOpen}
         setOpen={setOpen}

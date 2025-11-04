@@ -3,7 +3,7 @@ import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type {
   AllRoleTemplates,
-  TemplateDataById,
+  RolesObj,
   UpdateRoleTemplates,
 } from "./roleTemplatesTypes";
 
@@ -42,9 +42,48 @@ export const roleTemplatesApi = api.injectEndpoints({
       }),
     }),
 
-    allRoleTemplatesById: builder.query<ApiResponse<TemplateDataById>, string>({
+    getSelectTeamplates: builder.query<
+      ApiResponse<
+        {
+          id: string;
+          name: string;
+        }[]
+      >,
+      void
+    >({
+      query: () => ({
+        url: `/role-templates/all-select`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    // getTemplateById: builder.query<
+    //   ApiResponse<RoleItem[]
+    //   >,
+    //   string
+    // >({
+    //   query: (id) => ({
+    //     url: `/role-templates/${id}`,
+    //     method: METHODS.GET,
+    //   }),
+    // }),
+
+    allRoleTemplatesById: builder.query<
+      ApiResponse<{ roles: RolesObj[] }>,
+      string
+    >({
       query: (id) => ({
-        url: `/role-templates/all-by/${id}`,
+        url: `/role-templates/${id}`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    getRolesNotInTemplate: builder.query<
+      ApiResponse<{ roles: RolesObj[] }>,
+      string
+    >({
+      query: (id) => ({
+        url: `/role-templates/by-not-id/${id}`,
         method: METHODS.GET,
       }),
     }),
@@ -59,4 +98,10 @@ export const {
   useLazyAllRoleTemplatesQuery,
   useAllRoleTemplatesByIdQuery,
   useLazyAllRoleTemplatesByIdQuery,
+  useGetSelectTeamplatesQuery,
+  // useGetTemplateByIdQuery,
+  // useLazyGetTemplateByIdQuery,
+  useLazyGetSelectTeamplatesQuery,
+  useGetRolesNotInTemplateQuery,
+  useLazyGetRolesNotInTemplateQuery,
 } = roleTemplatesApi;

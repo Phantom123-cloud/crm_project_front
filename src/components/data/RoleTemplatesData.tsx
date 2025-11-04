@@ -74,7 +74,7 @@ const RoleTemplatesData: React.FC<Props> = ({
       <DeleteRoleTemplate
         isOpen={isOpen}
         setOpen={setOpen}
-        name={name}
+        name={name as string}
         id={id}
         modalType={modalType}
       />
@@ -83,7 +83,7 @@ const RoleTemplatesData: React.FC<Props> = ({
         <UpdateRoleTemplate
           isOpen={isOpen}
           setOpen={setOpen}
-          name={name}
+          name={name as string}
           id={id}
           modalType={modalType}
           roleTypes={[]}

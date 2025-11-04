@@ -1,9 +1,9 @@
-import type { Role } from "@/app/services/role-templates/roleTemplatesTypes";
+import type { RoleItem } from "@/app/services/role-templates/roleTemplatesTypes";
 import { Checkbox } from "antd";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 type Props<T extends FieldValues> = {
-  roles: Role[];
+  roles: RoleItem[];
   selected: string[];
   field: ControllerRenderProps<T>;
 };

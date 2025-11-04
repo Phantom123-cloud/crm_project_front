@@ -12,6 +12,8 @@ import RoleTemplates from "./pages/RoleTemplates.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import Citizenships from "./pages/Citizenships.tsx";
 import Languages from "./pages/Languages.tsx";
+import Users from "./pages/Users.tsx";
+import RegisterUsers from "./pages/RegisterUsers.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,14 +24,19 @@ const router = createBrowserRouter([
         element: <Main />,
         path: "/",
         children: [
-          { path: "/role-types", element: <RoleTypes /> },
-          { path: "/roles", element: <Roles /> },
-          { path: "/role-templates", element: <RoleTemplates /> },
-          { path: "/citizenships", element: <Citizenships /> },
-          { path: "/languages", element: <Languages /> },
-          // { path: "projects", element: <Projects /> },
-          // { path: "projects/project/:id", element: <Project /> },
-          // { path: "/task/:id", element: <Task /> },
+          { path: "role-types", element: <RoleTypes /> },
+          { path: "roles", element: <Roles /> },
+          { path: "role-templates", element: <RoleTemplates /> },
+          { path: "citizenships", element: <Citizenships /> },
+          { path: "languages", element: <Languages /> },
+          {
+            path: "users",
+            element: <Users />,
+            children: [
+              { path: "register", element: <RegisterUsers /> },
+              { path: "accounts", element: <>accounts</> },
+            ],
+          },
         ],
       },
     ],

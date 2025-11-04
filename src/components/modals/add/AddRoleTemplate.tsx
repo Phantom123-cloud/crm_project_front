@@ -9,7 +9,7 @@ import {
   useLazyAllRoleTemplatesQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
-import CheckboxGroup from "@/components/CheckboxGroup";
+import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 
 type Props = {
   isOpen: boolean;
@@ -88,62 +88,10 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, roles }) => {
           help={errors.array?.message}
           required={true}
         >
-          <Controller
+          <CheckboxRolesGroupContoller
             name="array"
             control={control}
-            defaultValue={[]}
-            render={({ field }) => (
-              <div className="grid gap-5">
-                {roles.map((type) => {
-                  const roleIds = type.roles.map((r) => r.id);
-
-                  const selected = field.value.filter((v: string) =>
-                    roleIds.includes(v)
-                  );
-                  const isAllChecked = selected.length === roleIds.length;
-
-                  const isIndeterminate =
-                    selected.length > 0 && selected.length < roleIds.length;
-
-                  return (
-                    <div key={type.id} className="grid">
-                      <div className="flex gap-2 pb-2 items-center">
-                        <strong>{`${type.descriptions} [${type.type}]`}</strong>
-
-                        <Checkbox
-                          indeterminate={isIndeterminate}
-                          checked={isAllChecked}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              const newValues = Array.from(
-                                new Set([...field.value, ...roleIds])
-                              );
-                              field.onChange(newValues);
-                            } else {
-                              field.onChange(
-                                field.value.filter(
-                                  (v: string) => !roleIds.includes(v)
-                                )
-                              );
-                            }
-                          }}
-                        >
-                          все
-                        </Checkbox>
-                      </div>
-
-                      <CheckboxGroup
-                        roles={type.roles}
-                        selected={selected}
-                        field={field}
-                      />
-
-                      <Divider size="small" />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            roles={roles}
           />
         </Form.Item>
 

@@ -1,17 +1,17 @@
 import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
-import type { Login } from "./authTypes";
+import type { Login, Register } from "./authTypes";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // register: builder.mutation<ApiResponse, Register>({
-    //   query: (body) => ({
-    //     url: `/auth/register`,
-    //     method: METHODS.POST,
-    //     body,
-    //   }),
-    // }),
+    register: builder.mutation<ApiResponse, Register>({
+      query: (data) => ({
+        url: `/auth/register`,
+        method: METHODS.POST,
+        body: data,
+      }),
+    }),
 
     login: builder.mutation<ApiResponse, Login>({
       query: (body) => ({
@@ -27,13 +27,6 @@ export const authApi = api.injectEndpoints({
         method: METHODS.POST,
       }),
     }),
-
-    // logoutById: builder.mutation<ApiResponse, string>({
-    //   query: (id) => ({
-    //     url: `/auth/logout/${id}`,
-    //     method: METHODS.POST,
-    //   }),
-    // }),
 
     getMe: builder.query<ApiResponse<string[]>, void>({
       query: () => ({
@@ -56,4 +49,5 @@ export const {
   useGetMeQuery,
   useLogoutMeMutation,
   useLazyGetMeQuery,
+  useRegisterMutation,
 } = authApi;
