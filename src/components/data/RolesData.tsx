@@ -36,6 +36,7 @@ const RolesData: React.FC<Props> = ({
         <div className="flex gap-5">
           <Button
             color="primary"
+            size="small"
             variant="outlined"
             icon={<EditOutlined />}
             onClick={() => {
@@ -47,6 +48,7 @@ const RolesData: React.FC<Props> = ({
           </Button>
           <Button
             color="danger"
+            size="small"
             variant="outlined"
             icon={<DeleteOutlined />}
             onClick={() => getInfo(item, "DELETE")}
@@ -101,7 +103,7 @@ const RolesData: React.FC<Props> = ({
       <DeleteRole
         isOpen={isOpen}
         setOpen={setOpen}
-        name={name}
+        name={name ?? ""}
         id={id}
         modalType={modalType}
         limit={limit}
@@ -111,12 +113,12 @@ const RolesData: React.FC<Props> = ({
       <UpdateRole
         isOpen={isOpen}
         setOpen={setOpen}
-        name={name}
+        name={name ?? ""}
         id={id}
         modalType={modalType}
         limit={limit}
         page={page}
-        descriptions={descriptions as string}
+        descriptions={descriptions ?? ""}
         roleTypeId={roleTypeId}
         roleTypes={roleTypes}
         loading={isLoading}

@@ -1,27 +1,16 @@
-import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import LanguagesData from "@/components/data/LanguagesData";
 import AddLanguage from "@/components/modals/add/AddLanguage";
+import AddButton from "@/components/UI/buttons/AddButton";
 
 const Languages = () => {
   const [isOpen, setOpen] = useState(false);
-
   return (
-    <div>
-      <div className="flex justify-end mb-10">
-        <Button
-          color="cyan"
-          variant="solid"
-          icon={<PlusOutlined />}
-          onClick={() => setOpen(true)}
-        >
-          Добавить
-        </Button>
-      </div>
+    <>
+      <AddButton onClick={() => setOpen(true)} text="Добавить" />
       <LanguagesData />
       <AddLanguage isOpen={isOpen} setOpen={setOpen} />
-    </div>
+    </>
   );
 };
 

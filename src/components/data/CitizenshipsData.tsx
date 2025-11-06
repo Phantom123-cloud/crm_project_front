@@ -34,6 +34,7 @@ const CitizenshipsData = () => {
           <Button
             color="primary"
             variant="outlined"
+            size="small"
             icon={<EditOutlined />}
             onClick={() => getInfo(item, "UPDATE")}
           >
@@ -42,6 +43,7 @@ const CitizenshipsData = () => {
           <Button
             color="danger"
             variant="outlined"
+            size="small"
             icon={<DeleteOutlined />}
             onClick={() => getInfo(item, "DELETE")}
           >

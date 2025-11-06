@@ -1,5 +1,5 @@
 import { Button, Flex, Form, Input, Modal, Tabs } from "antd";
-import { useEffect, type SetStateAction } from "react";
+import { useEffect, useState, type SetStateAction } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -8,6 +8,7 @@ import { errorMessages } from "@/utils/is-error-message";
 import {
   useAllRoleTemplatesByIdQuery,
   useLazyAllRoleTemplatesQuery,
+  useLazyGetRolesNotInTemplateQuery,
   useUpdateRoleTemplateMutation,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
@@ -68,6 +69,10 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   const { data } = useAllRoleTemplatesByIdQuery(id);
   const [updateRoleTemplate] = useUpdateRoleTemplateMutation();
   const [triggerRoleTemplate] = useLazyAllRoleTemplatesQuery();
+  const [triggerRolesNotInTemplate, { data: unusedRoles }] =
+    useLazyGetRolesNotInTemplateQuery();
+
+  const [key, setKey] = useState<"connect" | "disconnect">("disconnect");
 
   const onCancel = () => {
     setOpen(false);
@@ -75,20 +80,9 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   };
 
   const usedRoles = data?.data?.roles ?? [];
-  const unusedRoles = roles
-    .map((item) => {
-      const currentTypeUsedRoles = usedRoles.find((t) => t.type === item.type);
-      if (!currentTypeUsedRoles) return item;
-      const filteredRoles = item.roles.filter(
-        (role) => !currentTypeUsedRoles.roles.some((r) => r.id === role.id)
-      );
-
-      return filteredRoles.length ? { ...item, roles: filteredRoles } : null;
-    })
-    .filter(Boolean);
 
   const tabItems: {
-    array: (RolesObj | null)[];
+    array: (RolesObj | undefined)[];
     name: "arrayConnect" | "arrayDisconnect";
     label: string;
     key: "connect" | "disconnect";
@@ -100,12 +94,18 @@ const UpdateRoleTemplate: React.FC<Props> = ({
       key: "disconnect",
     },
     {
-      array: unusedRoles,
+      array: unusedRoles?.data?.roles ?? [],
       name: "arrayConnect",
       label: "Добавить роль",
       key: "connect",
     },
   ];
+
+  useEffect(() => {
+    if (key === "connect") {
+      triggerRolesNotInTemplate(id);
+    }
+  }, [key]);
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -160,6 +160,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
 
           <Tabs
             defaultActiveKey="disconnect"
+            onChange={(key) => setKey(key as "disconnect" | "connect")}
             items={tabItems.map((item) => {
               return {
                 key: item.key,

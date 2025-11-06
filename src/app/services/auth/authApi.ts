@@ -34,13 +34,6 @@ export const authApi = api.injectEndpoints({
         method: METHODS.GET,
       }),
     }),
-
-    // refresh: builder.mutation<ApiResponse, void>({
-    //   query: () => ({
-    //     url: `/auth/refresh`,
-    //     method: METHODS.POST,
-    //   }),
-    // }),
   }),
 });
 

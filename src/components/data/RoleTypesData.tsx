@@ -23,6 +23,7 @@ const RoleTypesData = () => {
             variant="outlined"
             icon={<EditOutlined />}
             onClick={() => getInfo(item, "UPDATE")}
+            size="small"
           >
             изменить
           </Button>
@@ -31,6 +32,7 @@ const RoleTypesData = () => {
             variant="outlined"
             icon={<DeleteOutlined />}
             onClick={() => getInfo(item, "DELETE")}
+            size="small"
           >
             удалить
           </Button>
@@ -68,15 +70,15 @@ const RoleTypesData = () => {
       <DeleteRoleType
         isOpen={isOpen}
         setOpen={setOpen}
-        name={name}
+        name={name ?? ""}
         id={id}
         modalType={modalType}
       />
       <UpdateRoleType
         isOpen={isOpen}
         setOpen={setOpen}
-        name={name}
-        descriptions={descriptions as string}
+        name={name ?? ""}
+        descriptions={descriptions ?? ""}
         id={id}
         modalType={modalType}
         loading={isLoading}

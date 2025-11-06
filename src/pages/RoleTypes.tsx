@@ -1,27 +1,17 @@
 import RoleTypesData from "@/components/data/RoleTypesData";
-import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import AddRoleType from "@/components/modals/add/AddRoleType";
+import AddButton from "@/components/UI/buttons/AddButton";
 
 const RoleTypes = () => {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <div>
-      <div className="flex justify-end mb-10">
-        <Button
-          color="cyan"
-          variant="solid"
-          icon={<PlusOutlined />}
-          onClick={() => setOpen(true)}
-        >
-          Добавить
-        </Button>
-      </div>
+    <>
+      <AddButton onClick={() => setOpen(true)} text="Добавить" />
       <RoleTypesData />
       <AddRoleType isOpen={isOpen} setOpen={setOpen} />
-    </div>
+    </>
   );
 };
 

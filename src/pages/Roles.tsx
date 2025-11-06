@@ -1,9 +1,8 @@
 import RolesData from "@/components/data/RolesData";
-import { Button } from "antd";
 import { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import { useAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 import AddRole from "@/components/modals/add/AddRole";
+import AddButton from "@/components/UI/buttons/AddButton";
 
 const Roles = () => {
   const [page, setPage] = useState(1);
@@ -19,17 +18,8 @@ const Roles = () => {
   });
 
   return (
-    <div>
-      <div className="flex justify-end mb-10">
-        <Button
-          color="cyan"
-          variant="solid"
-          icon={<PlusOutlined />}
-          onClick={() => setOpen(true)}
-        >
-          Добавить
-        </Button>
-      </div>
+    <>
+      <AddButton onClick={() => setOpen(true)} text="Добавить" />
       <RolesData
         page={page}
         setPage={setPage}
@@ -44,7 +34,7 @@ const Roles = () => {
         setOpen={setOpen}
         roleTypes={roleTypes}
       />
-    </div>
+    </>
   );
 };
 

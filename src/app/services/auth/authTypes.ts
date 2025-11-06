@@ -10,5 +10,5 @@ export type Register = {
   fullName: string;
   arrayBlockedRoles?: string[];
   arrayAddRoles?: string[];
-  roleTemplatesId?: string
+  roleTemplatesId: string
 };

@@ -3,14 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import {
-  Button,
-  Flex,
-  Form,
-  Input,
-  Modal,
-  Select,
-} from "antd";
+import { Button, Flex, Form, Input, Modal, Select } from "antd";
 import {
   useGetSelectTeamplatesQuery,
   useLazyAllRoleTemplatesByIdQuery,
@@ -19,13 +12,6 @@ import {
 import { useEffect, useState } from "react";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useRegisterMutation } from "@/app/services/auth/authApi";
-
-type Props = {
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
-  limit: number;
-  page: number;
-};
 
 const schema = z.object({
   email: z.email("Некоректный email").nonempty("Обязательное поле"),
@@ -116,17 +102,16 @@ const RegisterUsers = () => {
       label: item.name,
     };
   });
-  const { callMessage } = useUiContext();
 
+  const { callMessage } = useUiContext();
   const [registerUser] = useRegisterMutation();
 
   const onSubmit = async (data: FormValues) => {
-    setRolesByTemplateId(null);
-    setShowButtonRules(false);
-
     try {
       const { message } = await registerUser(data).unwrap();
       callMessage.success(message);
+      setRolesByTemplateId(null);
+      setShowButtonRules(false);
     } catch (err) {
       callMessage.error(errorMessages(err));
     } finally {
@@ -199,7 +184,6 @@ const RegisterUsers = () => {
                     .localeCompare((optionB?.label ?? "").toLowerCase())
                 }
                 options={roleTemplates}
-                value={rolesByTemplateId}
                 onChange={(value) => {
                   onTemplateIdChange(value);
                   field.onChange(value);
@@ -243,40 +227,34 @@ const RegisterUsers = () => {
         </Form.Item>
       </Flex>
 
-      <Form.Item label={null}>
-        {typeModal === "DELETE" && isModalOpen && (
-          <Modal
-            title="Выберите права для ограничения"
-            closable={{ "aria-label": "Custom Close Button" }}
-            open={isModalOpen}
-            footer={null}
-            onCancel={onCancel}
-            loading={isLoadRoles}
-          >
+      {isModalOpen && (
+        <Modal
+          title={
+            typeModal === "DELETE"
+              ? "Выберите права для ограничения"
+              : "Добавить новые права"
+          }
+          closable={{ "aria-label": "Custom Close Button" }}
+          open={isModalOpen}
+          footer={null}
+          onCancel={onCancel}
+          loading={typeModal === "DELETE" ? isLoadRoles : isLoadUnsedRoles}
+        >
+          <Form.Item label={null}>
             <CheckboxRolesGroupContoller
-              name="arrayBlockedRoles"
+              name={
+                typeModal === "DELETE" ? "arrayBlockedRoles" : "arrayAddRoles"
+              }
               control={control}
-              roles={usedRoles?.data?.roles ?? []}
+              roles={
+                typeModal === "DELETE"
+                  ? usedRoles?.data?.roles ?? []
+                  : unsedRoles?.data?.roles ?? []
+              }
             />
-          </Modal>
-        )}
-        {typeModal === "ADD" && isModalOpen && (
-          <Modal
-            title="Добавить новые права"
-            closable={{ "aria-label": "Custom Close Button" }}
-            open={isModalOpen}
-            footer={null}
-            onCancel={onCancel}
-            loading={isLoadUnsedRoles}
-          >
-            <CheckboxRolesGroupContoller
-              name="arrayAddRoles"
-              control={control}
-              roles={unsedRoles?.data?.roles ?? []}
-            />
-          </Modal>
-        )}
-      </Form.Item>
+          </Form.Item>
+        </Modal>
+      )}
     </Form>
   );
 };

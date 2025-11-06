@@ -36,6 +36,7 @@ const LanguagesData = () => {
             variant="outlined"
             icon={<EditOutlined />}
             onClick={() => getInfo(item, "UPDATE")}
+            size="small"
           >
             изменить
           </Button>
@@ -44,6 +45,7 @@ const LanguagesData = () => {
             variant="outlined"
             icon={<DeleteOutlined />}
             onClick={() => getInfo(item, "DELETE")}
+            size="small"
           >
             удалить
           </Button>

@@ -32,6 +32,7 @@ const RoleTemplatesData: React.FC<Props> = ({
             variant="outlined"
             icon={<EditOutlined />}
             onClick={() => getInfo(item, "UPDATE")}
+            size="small"
           >
             изменить
           </Button>
@@ -40,6 +41,7 @@ const RoleTemplatesData: React.FC<Props> = ({
             variant="outlined"
             icon={<DeleteOutlined />}
             onClick={() => getInfo(item, "DELETE")}
+            size="small"
           >
             удалить
           </Button>
@@ -74,7 +76,7 @@ const RoleTemplatesData: React.FC<Props> = ({
       <DeleteRoleTemplate
         isOpen={isOpen}
         setOpen={setOpen}
-        name={name as string}
+        name={name ?? ""}
         id={id}
         modalType={modalType}
       />
@@ -83,7 +85,7 @@ const RoleTemplatesData: React.FC<Props> = ({
         <UpdateRoleTemplate
           isOpen={isOpen}
           setOpen={setOpen}
-          name={name as string}
+          name={name ?? ""}
           id={id}
           modalType={modalType}
           roleTypes={[]}

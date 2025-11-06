@@ -2,8 +2,8 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type {
-  AllRoleTemplates,
   RolesObj,
+  Templates,
   UpdateRoleTemplates,
 } from "./roleTemplatesTypes";
 
@@ -35,7 +35,10 @@ export const roleTemplatesApi = api.injectEndpoints({
       }),
     }),
 
-    allRoleTemplates: builder.query<ApiResponse<AllRoleTemplates>, void>({
+    allRoleTemplates: builder.query<
+      ApiResponse<{ templates: Templates[] }>,
+      void
+    >({
       query: () => ({
         url: `/role-templates/all`,
         method: METHODS.GET,

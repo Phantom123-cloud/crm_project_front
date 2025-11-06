@@ -11,8 +11,8 @@ const Citizenships = () => {
     <div>
       <div className="flex justify-end mb-10">
         <Button
-          color="cyan"
-          variant="solid"
+          color="green"
+          variant="outlined"
           icon={<PlusOutlined />}
           onClick={() => setOpen(true)}
         >

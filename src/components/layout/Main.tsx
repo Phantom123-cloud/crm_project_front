@@ -17,7 +17,6 @@ import {
   useLazyGetMeQuery,
   useLogoutMeMutation,
 } from "@/app/services/auth/authApi";
-import { errorMessages } from "@/utils/is-error-message";
 const { Header, Sider, Content } = Layout;
 
 const Main = () => {
