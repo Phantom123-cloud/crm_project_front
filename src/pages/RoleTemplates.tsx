@@ -1,9 +1,7 @@
 import RoleTemplatesData from "@/components/data/RoleTemplatesData";
 import { useState } from "react";
 import AddRoleTemplate from "@/components/modals/add/AddRoleTemplate";
-import {
-  useAllRoleTemplatesQuery,
-} from "@/app/services/role-templates/roleTemplatesApi";
+import { useAllRoleTemplatesQuery } from "@/app/services/role-templates/roleTemplatesApi";
 import AddButton from "@/components/UI/buttons/AddButton";
 
 const RoleTemplates = () => {
@@ -15,11 +13,7 @@ const RoleTemplates = () => {
     <>
       <AddButton onClick={() => setOpen(true)} text="Добавить" />
       <RoleTemplatesData templates={templates} isLoading={isLoading} />
-      <AddRoleTemplate
-        isOpen={isOpen}
-        setOpen={setOpen}
-        // roles={data?.data?.roles ?? []}
-      />
+      <AddRoleTemplate isOpen={isOpen} setOpen={setOpen} />
     </>
   );
 };
