@@ -2,23 +2,15 @@ import { Table, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
-import type {
-  RolesObj,
-  Templates,
-} from "@/app/services/role-templates/roleTemplatesTypes";
-import DeleteRoleTemplate from "../modals/delete/DeleteRoleRoleTemplate";
+import type { Templates } from "@/app/services/role-templates/roleTemplatesTypes";
+import DeleteRoleTemplate from "../modals/delete/DeleteRoleTemplate";
 import UpdateRoleTemplate from "../modals/update/UpdateRoleTemplate";
 
 type Props = {
   templates: Templates[];
-  roles: RolesObj[];
   isLoading: boolean;
 };
-const RoleTemplatesData: React.FC<Props> = ({
-  templates,
-  isLoading,
-  roles,
-}) => {
+const RoleTemplatesData: React.FC<Props> = ({ templates, isLoading }) => {
   const [isOpen, setOpen] = useState(false);
   const { getInfo, itemInfo } = useGetRoleModalsInfo(setOpen);
   const dataSource = (templates ?? []).map((item) => {
@@ -89,7 +81,6 @@ const RoleTemplatesData: React.FC<Props> = ({
           id={id}
           modalType={modalType}
           roleTypes={[]}
-          roles={roles}
           loading={isLoading}
         />
       )}

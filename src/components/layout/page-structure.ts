@@ -12,15 +12,15 @@ export const pageStructure = [
     Icon: LockOutlined,
     children: [
       {
-        label: "типы",
+        label: "Типы",
         path: "role-types",
       },
       {
-        label: "роли",
+        label: "Роли",
         path: "roles",
       },
       {
-        label: "шаблоны",
+        label: "Шаблоны",
         path: "role-templates",
       },
     ],
@@ -31,11 +31,11 @@ export const pageStructure = [
     Icon: TeamOutlined,
     children: [
       {
-        label: "пользователи",
+        label: "Пользователи",
         path: "users",
       },
       {
-        label: "сотрудники",
+        label: "Сотрудники",
         path: "employees",
       },
     ],

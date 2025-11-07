@@ -12,7 +12,6 @@ import {
   useUpdateRoleTemplateMutation,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
-import RolesCheckboxGroup from "@/components/RolesCheckboxGroup";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 
 type Props = {
@@ -25,7 +24,6 @@ type Props = {
     value: string;
     label: string;
   }[];
-  roles: RolesObj[];
   loading: boolean;
 };
 
@@ -47,7 +45,6 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   id,
   name,
   modalType,
-  roles,
   loading,
 }) => {
   const {

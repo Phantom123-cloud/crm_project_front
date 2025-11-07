@@ -2,6 +2,7 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type {
+  AllRoleTemplates,
   RolesObj,
   Templates,
   UpdateRoleTemplates,
@@ -34,13 +35,19 @@ export const roleTemplatesApi = api.injectEndpoints({
         body: { arrayConnect, arrayDisconnect, name },
       }),
     }),
-
     allRoleTemplates: builder.query<
       ApiResponse<{ templates: Templates[] }>,
       void
     >({
       query: () => ({
         url: `/role-templates/all`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    allRolesByType: builder.query<ApiResponse<{ roles: RolesObj[] }>, void>({
+      query: () => ({
+        url: `/role-templates/all-roles`,
         method: METHODS.GET,
       }),
     }),
@@ -107,4 +114,6 @@ export const {
   useLazyGetSelectTeamplatesQuery,
   useGetRolesNotInTemplateQuery,
   useLazyGetRolesNotInTemplateQuery,
+  useAllRolesByTypeQuery,
+  useLazyAllRolesByTypeQuery,
 } = roleTemplatesApi;

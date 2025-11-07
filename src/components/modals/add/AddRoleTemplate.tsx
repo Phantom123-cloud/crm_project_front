@@ -1,4 +1,4 @@
-import { Button, Checkbox, Divider, Flex, Form, Input, Modal } from "antd";
+import { Button, Flex, Form, Input, Modal } from "antd";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -6,15 +6,15 @@ import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import {
   useCreateRoleTemplateMutation,
+  useLazyAllRolesByTypeQuery,
   useLazyAllRoleTemplatesQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
-import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
+import { useEffect } from "react";
 
 type Props = {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
-  roles: RolesObj[];
 };
 const schema = z.object({
   name: z
@@ -27,7 +27,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, roles }) => {
+const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen }) => {
   const {
     handleSubmit,
     control,
@@ -45,6 +45,8 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, roles }) => {
 
   const [createRoleTemplate] = useCreateRoleTemplateMutation();
   const [triggerRoleTemplates] = useLazyAllRoleTemplatesQuery();
+  const [triggerAllRolesByType, { data: rolesData }] =
+    useLazyAllRolesByTypeQuery();
 
   const onCancel = () => {
     setOpen(false);
@@ -62,6 +64,12 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, roles }) => {
       onCancel();
     }
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      triggerAllRolesByType();
+    }
+  }, [isOpen]);
   return (
     <Modal
       title="Добавить новый шаблон"
@@ -91,7 +99,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, roles }) => {
           <CheckboxRolesGroupContoller
             name="array"
             control={control}
-            roles={roles}
+            roles={rolesData?.data?.roles ?? []}
           />
         </Form.Item>
 
