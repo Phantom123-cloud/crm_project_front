@@ -17,6 +17,8 @@ import {
   useLazyGetMeQuery,
   useLogoutMeMutation,
 } from "@/app/services/auth/authApi";
+import { useSelector } from "react-redux";
+import { authState } from "@/app/features/authSlice";
 const { Header, Sider, Content } = Layout;
 
 const Main = () => {
@@ -73,10 +75,13 @@ const Main = () => {
       navigate("/login");
     }
   };
+
+  const { meData } = useSelector(authState);
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
+
         <Menu theme="dark" mode="inline" items={items} />
       </Sider>
       <Layout>
@@ -84,11 +89,14 @@ const Main = () => {
           style={{ background: colorBgContainer, padding: `0 10px` }}
           className="flex justify-between items-center"
         >
-          <UiButton
-            onClick={handleCollapse}
-            Icon={collapsed ? MenuUnfoldOutlined : MenuFoldOutlined}
-            text={"меню"}
-          />
+          <div className="flex items-center">
+            <UiButton
+              onClick={handleCollapse}
+              Icon={collapsed ? MenuUnfoldOutlined : MenuFoldOutlined}
+              text={"меню"}
+            />
+            <span>{meData?.email}</span>
+          </div>
           <div className="">
             <UiButton
               onClick={handleToggleTheme}

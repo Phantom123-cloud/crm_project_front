@@ -2,7 +2,6 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type {
-  AllRoleTemplates,
   RolesObj,
   Templates,
   UpdateRoleTemplates,

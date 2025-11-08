@@ -16,7 +16,7 @@ export type Templates = {
   name: string;
 };
 
-export type AllRoleTemplates = { roles: RolesObj[]; templates: Templates[] };
+// export type AllRoleTemplates = { roles: RolesObj[]; templates: Templates[] };
 
 export type UpdateRoleTemplates = {
   id: string;

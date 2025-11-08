@@ -26,19 +26,9 @@ export const pageStructure = [
     ],
   },
   {
-    label: "Люди",
-    path: null,
+    label: "Пользователи",
+    path: "users",
     Icon: TeamOutlined,
-    children: [
-      {
-        label: "Пользователи",
-        path: "users",
-      },
-      {
-        label: "Сотрудники",
-        path: "employees",
-      },
-    ],
   },
   { label: "Страны", path: "citizenships", Icon: GlobalOutlined },
   { label: "Языки", path: "languages", Icon: FontColorsOutlined },

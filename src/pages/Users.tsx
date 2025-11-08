@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import AddButton from "@/components/UI/buttons/AddButton";
-import UsersData from "@/components/data/UsersData";
+import UsersData from "@/components/data/UsersData/UsersData";
 
 const Users = () => {
   const navigate = useNavigate();

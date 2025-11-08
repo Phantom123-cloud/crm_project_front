@@ -2,6 +2,7 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type { Login, Register } from "./authTypes";
+import type { RolesObj } from "../role-templates/roleTemplatesTypes";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,7 +29,13 @@ export const authApi = api.injectEndpoints({
       }),
     }),
 
-    getMe: builder.query<ApiResponse<string[]>, void>({
+    getMe: builder.query<
+      ApiResponse<{
+        roles: RolesObj[];
+        meData: { id: string; email: string; fullName: string };
+      }>,
+      void
+    >({
       query: () => ({
         url: `/auth/me`,
         method: METHODS.GET,
@@ -44,3 +51,14 @@ export const {
   useLazyGetMeQuery,
   useRegisterMutation,
 } = authApi;
+
+//  roles: {
+//         id: string;
+//         type: string;
+//         descriptions: string;
+//         roles: {
+//             name: string;
+//             descriptions: string;
+//             id: string;
+//         }[];
+//     }[];

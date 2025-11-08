@@ -14,6 +14,7 @@ import Citizenships from "./pages/Citizenships.tsx";
 import Languages from "./pages/Languages.tsx";
 import Users from "./pages/Users.tsx";
 import RegisterUsers from "./pages/RegisterUsers.tsx";
+import User from "./pages/User.tsx";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
             element: <Users />,
             children: [{ path: "register", element: <RegisterUsers /> }],
           },
+          { path: "user/:id", element: <User /> },
         ],
       },
     ],

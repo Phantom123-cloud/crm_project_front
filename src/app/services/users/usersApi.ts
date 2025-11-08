@@ -1,7 +1,7 @@
 import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
-import type { UsersData } from "./usersType";
+import type { User, UsersData } from "./usersType";
 
 export const usersApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -56,9 +56,15 @@ export const usersApi = api.injectEndpoints({
 
     allUsers: builder.query<
       ApiResponse<UsersData>,
-      { page: number; limit: number; isActive?: boolean; isOnline?: boolean }
+      {
+        page: number;
+        limit: number;
+        isFullData: boolean;
+        isActive?: boolean;
+        isOnline?: boolean;
+      }
     >({
-      query: ({ page, limit, isActive, isOnline }) => ({
+      query: ({ page, limit, isActive, isOnline, isFullData }) => ({
         url: `/users/all`,
         method: METHODS.GET,
         params: {
@@ -66,7 +72,14 @@ export const usersApi = api.injectEndpoints({
           limit,
           isActive,
           isOnline,
+          isFullData,
         },
+      }),
+    }),
+    userById: builder.query<ApiResponse<{ user: User }>, string>({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: METHODS.GET,
       }),
     }),
   }),
@@ -77,4 +90,6 @@ export const {
   useLazyAllUsersQuery,
   useLogoutByUserIdMutation,
   useIsActiveUserMutation,
+  useUserByIdQuery,
+  useLazyUserByIdQuery,
 } = usersApi;

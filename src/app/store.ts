@@ -4,12 +4,12 @@ import {
   type ThunkAction,
 } from "@reduxjs/toolkit";
 import { api } from "./services/api";
-import roles from "./features/rolesSlice";
+import auth from "./features/authSlice";
 
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
-    roles,
+    auth,
   },
 
   middleware: (getDefaultMiddleware) => {
