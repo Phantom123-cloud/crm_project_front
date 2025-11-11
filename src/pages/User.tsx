@@ -1,11 +1,7 @@
-import { useUserByIdQuery } from "@/app/services/users/usersApi";
-import { useParams } from "react-router-dom";
+import UserData from "@/components/data/UserData";
 
 const User = () => {
-  const { id } = useParams();
-  const { data } = useUserByIdQuery(id as string);
-
-  return <div></div>;
+  return <UserData />;
 };
 
 export default User;

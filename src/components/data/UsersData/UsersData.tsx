@@ -6,12 +6,15 @@ import {
 } from "@/app/services/users/usersApi";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { Button, Flex, Segmented, Select, Table, Tag } from "antd";
+import { Flex, Segmented, Select, Table } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { columnsData } from "./utils";
+import { columnsData } from "./columns";
 import { useChangeUserDataSelect } from "@/hooks/useChangeUserDataSelect";
+import ActionsButton from "../../UI/buttons/ActionsButton";
+import TagBoolean from "../../UI/TagBoolean";
+import { isDate } from "@/utils/is-date";
 
 const UsersData = () => {
   const [isFullData, setIsFullData] = useState<boolean>(() => {
@@ -40,6 +43,7 @@ const UsersData = () => {
   };
   const dataSource = (data?.data?.users ?? []).map((item) => {
     const isMe = meData?.id === item.id;
+    const employeeData = item.employee;
 
     return {
       key: item.id,
@@ -50,46 +54,69 @@ const UsersData = () => {
           <span className="text-red-700">{isMe ? "(Я)" : ""}</span>
         </Flex>
       ),
-      createdAt: new Date(item.createdAt).toLocaleDateString(),
-      isActive: (
-        <Tag color={item.isActive ? "green" : "volcano"}>
-          {item.isActive ? "Да" : "Нет"}
-        </Tag>
-      ),
+      createdAt: isDate(item.createdAt),
 
-      isOnline: (
-        <Tag color={item.isOnline ? "green" : "volcano"}>
-          {item.isOnline ? "Да" : "Нет"}
-        </Tag>
-      ),
+      ...(employeeData && {
+        tradingСode: employeeData.tradingСode ?? "-",
+        birthDate: isDate(employeeData.birthDate),
+
+        phones: (
+          <div className="grid">
+            {employeeData.phones.map((phone) => (
+              <div className="whitespace-nowrap text-[12px]">
+                {phone.number}-{phone.option}
+              </div>
+            ))}
+          </div>
+        ),
+
+        dateFirstTrip: isDate(employeeData.dateFirstTrip),
+
+        isHaveChildren: <TagBoolean isBool={employeeData.isHaveChildren} />,
+        isHaveDriverLicense: (
+          <TagBoolean isBool={employeeData.isHaveDriverLicense} />
+        ),
+
+        drivingExperience: employeeData.drivingExperience,
+        isHaveInterPassport: (
+          <TagBoolean isBool={employeeData.isHaveInterPassport} />
+        ),
+        isInMarriage: <TagBoolean isBool={employeeData.isInMarriage} />,
+
+        citizenships: (
+          <div className="grid">
+            {employeeData.citizenships.map((citizen) => (
+              <div className="whitespace-nowrap">{citizen.localeRu}</div>
+            ))}
+          </div>
+        ),
+        foreignLanguages: (
+          <div className="grid">
+            {employeeData.foreignLanguages.map((l) => (
+              <div className="whitespace-nowrap">
+                {`${l.language.localeRu}-${l.level}`}
+              </div>
+            ))}
+          </div>
+        ),
+      }),
+
+      isActive: <TagBoolean isBool={item.isActive} />,
+      isOnline: <TagBoolean isBool={item.isOnline} />,
       actions: (
-        <div className="flex gap-5">
-          <Button
-            color="default"
-            variant="outlined"
-            size="small"
-            disabled={!item.isActive || isMe}
-            onClick={() => {
-              onActions(item.id, "logout");
-            }}
-          >
-            выйти
-          </Button>
-          <Button
-            color={item.isActive ? "danger" : "green"}
-            variant="outlined"
-            size="small"
-            disabled={isMe}
-            onClick={() => {
-              onActions(item.id, "active");
-            }}
-          >
-            {item.isActive ? "забло-ть" : "актив-ть"}
-          </Button>
-        </div>
+        <ActionsButton
+          disabledLogout={!item.isActive || isMe}
+          disabledActions={isMe}
+          onClickLogout={() => {
+            onActions(item.id, "logout");
+          }}
+          onClickActions={() => onActions(item.id, "active")}
+          isActive={item.isActive}
+        />
       ),
     };
   });
+
   const columns = columnsData(isFullData);
   const selectOptions = [
     { value: "all", label: "все" },

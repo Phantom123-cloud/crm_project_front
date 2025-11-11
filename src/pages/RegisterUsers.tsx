@@ -14,7 +14,7 @@ import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContolle
 import { useRegisterMutation } from "@/app/services/auth/authApi";
 
 const schema = z.object({
-  email: z.email("Некоректный email").nonempty("Обязательное поле"),
+  email: z.email("Некоректный email"),
 
   password: z
     .string()
@@ -120,8 +120,8 @@ const RegisterUsers = () => {
   };
   return (
     <Form
-      labelCol={{ span: 2 }}
       name="basic"
+      layout="vertical"
       onFinish={handleSubmit(onSubmit)}
       autoComplete="off"
     >

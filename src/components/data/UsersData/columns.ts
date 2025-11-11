@@ -33,6 +33,7 @@ export const columnsData = (isFullData: boolean) => {
             dataIndex: "phones",
             key: "phones",
           },
+
           {
             title: "Дата первого выезда",
             dataIndex: "dateFirstTrip",

@@ -10,9 +10,9 @@ export type User = {
 
 export type Employee = {
   birthDate: string | null;
-  notes: string | null;
   phones: { number: string; option: PhoneSelection }[];
   dateFirstTrip: string | null;
+  notes: string | null;
   isHaveChildren: boolean;
   isHaveDriverLicense: boolean;
   isHaveInterPassport: boolean;
