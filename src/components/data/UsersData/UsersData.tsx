@@ -50,7 +50,7 @@ const UsersData = () => {
       email: <Link to={`/user/${item.id}`}>{item.email}</Link>,
       fullName: (
         <Flex gap={isMe ? 5 : 0}>
-          {item.fullName}
+          {employeeData?.fullName}
           <span className="text-red-700">{isMe ? "(Я)" : ""}</span>
         </Flex>
       ),
@@ -90,6 +90,8 @@ const UsersData = () => {
             ))}
           </div>
         ),
+        registrationAddress: employeeData.registrationAddress ?? "-",
+        actualAddress: employeeData.actualAddress ?? "-",
         foreignLanguages: (
           <div className="grid">
             {employeeData.foreignLanguages.map((l) => (

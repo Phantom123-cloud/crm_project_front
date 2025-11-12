@@ -70,6 +70,16 @@ export const columnsData = (isFullData: boolean) => {
             key: "citizenships",
           },
           {
+            title: "Адрес прописки",
+            dataIndex: "registrationAddress",
+            key: "registrationAddress",
+          },
+          {
+            title: "Адрес проживания",
+            dataIndex: "actualAddress",
+            key: "actualAddress",
+          },
+          {
             title: "Ин-ные языки",
             dataIndex: "foreignLanguages",
             key: "foreignLanguages",

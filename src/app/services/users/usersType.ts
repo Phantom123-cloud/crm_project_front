@@ -1,7 +1,6 @@
 export type User = {
   id: string;
   email: string;
-  fullName: string;
   createdAt: Date;
   isActive: boolean;
   isOnline: boolean;
@@ -10,19 +9,28 @@ export type User = {
 
 export type Employee = {
   birthDate: string | null;
+  fullName: string;
   notes: string | null;
+  registrationAddress: string | null;
+  actualAddress: string | null;
   phones: { number: string; option: PhoneSelection }[];
   dateFirstTrip: string | null;
   isHaveChildren: boolean;
   isHaveDriverLicense: boolean;
   isHaveInterPassport: boolean;
   isInMarriage: boolean;
-  citizenships: { code: string; localeRu: string; localeEn: string }[];
+  citizenships: {
+    id: string;
+    code: string;
+    localeRu: string;
+    localeEn: string;
+  }[];
   tradingСode: string | null;
-  drivingExperience: number;
+  drivingExperience: string;
   foreignLanguages: {
     level: LanguageLevel;
     language: {
+      id: string;
       localeRu: string;
       localeEn: string;
     };

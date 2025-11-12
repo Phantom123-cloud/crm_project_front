@@ -14,6 +14,22 @@ export const authApi = api.injectEndpoints({
       }),
     }),
 
+    updateAccountCredentials: builder.mutation<
+      ApiResponse,
+      {
+        oldPassword?: string;
+        newPassword?: string;
+        email?: string;
+        userId: string;
+      }
+    >({
+      query: ({ oldPassword, newPassword, email, userId }) => ({
+        url: `/auth/update-account-credentials/${userId}`,
+        method: METHODS.PUT,
+        body: { oldPassword, newPassword, email },
+      }),
+    }),
+
     login: builder.mutation<ApiResponse, Login>({
       query: (body) => ({
         url: `/auth/login`,
@@ -50,15 +66,5 @@ export const {
   useLogoutMeMutation,
   useLazyGetMeQuery,
   useRegisterMutation,
+  useUpdateAccountCredentialsMutation,
 } = authApi;
-
-//  roles: {
-//         id: string;
-//         type: string;
-//         descriptions: string;
-//         roles: {
-//             name: string;
-//             descriptions: string;
-//             id: string;
-//         }[];
-//     }[];

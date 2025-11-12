@@ -1,30 +1,57 @@
 import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
+import type {
+  UpdateEmployeeForm,
+  UpdateEmployeePassport,
+} from "./employeesType";
 
 export const employeesApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // logoutByUserId: builder.mutation<ApiResponse, string>({
-    //   query: (id) => ({
-    //     url: `/users/logout-user/${id}`,
-    //     method: METHODS.POST,
-    //   }),
-    // }),
-
-    updateEmployees: builder.mutation<
+    updateEmployeeForm: builder.mutation<
       ApiResponse,
       {
-        formData: FormData;
+        body: Partial<UpdateEmployeeForm>;
         id: string;
       }
     >({
-      query: ({ id, formData }) => ({
-        url: `/employees/update/${id}`,
+      query: ({ id, body }) => ({
+        url: `/employees/update-form/${id}`,
         method: METHODS.PUT,
-        body: formData,
+        body,
+      }),
+    }),
+    updateEmployeePassport: builder.mutation<
+      ApiResponse,
+      {
+        body: Partial<UpdateEmployeePassport>;
+        id: string;
+      }
+    >({
+      query: ({ id, body }) => ({
+        url: `/employees/update-passport/${id}`,
+        method: METHODS.PUT,
+        body,
+      }),
+    }),
+    disconnectCitizenship: builder.mutation<
+      ApiResponse,
+      {
+        citizenshipId: string;
+        userId: string;
+      }
+    >({
+      query: ({ citizenshipId, userId }) => ({
+        url: `/employees/disconnect-citizenship`,
+        method: METHODS.PATCH,
+        params: { citizenshipId, userId },
       }),
     }),
   }),
 });
 
-export const { useUpdateEmployeesMutation } = employeesApi;
+export const {
+  useUpdateEmployeeFormMutation,
+  useUpdateEmployeePassportMutation,
+  useDisconnectCitizenshipMutation,
+} = employeesApi;

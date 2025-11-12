@@ -1,50 +1,38 @@
-import { useUpdateEmployeesMutation } from "@/app/services/employees/employeesApi";
-import {
-  useLazyUserByIdQuery,
-  useUserByIdQuery,
-} from "@/app/services/users/usersApi";
+import { useUpdateEmployeeFormMutation } from "@/app/services/employees/employeesApi";
+import { useLazyUserByIdQuery } from "@/app/services/users/usersApi";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Form, Input, Select, Upload, type UploadFile } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { useEffect } from "react";
-import { UploadOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import type { Employee } from "@/app/services/users/usersType";
 
 const schema = z.object({
-  email: z.email("Некоректный email"),
-  fullName: z.string(),
   notes: z.string(),
   tradingСode: z.string(),
-  birthDate: z.string(),
   dateFirstTrip: z.string(),
   isInMarriage: z.boolean(),
   isHaveChildren: z.boolean(),
   isHaveDriverLicense: z.boolean(),
-  drivingExperience: z.int(),
+  drivingExperience: z.string(),
   isHaveInterPassport: z.boolean(),
-  files: z.array(z.file()).max(10),
 });
 
 type FormValues = z.infer<typeof schema>;
+type KeyValue = keyof FormValues;
 
-const convertToUploadFile = (file: File): UploadFile => ({
-  uid: file.name + "-" + file.lastModified,
-  name: file.name,
-  status: "done",
-  //   originFileObj: file,
-});
+type Props = {
+  employee?: Employee;
+  userId: string;
+};
 
-const UserData = () => {
-  const { id } = useParams();
-  const { data, isLoading } = useUserByIdQuery(id as string);
+const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
   const [triggerUserData] = useLazyUserByIdQuery();
-  const [updateEmployee] = useUpdateEmployeesMutation();
+  const [updateEmployee] = useUpdateEmployeeFormMutation();
   const { callMessage } = useUiContext();
-  const userData = data?.data?.user;
 
   const {
     handleSubmit,
@@ -53,16 +41,11 @@ const UserData = () => {
     reset,
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      files: [],
-    },
   });
 
   useEffect(() => {
-    if (data && data.data && data.data.user.employee) {
-      const { employee, email, fullName } = data.data.user;
+    if (employee) {
       const {
-        birthDate,
         tradingСode,
         dateFirstTrip,
         isInMarriage,
@@ -73,9 +56,6 @@ const UserData = () => {
         notes,
       } = employee;
       reset({
-        email,
-        fullName,
-        birthDate: birthDate ?? "",
         tradingСode: tradingСode ?? "",
         dateFirstTrip: dateFirstTrip ?? "",
         isInMarriage,
@@ -84,30 +64,31 @@ const UserData = () => {
         drivingExperience,
         isHaveInterPassport,
         notes: notes ?? "",
-        // passports: [],
       });
     }
-  }, [data, reset]);
+  }, [employee, reset]);
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (formData: Partial<FormValues>) => {
     try {
-      const formData = new FormData();
-
-      if (data.files && data.files.length) {
-        data.files.forEach((file) => {
-          formData.append("files", file);
-        });
+      if (employee) {
+        for (const key in formData) {
+          const keyType = key as KeyValue;
+          if (formData[keyType] === employee[keyType]) {
+            delete formData[keyType];
+          }
+        }
       }
 
-      const userId = id as string;
       const { message } = await updateEmployee({
-        formData,
+        body: formData,
         id: userId,
       }).unwrap();
       await triggerUserData(userId).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
+    } finally {
+      reset();
     }
   };
   return (
@@ -117,40 +98,6 @@ const UserData = () => {
       autoComplete="off"
       layout="vertical"
     >
-      <Form.Item
-        label="Фамилия Имя Отчество"
-        style={{ textAlign: "start" }}
-        validateStatus={errors.fullName ? "error" : ""}
-        help={errors.fullName?.message}
-      >
-        <Controller
-          name="fullName"
-          control={control}
-          render={({ field }) => <Input {...field} onChange={field.onChange} />}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Email"
-        validateStatus={errors.email ? "error" : ""}
-        help={errors.email?.message}
-      >
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => <Input type="email" {...field} />}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Дата рождения"
-        validateStatus={errors.birthDate ? "error" : ""}
-        help={errors.birthDate?.message}
-      >
-        <Controller
-          name="birthDate"
-          control={control}
-          render={({ field }) => <Input type="date" {...field} />}
-        />
-      </Form.Item>
       <Form.Item
         label="Код торгового"
         validateStatus={errors.tradingСode ? "error" : ""}
@@ -271,41 +218,6 @@ const UserData = () => {
           render={({ field }) => <TextArea {...field} rows={4} />}
         />
       </Form.Item>
-      <Form.Item
-        label="Документы"
-        validateStatus={errors.files ? "error" : ""}
-        help={errors.files?.message}
-      >
-        <Controller
-          name="files"
-          control={control}
-          render={({ field }) => {
-            const uploadFileList: UploadFile[] = (field.value || []).map(
-              convertToUploadFile
-            );
-
-            return (
-              <Upload
-                listType="picture"
-                maxCount={10}
-                multiple
-                fileList={uploadFileList}
-                beforeUpload={(file) => {
-                  field.onChange([...(field.value || []), file]);
-                  return false;
-                }}
-                onRemove={(file) => {
-                  field.onChange(
-                    (field.value || []).filter((f) => f.name !== file.name)
-                  );
-                }}
-              >
-                <Button icon={<UploadOutlined />}>Загрузить (Макс: 10)</Button>
-              </Upload>
-            );
-          }}
-        />
-      </Form.Item>
 
       <Form.Item label={null}>
         <Button
@@ -315,11 +227,11 @@ const UserData = () => {
           loading={isSubmitting}
           disabled={!isDirty}
         >
-          Отправить
+          Обновить данные
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default UserData;
+export default EmployeeForm;

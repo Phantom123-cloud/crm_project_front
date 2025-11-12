@@ -21,11 +21,6 @@ const schema = z.object({
     .nonempty("Обязательное поле")
     .min(5, "Минимальная длина - 5")
     .max(20, "Максимальная длина - 20"),
-  fullName: z
-    .string()
-    .nonempty("Обязательное поле")
-    .min(3, "Минимальная длина - 3")
-    .max(50, "Максимальная длина - 50"),
 
   roleTemplatesId: z.string().nonempty("Обязательное поле"),
   arrayBlockedRoles: array(z.string()).optional(),
@@ -43,7 +38,6 @@ const RegisterUsers = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      fullName: "",
       password: "",
       email: "",
       roleTemplatesId: "",
@@ -125,18 +119,6 @@ const RegisterUsers = () => {
       onFinish={handleSubmit(onSubmit)}
       autoComplete="off"
     >
-      <Form.Item
-        label="Имя"
-        validateStatus={errors.fullName ? "error" : ""}
-        help={errors.fullName?.message}
-        required={true}
-      >
-        <Controller
-          name="fullName"
-          control={control}
-          render={({ field }) => <Input {...field} />}
-        />
-      </Form.Item>
       <Form.Item
         label="Email"
         validateStatus={errors.email ? "error" : ""}

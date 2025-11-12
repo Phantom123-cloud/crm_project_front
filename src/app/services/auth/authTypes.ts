@@ -7,8 +7,13 @@ export type Login = {
 export type Register = {
   email: string;
   password: string;
-  fullName: string;
   arrayBlockedRoles?: string[];
   arrayAddRoles?: string[];
-  roleTemplatesId: string
+  roleTemplatesId: string;
+};
+
+export type UpdateAccountCredentialsDto = {
+  oldPassword: string;
+  newPassword: string;
+  email: string;
 };
