@@ -9,6 +9,8 @@ import { Button, Form, Input, Select } from "antd";
 import { useEffect } from "react";
 import TextArea from "antd/es/input/TextArea";
 import type { Employee } from "@/app/services/users/usersType";
+import { removeUnchangedFields } from "@/utils/removeUnchangedEmployeeItems";
+import EmployeeKnowledgeAndContacts from "../EmployeeKnowledgeAndContacts";
 
 const schema = z.object({
   notes: z.string(),
@@ -70,15 +72,7 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
 
   const onSubmit = async (formData: Partial<FormValues>) => {
     try {
-      if (employee) {
-        for (const key in formData) {
-          const keyType = key as KeyValue;
-          if (formData[keyType] === employee[keyType]) {
-            delete formData[keyType];
-          }
-        }
-      }
-
+      removeUnchangedFields<Employee, FormValues>(employee, formData);
       const { message } = await updateEmployee({
         body: formData,
         id: userId,
@@ -91,6 +85,14 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
       reset();
     }
   };
+
+  const yesOrNoData = [
+    { label: "В браке?", name: "isInMarriage" },
+    { label: "Есть дети?", name: "isHaveChildren" },
+    { label: "Загран паспорт?", name: "isHaveInterPassport" },
+    { label: "Водительские права?", name: "isHaveDriverLicense" },
+  ];
+
   return (
     <Form
       name="basic"
@@ -120,63 +122,30 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
           render={({ field }) => <Input type="date" {...field} />}
         />
       </Form.Item>
-      <Form.Item
-        label="В браке?"
-        validateStatus={errors.isInMarriage ? "error" : ""}
-        help={errors.isInMarriage?.message}
-      >
-        <Controller
-          name="isInMarriage"
-          control={control}
-          render={({ field }) => (
-            <Select
-              {...field}
-              options={[
-                { value: true, label: "Да" },
-                { value: false, label: "Нет" },
-              ]}
-            />
-          )}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Есть дети?"
-        validateStatus={errors.isHaveChildren ? "error" : ""}
-        help={errors.isHaveChildren?.message}
-      >
-        <Controller
-          name="isHaveChildren"
-          control={control}
-          render={({ field }) => (
-            <Select
-              {...field}
-              options={[
-                { value: true, label: "Да" },
-                { value: false, label: "Нет" },
-              ]}
-            />
-          )}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Водительские права?"
-        validateStatus={errors.isHaveDriverLicense ? "error" : ""}
-        help={errors.isHaveDriverLicense?.message}
-      >
-        <Controller
-          name="isHaveDriverLicense"
-          control={control}
-          render={({ field }) => (
-            <Select
-              {...field}
-              options={[
-                { value: true, label: "Да" },
-                { value: false, label: "Нет" },
-              ]}
-            />
-          )}
-        />
-      </Form.Item>
+
+      {yesOrNoData.map((item, index) => (
+        <Form.Item
+          key={index}
+          label={item.label}
+          validateStatus={errors[item.name as KeyValue] ? "error" : ""}
+          help={errors[item.name as KeyValue]?.message}
+        >
+          <Controller
+            name={item.name as KeyValue}
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={[
+                  { value: true, label: "Да" },
+                  { value: false, label: "Нет" },
+                ]}
+              />
+            )}
+          />
+        </Form.Item>
+      ))}
+
       <Form.Item
         label="Стаж вождения"
         validateStatus={errors.drivingExperience ? "error" : ""}
@@ -186,25 +155,6 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
           name="drivingExperience"
           control={control}
           render={({ field }) => <Input type="number" {...field} />}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Загран паспорт?"
-        validateStatus={errors.isHaveInterPassport ? "error" : ""}
-        help={errors.isHaveInterPassport?.message}
-      >
-        <Controller
-          name="isHaveInterPassport"
-          control={control}
-          render={({ field }) => (
-            <Select
-              {...field}
-              options={[
-                { value: true, label: "Да" },
-                { value: false, label: "Нет" },
-              ]}
-            />
-          )}
         />
       </Form.Item>
       <Form.Item
@@ -218,7 +168,6 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
           render={({ field }) => <TextArea {...field} rows={4} />}
         />
       </Form.Item>
-
       <Form.Item label={null}>
         <Button
           variant="solid"
@@ -230,6 +179,11 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
           Обновить данные
         </Button>
       </Form.Item>
+      <EmployeeKnowledgeAndContacts
+        userId={userId}
+        foreignLanguages={employee?.foreignLanguages ?? []}
+        phones={employee?.phones ?? []}
+      />
     </Form>
   );
 };

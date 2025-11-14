@@ -1,0 +1,163 @@
+import type {
+  LanguageLevel,
+  PhoneSelection,
+} from "@/app/services/users/usersType";
+import { Button, Divider } from "antd";
+import AddLanguageToEmployee from "./modals/add/AddLanguageToEmployee";
+import { useState } from "react";
+import AddContactNumber from "./modals/add/AddContactNumber";
+import {
+  useDeleteContactNumberToEmployeeMutation,
+  useDeleteLanguageToEmployeeMutation,
+} from "@/app/services/employees/employeesApi";
+import { useLazyUserByIdQuery } from "@/app/services/users/usersApi";
+import { useUiContext } from "@/UIContext";
+import { errorMessages } from "@/utils/is-error-message";
+import ColorTab from "./UI/ColorTabContactNumType";
+import ColorTabLanguagesLevel from "./UI/ColorTabLanguagesLevel";
+
+type Props = {
+  foreignLanguages: {
+    id: string;
+    level: LanguageLevel;
+    language: {
+      id: string;
+      localeRu: string;
+      localeEn: string;
+    };
+  }[];
+
+  phones: {
+    number: string;
+    option: PhoneSelection;
+    id: string;
+  }[];
+  userId: string;
+};
+
+const EmployeeKnowledgeAndContacts: React.FC<Props> = ({
+  foreignLanguages,
+  phones,
+  userId,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [typeModal, setTypeModal] = useState<"language" | "contact">(
+    "language"
+  );
+
+  const openModal = (typeModal: "language" | "contact") => {
+    setTypeModal(typeModal);
+    setIsOpen(true);
+  };
+
+  const [deleteContact] = useDeleteContactNumberToEmployeeMutation();
+  const [deleteLanguage] = useDeleteLanguageToEmployeeMutation();
+  const [triggerUserData] = useLazyUserByIdQuery();
+  const { callMessage } = useUiContext();
+
+  const deleteItem = async (id: string, type: "language" | "contact") => {
+    try {
+      const { message } = await (type === "contact"
+        ? deleteContact({
+            userId,
+            phoneId: id,
+          })
+        : deleteLanguage({
+            userId,
+            languageId: id,
+          })
+      ).unwrap();
+
+      await triggerUserData(userId).unwrap();
+      callMessage.success(message);
+    } catch (err) {
+      callMessage.error(errorMessages(err));
+    }
+  };
+
+  return (
+    <>
+      <Divider />
+      <div>
+        <strong>Владение иностранными языками</strong>
+        <div className="grid my-2 gap-3">
+          {foreignLanguages?.map((l) => (
+            <div
+              key={l.id}
+              className="flex items-center w-[300px] justify-between"
+            >
+              <span>{l.language.localeRu}</span>
+              <ColorTabLanguagesLevel level={l.level} />
+              <Button
+                type="primary"
+                danger
+                onClick={() => deleteItem(l.id, "language")}
+              >
+                удалить
+              </Button>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-end">
+          <Button
+            type="primary"
+            color="primary"
+            onClick={() => openModal("language")}
+          >
+            добавить
+          </Button>
+        </div>
+      </div>
+      <Divider variant="dashed" />
+
+      <div>
+        <strong>Контакты для связи</strong>
+        <div className="grid my-2 gap-3">
+          {phones?.map((phone) => (
+            <div
+              key={phone.id}
+              className="flex items-center max-w-[300px] justify-between"
+            >
+              <span>{phone.number}</span>
+              <ColorTab option={phone.option} />
+              <Button
+                type="primary"
+                danger
+                onClick={() => deleteItem(phone.id, "contact")}
+              >
+                удалить
+              </Button>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-end">
+          <Button
+            type="primary"
+            color="primary"
+            onClick={() => openModal("contact")}
+          >
+            добавить
+          </Button>
+        </div>
+
+        <AddLanguageToEmployee
+          isOpen={isOpen}
+          setOpen={setIsOpen}
+          userId={userId}
+          typeModal={typeModal}
+          currentLanguages={
+            foreignLanguages.map((item) => item.language.id) ?? []
+          }
+        />
+        <AddContactNumber
+          isOpen={isOpen}
+          setOpen={setIsOpen}
+          userId={userId}
+          typeModal={typeModal}
+        />
+      </div>
+    </>
+  );
+};
+
+export default EmployeeKnowledgeAndContacts;

@@ -6,7 +6,7 @@ import {
 } from "@/app/services/users/usersApi";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { Flex, Segmented, Select, Table } from "antd";
+import { Divider, Flex, Segmented, Select, Table } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -15,6 +15,8 @@ import { useChangeUserDataSelect } from "@/hooks/useChangeUserDataSelect";
 import ActionsButton from "../../UI/buttons/ActionsButton";
 import TagBoolean from "../../UI/TagBoolean";
 import { isDate } from "@/utils/is-date";
+import ColorTab from "@/components/UI/ColorTabContactNumType";
+import ColorTabLanguagesLevel from "@/components/UI/ColorTabLanguagesLevel";
 
 const UsersData = () => {
   const [isFullData, setIsFullData] = useState<boolean>(() => {
@@ -49,7 +51,7 @@ const UsersData = () => {
       key: item.id,
       email: <Link to={`/user/${item.id}`}>{item.email}</Link>,
       fullName: (
-        <Flex gap={isMe ? 5 : 0}>
+        <Flex gap={isMe ? 5 : 0} className="whitespace-nowrap">
           {employeeData?.fullName}
           <span className="text-red-700">{isMe ? "(Я)" : ""}</span>
         </Flex>
@@ -62,9 +64,12 @@ const UsersData = () => {
 
         phones: (
           <div className="grid">
-            {employeeData.phones.map((phone) => (
+            {employeeData.phones.map((phone, index) => (
               <div className="whitespace-nowrap text-[12px]">
-                {phone.number}-{phone.option}
+                {phone.number} - <ColorTab option={phone.option} />
+                {employeeData.phones.length > index + 1 && (
+                  <Divider variant="dashed" size="small" />
+                )}
               </div>
             ))}
           </div>
@@ -94,9 +99,12 @@ const UsersData = () => {
         actualAddress: employeeData.actualAddress ?? "-",
         foreignLanguages: (
           <div className="grid">
-            {employeeData.foreignLanguages.map((l) => (
+            {employeeData.foreignLanguages.map((l, index) => (
               <div className="whitespace-nowrap">
-                {`${l.language.localeRu}-${l.level}`}
+                {l.language.localeRu} <ColorTabLanguagesLevel level={l.level} />
+                {employeeData.foreignLanguages.length > index + 1 && (
+                  <Divider variant="dashed" size="small" />
+                )}
               </div>
             ))}
           </div>
@@ -158,22 +166,22 @@ const UsersData = () => {
           onChange={handleChangeSegmented}
         />
       </Flex>
-      <div className="min-w-full overflow-y-auto">
-        <Table
-          loading={isLoading}
-          dataSource={dataSource}
-          columns={columns}
-          pagination={{
-            pageSize: query.limit,
-            total: data?.data?.total ?? 1,
-            current: query.page,
-            onChange: (page, limit) => {
-              setQuery((prev) => ({ ...prev, page, limit }));
-            },
-            showSizeChanger: true,
-          }}
-        />
-      </div>
+      <Table
+        // bordered={true}
+        scroll={{ x: true }}
+        loading={isLoading}
+        dataSource={dataSource}
+        columns={columns}
+        pagination={{
+          pageSize: query.limit,
+          total: data?.data?.total ?? 1,
+          current: query.page,
+          onChange: (page, limit) => {
+            setQuery((prev) => ({ ...prev, page, limit }));
+          },
+          showSizeChanger: true,
+        }}
+      />
     </>
   );
 };

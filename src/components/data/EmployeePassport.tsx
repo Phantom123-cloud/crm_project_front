@@ -9,9 +9,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Divider, Form, Input, Select } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Employee } from "@/app/services/users/usersType";
-import { useAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
+import { useLazyAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
+import { removeUnchangedFields } from "@/utils/removeUnchangedEmployeeItems";
 
 const schema = z.object({
   fullName: z.string(),
@@ -22,8 +23,6 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
-type KeyValue = keyof FormValues;
-
 type Props = {
   employee?: Employee;
   userId: string;
@@ -31,10 +30,19 @@ type Props = {
 
 const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
   const [triggerUserData] = useLazyUserByIdQuery();
-  const { data, isLoading } = useAllCitizenshipsQuery();
+  const [triggerCitizenData, { data, isLoading }] =
+    useLazyAllCitizenshipsQuery();
+  const [isOpenSelect, setIsOpenSelect] = useState(false);
+
   const [updateEmployee] = useUpdateEmployeePassportMutation();
   const [disconnectCitizenshipById] = useDisconnectCitizenshipMutation();
   const { callMessage } = useUiContext();
+
+  useEffect(() => {
+    if (isOpenSelect) {
+      triggerCitizenData();
+    }
+  }, [isOpenSelect]);
 
   const {
     handleSubmit,
@@ -69,14 +77,7 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
 
   const onSubmit = async (formData: Partial<FormValues>) => {
     try {
-      if (employee) {
-        for (const key in formData) {
-          const keyType = key as KeyValue;
-          if (formData[keyType] === employee[keyType]) {
-            delete formData[keyType];
-          }
-        }
-      }
+      removeUnchangedFields<Employee, FormValues>(employee, formData);
 
       const { message } = await updateEmployee({
         body: formData,
@@ -104,6 +105,7 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
       reset();
     }
   };
+
   return (
     <Form
       name="basic"
@@ -198,6 +200,7 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
                   .toLowerCase()
                   .localeCompare((optionB?.label ?? "").toLowerCase())
               }
+              onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
               options={citizenshipsSelect}
               onChange={(checkedValues) => {
                 const citizenshipsIds = citizenshipsSelect.map((r) => r.value);

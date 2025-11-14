@@ -5,12 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import {
-  useCreateCitizenshipMutation,
-  useLazyAllCitizenshipsQuery,
-} from "@/app/services/citizenships/citizenshipsApi";
 import LanguagesForm from "@/components/forms/CitizenshipAndLanguagesForm";
-import { useCreateLanguageMutation, useLazyAllLanguagesQuery } from "@/app/services/languages/languagesApi";
+import {
+  useCreateLanguageMutation,
+  useLazyAllLanguagesQuery,
+} from "@/app/services/languages/languagesApi";
 
 type Props = {
   isOpen: boolean;

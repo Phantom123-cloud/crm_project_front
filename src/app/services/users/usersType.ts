@@ -13,7 +13,7 @@ export type Employee = {
   notes: string | null;
   registrationAddress: string | null;
   actualAddress: string | null;
-  phones: { number: string; option: PhoneSelection }[];
+  phones: { number: string; option: PhoneSelection; id: string }[];
   dateFirstTrip: string | null;
   isHaveChildren: boolean;
   isHaveDriverLicense: boolean;
@@ -29,6 +29,7 @@ export type Employee = {
   drivingExperience: string;
   foreignLanguages: {
     level: LanguageLevel;
+    id: string;
     language: {
       id: string;
       localeRu: string;
@@ -45,8 +46,8 @@ export type UsersData = {
   limit: number;
 };
 
-type PhoneSelection = "mobile" | "whatsapp" | "telegram";
-type LanguageLevel =
+export type PhoneSelection = "mobile" | "whatsapp" | "telegram";
+export type LanguageLevel =
   | "A1"
   | "A2"
   | "B1"

@@ -5,11 +5,7 @@ export const columnsData = (isFullData: boolean) => {
       dataIndex: "email",
       key: "email",
     },
-    {
-      title: "Имя",
-      dataIndex: "fullName",
-      key: "fullName",
-    },
+
     {
       title: "Создан",
       dataIndex: "createdAt",
@@ -18,6 +14,11 @@ export const columnsData = (isFullData: boolean) => {
 
     ...(isFullData
       ? [
+          {
+            title: "Имя",
+            dataIndex: "fullName",
+            key: "fullName",
+          },
           {
             title: "Код торгового",
             dataIndex: "tradingСode",
@@ -35,7 +36,7 @@ export const columnsData = (isFullData: boolean) => {
           },
 
           {
-            title: "Дата первого выезда",
+            title: "Первый выезд",
             dataIndex: "dateFirstTrip",
             key: "dateFirstTrip",
           },
@@ -45,7 +46,7 @@ export const columnsData = (isFullData: boolean) => {
             key: "isHaveChildren",
           },
           {
-            title: "Вод-ские права?",
+            title: "Вод. права?",
             dataIndex: "isHaveDriverLicense",
             key: "isHaveDriverLicense",
           },
@@ -80,7 +81,7 @@ export const columnsData = (isFullData: boolean) => {
             key: "actualAddress",
           },
           {
-            title: "Ин-ные языки",
+            title: "Языки",
             dataIndex: "foreignLanguages",
             key: "foreignLanguages",
           },

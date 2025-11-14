@@ -34,8 +34,8 @@ export const AntUIProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     localStorage.setItem("theme", isDark ? "dark" : "light");
-    document.body.style.backgroundColor = isDark ? "#141414" : "#f3f3f3";
-    document.body.style.color = isDark ? "#f0f0f0" : "#141414";
+    // document.body.style.backgroundColor = isDark ? "#141414" : "#f3f3f3";
+    // document.body.style.color = isDark ? "#f0f0f0" : "#141414";
   }, [isDark]);
 
   return (
@@ -46,16 +46,16 @@ export const AntUIProvider: React.FC<{ children: React.ReactNode }> = ({
             ? antTheme.darkAlgorithm
             : antTheme.defaultAlgorithm,
 
-          // token: {
-          //   colorPrimary: isDark ? "#b78aff" : "#722ed1",
-          //   colorBgBase: isDark ? "#1a1425" : "#faf5ff",
-          //   colorTextBase: isDark ? "#e0d4ff" : "#3c1f7b",
-          //   colorLink: isDark ? "#f4c542" : "#d4a017",
-          //   colorLinkHover: isDark ? "#ffdc73" : "#e6b94c",
-          //   colorWarning: "#fadb14",
-          //   colorSuccess: "#52c41a",
-          //   borderRadius: 10,
-          // },
+          token: {
+            // colorPrimary: isDark ? "#b78aff" : "#722ed1",
+            colorBgBase: isDark ? "#141414" : "#f0f0f0",
+            // colorTextBase: isDark ? "#e0d4ff" : "#3c1f7b",
+            // colorLink: isDark ? "#f4c542" : "#d4a017",
+            // colorLinkHover: isDark ? "#ffdc73" : "#e6b94c",
+            // colorWarning: "#fadb14",
+            // colorSuccess: "#52c41a",
+            // borderRadius: 8,
+          },
         }}
       >
         {contextHolder}
