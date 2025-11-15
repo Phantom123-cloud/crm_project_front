@@ -8,7 +8,7 @@
 }
 
 .ant-table-cell {
-    padding: 10px !important;
+    padding: 11px !important;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -20,7 +20,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: transparent;
 }
 
-/* .ant-form-item-label {
-    text-align: start !important;
-} */
-
+.ant-table-thead > tr > th {
+    white-space: nowrap !important;
+}

@@ -20,50 +20,9 @@ export const columnsData = (isFullData: boolean) => {
             key: "fullName",
           },
           {
-            title: "Код торгового",
-            dataIndex: "tradingСode",
-            key: "tradingСode",
-          },
-          {
             title: "Дата рождения",
             dataIndex: "birthDate",
             key: "birthDate",
-          },
-          {
-            title: "Телефоны",
-            dataIndex: "phones",
-            key: "phones",
-          },
-
-          {
-            title: "Первый выезд",
-            dataIndex: "dateFirstTrip",
-            key: "dateFirstTrip",
-          },
-          {
-            title: "Дети?",
-            dataIndex: "isHaveChildren",
-            key: "isHaveChildren",
-          },
-          {
-            title: "Вод. права?",
-            dataIndex: "isHaveDriverLicense",
-            key: "isHaveDriverLicense",
-          },
-          {
-            title: "Стаж вождения",
-            dataIndex: "drivingExperience",
-            key: "drivingExperience",
-          },
-          {
-            title: "Загран паспорт?",
-            dataIndex: "isHaveInterPassport",
-            key: "isHaveInterPassport",
-          },
-          {
-            title: "Брак?",
-            dataIndex: "isInMarriage",
-            key: "isInMarriage",
           },
           {
             title: "Гражданства",
@@ -84,6 +43,48 @@ export const columnsData = (isFullData: boolean) => {
             title: "Языки",
             dataIndex: "foreignLanguages",
             key: "foreignLanguages",
+          },
+          {
+            title: "Телефоны",
+            dataIndex: "phones",
+            key: "phones",
+          },
+          {
+            title: "Код торгового",
+            dataIndex: "tradingСode",
+            key: "tradingСode",
+          },
+
+          {
+            title: "Первый выезд",
+            dataIndex: "dateFirstTrip",
+            key: "dateFirstTrip",
+          },
+          {
+            title: "Стаж вождения",
+            dataIndex: "drivingExperience",
+            key: "drivingExperience",
+          },
+          {
+            title: "Вод. права?",
+            dataIndex: "isHaveDriverLicense",
+            key: "isHaveDriverLicense",
+          },
+          {
+            title: "Дети?",
+            dataIndex: "isHaveChildren",
+            key: "isHaveChildren",
+          },
+
+          {
+            title: "Загран паспорт?",
+            dataIndex: "isHaveInterPassport",
+            key: "isHaveInterPassport",
+          },
+          {
+            title: "Брак?",
+            dataIndex: "isInMarriage",
+            key: "isInMarriage",
           },
         ]
       : []),

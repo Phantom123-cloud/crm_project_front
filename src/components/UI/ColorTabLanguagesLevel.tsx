@@ -4,15 +4,15 @@ import { Tag } from "antd";
 const ColorTabLanguagesLevel = ({ level }: { level: LanguageLevel }) => {
   const selectColorTabs = (level: LanguageLevel) => {
     if (["A1", "A2"].includes(level)) {
-      return "warning";
+      return "#8bbb11";
     } else if (["B1", "B2"].includes(level)) {
-      return "purple";
+      return "#3e2069";
     } else if (["C1", "C2"].includes(level)) {
-      return "success";
+      return "#a02669";
     } else if (level === "NATIVE") {
-      return "gold";
+      return "#3c8618";
     } else if (level === "SPOKEN") {
-      return "default";
+      return "#434343";
     } else {
       return "";
     }

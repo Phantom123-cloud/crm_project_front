@@ -6,7 +6,7 @@ import {
 } from "@/app/services/users/usersApi";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { Divider, Flex, Segmented, Select, Table } from "antd";
+import { Flex, Segmented, Select, Table } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -19,9 +19,9 @@ import ColorTab from "@/components/UI/ColorTabContactNumType";
 import ColorTabLanguagesLevel from "@/components/UI/ColorTabLanguagesLevel";
 
 const UsersData = () => {
-  const [isFullData, setIsFullData] = useState<boolean>(() => {
-    return localStorage.getItem("segmentedValue") === "fullData";
-  });
+  const [isFullData, setIsFullData] = useState<boolean>(
+    () => localStorage.getItem("segmentedValue") === "fullData"
+  );
   const handleChangeSegmented = () => setIsFullData(!isFullData);
   const { query, changeSelect, setQuery } = useChangeUserDataSelect(isFullData);
 
@@ -59,17 +59,15 @@ const UsersData = () => {
       createdAt: isDate(item.createdAt),
 
       ...(employeeData && {
-        tradingСode: employeeData.tradingСode ?? "-",
+        tradingСode: employeeData.tradingСode,
         birthDate: isDate(employeeData.birthDate),
 
         phones: (
-          <div className="grid">
+          <div className="grid gap-1">
             {employeeData.phones.map((phone, index) => (
-              <div className="whitespace-nowrap text-[12px]">
-                {phone.number} - <ColorTab option={phone.option} />
-                {employeeData.phones.length > index + 1 && (
-                  <Divider variant="dashed" size="small" />
-                )}
+              <div key={index} className="w-[180px] flex justify-between">
+                <span>{phone.number}</span>
+                <ColorTab option={phone.option} />
               </div>
             ))}
           </div>
@@ -90,21 +88,23 @@ const UsersData = () => {
 
         citizenships: (
           <div className="grid">
-            {employeeData.citizenships.map((citizen) => (
-              <div className="whitespace-nowrap">{citizen.localeRu}</div>
+            {employeeData.citizenships.map((citizen, index) => (
+              <span key={index}>{citizen.localeRu}</span>
             ))}
           </div>
         ),
-        registrationAddress: employeeData.registrationAddress ?? "-",
-        actualAddress: employeeData.actualAddress ?? "-",
+        registrationAddress: (
+          <div className="w-[250px]">{employeeData.registrationAddress}</div>
+        ),
+        actualAddress: (
+          <div className="w-[250px]">{employeeData.actualAddress}</div>
+        ),
         foreignLanguages: (
-          <div className="grid">
+          <div className="grid gap-1">
             {employeeData.foreignLanguages.map((l, index) => (
-              <div className="whitespace-nowrap">
-                {l.language.localeRu} <ColorTabLanguagesLevel level={l.level} />
-                {employeeData.foreignLanguages.length > index + 1 && (
-                  <Divider variant="dashed" size="small" />
-                )}
+              <div key={index} className="w-[180px] flex justify-between">
+                <span>{l.language.localeRu}</span>
+                <ColorTabLanguagesLevel level={l.level} />
               </div>
             ))}
           </div>
@@ -167,7 +167,6 @@ const UsersData = () => {
         />
       </Flex>
       <Table
-        // bordered={true}
         scroll={{ x: true }}
         loading={isLoading}
         dataSource={dataSource}
