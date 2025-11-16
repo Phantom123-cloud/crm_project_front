@@ -2,7 +2,6 @@ import { useUserByIdQuery } from "@/app/services/users/usersApi";
 import EmployeeData from "@/components/data/EmployeeForm";
 import EmployeePassport from "@/components/data/EmployeePassport";
 import UserAccount from "@/components/data/UserAccount";
-import UserRoles from "@/components/data/UserRoles";
 import { Tabs } from "antd";
 import { useParams } from "react-router-dom";
 
@@ -46,10 +45,6 @@ const User = () => {
           email={data?.data?.user?.email as string}
         />
       ),
-    },
-    {
-      label: "Роли",
-      children: <UserRoles />,
     },
   ];
 

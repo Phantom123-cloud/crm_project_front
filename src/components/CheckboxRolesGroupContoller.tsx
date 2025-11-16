@@ -65,7 +65,7 @@ const CheckboxRolesGroupContoller: React.FC<Props> = ({
                   }))}
                   value={selected}
                   onChange={(checkedValues) => {
-                    const roleIds = roles.map((r) => r.id);
+                    const roleIds = type.roles.map((r) => r.id);
                     const others = field.value.filter(
                       (v: string) => !roleIds.includes(v)
                     );

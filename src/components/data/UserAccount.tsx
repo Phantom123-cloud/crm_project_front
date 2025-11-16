@@ -5,8 +5,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState, type SetStateAction } from "react";
 import { useUpdateAccountCredentialsMutation } from "@/app/services/auth/authApi";
+import UpdateRolesByUserId from "../modals/update/UpdateRolesByUserId";
 
 const schema = z.object({
   oldPassword: z.optional(z.string()),
@@ -61,59 +62,75 @@ const UserAccount: React.FC<Props> = ({ email, userId }) => {
       reset();
     }
   };
+  const [isOpen, setIsOpen] = useState(false);
+  const onOpen = () => setIsOpen(true);
 
   return (
-    <Form
-      name="basic"
-      onFinish={handleSubmit(onSubmit)}
-      autoComplete="off"
-      layout="vertical"
-    >
-      <Form.Item
-        label="Email"
-        validateStatus={errors.email ? "error" : ""}
-        help={errors.email?.message}
-      >
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => <Input type="email" {...field} />}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Текущий пароль"
-        validateStatus={errors.oldPassword ? "error" : ""}
-        help={errors.oldPassword?.message}
-      >
-        <Controller
-          name="oldPassword"
-          control={control}
-          render={({ field }) => <Input.Password {...field} />}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Новый пароль"
-        validateStatus={errors.newPassword ? "error" : ""}
-        help={errors.newPassword?.message}
-      >
-        <Controller
-          name="newPassword"
-          control={control}
-          render={({ field }) => <Input.Password {...field} />}
-        />
-      </Form.Item>
-      <Form.Item label={null}>
-        <Button
-          variant="solid"
-          color="blue"
-          htmlType="submit"
-          loading={isSubmitting}
-          disabled={!isDirty}
-        >
-          Обновить данные
+    <>
+      <div className="flex justify-end">
+        <Button onClick={onOpen} type="primary">
+          Редактировать роли
         </Button>
-      </Form.Item>
-    </Form>
+      </div>
+
+      <Form
+        name="basic"
+        onFinish={handleSubmit(onSubmit)}
+        autoComplete="off"
+        layout="vertical"
+      >
+        <Form.Item
+          label="Email"
+          validateStatus={errors.email ? "error" : ""}
+          help={errors.email?.message}
+        >
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => <Input type="email" {...field} />}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Текущий пароль"
+          validateStatus={errors.oldPassword ? "error" : ""}
+          help={errors.oldPassword?.message}
+        >
+          <Controller
+            name="oldPassword"
+            control={control}
+            render={({ field }) => <Input.Password {...field} />}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Новый пароль"
+          validateStatus={errors.newPassword ? "error" : ""}
+          help={errors.newPassword?.message}
+        >
+          <Controller
+            name="newPassword"
+            control={control}
+            render={({ field }) => <Input.Password {...field} />}
+          />
+        </Form.Item>
+        <Form.Item label={null}>
+          <Button
+            variant="solid"
+            color="blue"
+            htmlType="submit"
+            loading={isSubmitting}
+            disabled={!isDirty}
+          >
+            Обновить данные
+          </Button>
+        </Form.Item>
+      </Form>
+
+      <UpdateRolesByUserId
+        userId={userId}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
+    </>
   );
 };
 

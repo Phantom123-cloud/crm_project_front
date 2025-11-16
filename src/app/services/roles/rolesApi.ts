@@ -2,6 +2,7 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type { Roles } from "./rolesType";
+import type { RolesObj } from "../role-templates/roleTemplatesTypes";
 
 export const rolesApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -56,6 +57,22 @@ export const rolesApi = api.injectEndpoints({
         params: { page, limit },
       }),
     }),
+
+    fullInformationOnRoles: builder.query<
+      ApiResponse<{
+        templateAvailableRoles: RolesObj[];
+        blockedTemplateRoles: RolesObj[];
+        individualAvailableRoles: RolesObj[];
+        unusedRoles: RolesObj[];
+        roleTemplate: string;
+      }>,
+      string
+    >({
+      query: (id) => ({
+        url: `/roles/full-info-roles-by-user/${id}`,
+        method: METHODS.GET,
+      }),
+    }),
   }),
 });
 
@@ -65,4 +82,6 @@ export const {
   useDeleteRoleMutation,
   useLazyAllRoleQuery,
   useUpdateRoleMutation,
+  useFullInformationOnRolesQuery,
+  useLazyFullInformationOnRolesQuery,
 } = rolesApi;

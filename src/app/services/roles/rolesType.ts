@@ -11,3 +11,14 @@ export type Roles = {
   typeName: string;
   typeId: string;
 };
+
+export type TemplateRolesItem = {
+  id: string;
+  type: string;
+  descriptions: string;
+  roles: {
+    name: string;
+    descriptions: string;
+    id: string;
+  }[];
+};
