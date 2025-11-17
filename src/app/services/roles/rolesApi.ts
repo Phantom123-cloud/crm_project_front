@@ -40,6 +40,22 @@ export const rolesApi = api.injectEndpoints({
         body: { name, descriptions, roleTypeId },
       }),
     }),
+    updateUserRoles: builder.mutation<
+      ApiResponse,
+      {
+        userId: string;
+        unlock?: string[];
+        removeIndividual?: string[];
+        blockCurrent?: string[];
+        addUnused?: string[];
+      }
+    >({
+      query: ({ userId, unlock, removeIndividual, blockCurrent, addUnused }) => ({
+        url: `/roles/update-roles-by-user/${userId}`,
+        method: METHODS.PUT,
+        body: { unlock, removeIndividual, blockCurrent, addUnused },
+      }),
+    }),
 
     allRole: builder.query<
       ApiResponse<{
@@ -84,4 +100,5 @@ export const {
   useUpdateRoleMutation,
   useFullInformationOnRolesQuery,
   useLazyFullInformationOnRolesQuery,
+  useUpdateUserRolesMutation
 } = rolesApi;

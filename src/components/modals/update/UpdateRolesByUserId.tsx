@@ -1,13 +1,17 @@
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
-import { useLazyFullInformationOnRolesQuery } from "@/app/services/roles/rolesApi";
-import { Button, Flex, Form, Modal, Tabs } from "antd";
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import {
+  useLazyFullInformationOnRolesQuery,
+  useUpdateUserRolesMutation,
+} from "@/app/services/roles/rolesApi";
+import { Button, Flex, Form, Modal, Tabs, Tag, Tooltip } from "antd";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import CheckboxRolesGroupContoller from "../../CheckboxRolesGroupContoller";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
+import { useLazyUserByIdQuery } from "@/app/services/users/usersApi";
 
 type Props = {
   userId: string;
@@ -32,7 +36,7 @@ const UpdateRolesByUserId: React.FC<Props> = ({
   const {
     handleSubmit,
     control,
-    formState: { isDirty, isSubmitting, defaultValues },
+    formState: { isDirty, isSubmitting },
     reset,
   } = useForm({
     resolver: zodResolver(schema),
@@ -47,6 +51,8 @@ const UpdateRolesByUserId: React.FC<Props> = ({
 
   const [triggerData, { data, isLoading }] =
     useLazyFullInformationOnRolesQuery();
+  const [updateUserRoles] = useUpdateUserRolesMutation();
+  const [triggerUserData] = useLazyUserByIdQuery();
   const { callMessage } = useUiContext();
 
   // список блокнутых ролей из шаблона, юзаем для отблока
@@ -67,18 +73,21 @@ const UpdateRolesByUserId: React.FC<Props> = ({
       | "unusedRoles";
     label: string;
     name: "unlock" | "removeIndividual" | "blockCurrent" | "addUnused";
+    guide: string;
   }[] = [
     {
       array: templateAvailableRoles,
       key: "templateAvailableRoles",
       name: "blockCurrent",
       label: "Шаблон(активные)",
+      guide: "Выберите роли для блокировки",
     },
     {
       array: blockedTemplateRoles,
       key: "blockedTemplateRoles",
       label: "Шаблон(ограниченные)",
       name: "unlock",
+      guide: "Выберите роли для разблокирования",
     },
 
     {
@@ -86,20 +95,23 @@ const UpdateRolesByUserId: React.FC<Props> = ({
       key: "individualAvailableRoles",
       label: "Индивидуальные",
       name: "removeIndividual",
+      guide: "Выберите роли для удаления индивидуального доступа",
     },
     {
       array: unusedRoles,
       key: "unusedRoles",
       label: "Не задействованные",
       name: "addUnused",
+      guide: "Выберите роли для добавления индивидуального доступа",
     },
   ];
 
   const onSubmit = async (data: FormValues) => {
     try {
-      console.log(data);
-
-      callMessage.success("message");
+      const { message } = await updateUserRoles({ ...data, userId }).unwrap();
+      await triggerData(userId).unwrap();
+      await triggerUserData(userId).unwrap();
+      callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
     } finally {
@@ -120,7 +132,7 @@ const UpdateRolesByUserId: React.FC<Props> = ({
 
   return (
     <Modal
-      title="Изменить имя для типа роли"
+      title="Манипуляции с правами доступа"
       closable={{ "aria-label": "Custom Close Button" }}
       open={isOpen}
       footer={null}
@@ -131,7 +143,6 @@ const UpdateRolesByUserId: React.FC<Props> = ({
       <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
         <Tabs
           defaultActiveKey="blockCurrent"
-          // onChange={(key) => setKey(key as "disconnect" | "connect")}
           items={tabItems.map((item) => {
             return {
               key: item.key,
@@ -139,6 +150,11 @@ const UpdateRolesByUserId: React.FC<Props> = ({
               forceRender: true,
               children: (
                 <Form.Item>
+                  <div className="flex justify-end">
+                    <Tooltip placement="topLeft" title={item.guide}>
+                      <Tag color="#cd201f">как пользоваться?</Tag>
+                    </Tooltip>
+                  </div>
                   <CheckboxRolesGroupContoller
                     name={item.name}
                     control={control}

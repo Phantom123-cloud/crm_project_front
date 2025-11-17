@@ -1,4 +1,3 @@
-import { useUpdateEmployeesMutation } from "@/app/services/employees/employeesApi";
 import {
   useLazyUserByIdQuery,
   useUserByIdQuery,
@@ -23,7 +22,7 @@ const schema = z.object({
   isInMarriage: z.boolean(),
   isHaveChildren: z.boolean(),
   isHaveDriverLicense: z.boolean(),
-  drivingExperience: z.int(),
+  drivingExperience: z.string(),
   isHaveInterPassport: z.boolean(),
   // files: z.array(z.file()).max(10),
 });
@@ -302,3 +301,7 @@ const EmployeeData = () => {
 };
 
 export default EmployeeData;
+function useUpdateEmployeesMutation(): [any] {
+  throw new Error("Function not implemented.");
+}
+

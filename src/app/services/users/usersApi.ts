@@ -41,7 +41,10 @@ export const usersApi = api.injectEndpoints({
         },
       }),
     }),
-    userById: builder.query<ApiResponse<{ user: User }>, string>({
+    userById: builder.query<
+      ApiResponse<{ user: User; passports: string[] }>,
+      string
+    >({
       query: (id) => ({
         url: `/users/${id}`,
         method: METHODS.GET,
