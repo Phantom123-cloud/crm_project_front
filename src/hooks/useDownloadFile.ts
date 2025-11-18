@@ -1,14 +1,14 @@
 export const useDownloadFile = () => {
   const url = import.meta.env.VITE_API_URL;
 
-  const handleDownload = async (filename: string) => {
-    const res = await fetch(
-      `${url}/files/download/${encodeURIComponent(filename)}`,
-      {
-        credentials: "include",
-        mode: "cors",
-      }
-    );
+  const handleDownload = async (filename: string, userId: string) => {
+    const ROUTE = `${url}/files/download?fileName=${encodeURIComponent(
+      filename
+    )}&userId=${userId}`;
+    const res = await fetch(ROUTE, {
+      credentials: "include",
+      mode: "cors",
+    });
 
     if (!res.ok) {
       return;
@@ -18,7 +18,7 @@ export const useDownloadFile = () => {
     const URL = window.URL.createObjectURL(blob);
 
     const link = document.createElement("a");
-    link.href = `${url}/files/download/${encodeURIComponent(filename)}`;
+    link.href = ROUTE;
     link.target = "_blank";
     link.click();
 
