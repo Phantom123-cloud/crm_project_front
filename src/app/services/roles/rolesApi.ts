@@ -40,22 +40,6 @@ export const rolesApi = api.injectEndpoints({
         body: { name, descriptions, roleTypeId },
       }),
     }),
-    updateUserRoles: builder.mutation<
-      ApiResponse,
-      {
-        userId: string;
-        unlock?: string[];
-        removeIndividual?: string[];
-        blockCurrent?: string[];
-        addUnused?: string[];
-      }
-    >({
-      query: ({ userId, unlock, removeIndividual, blockCurrent, addUnused }) => ({
-        url: `/roles/update-roles-by-user/${userId}`,
-        method: METHODS.PUT,
-        body: { unlock, removeIndividual, blockCurrent, addUnused },
-      }),
-    }),
 
     allRole: builder.query<
       ApiResponse<{
@@ -71,6 +55,23 @@ export const rolesApi = api.injectEndpoints({
         url: `/roles/all`,
         method: METHODS.GET,
         params: { page, limit },
+      }),
+    }),
+
+    getRolesNotInTemplate: builder.query<
+      ApiResponse<{ roles: RolesObj[] }>,
+      string
+    >({
+      query: (id) => ({
+        url: `/roles/by-not-id/${id}`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    allRolesByType: builder.query<ApiResponse<{ roles: RolesObj[] }>, void>({
+      query: () => ({
+        url: `/roles/all-roles`,
+        method: METHODS.GET,
       }),
     }),
 
@@ -100,5 +101,10 @@ export const {
   useUpdateRoleMutation,
   useFullInformationOnRolesQuery,
   useLazyFullInformationOnRolesQuery,
-  useUpdateUserRolesMutation
+
+  useGetRolesNotInTemplateQuery,
+  useLazyGetRolesNotInTemplateQuery,
+
+  useAllRolesByTypeQuery,
+  useLazyAllRolesByTypeQuery,
 } = rolesApi;

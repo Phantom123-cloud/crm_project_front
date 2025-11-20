@@ -5,13 +5,13 @@ import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import { Button, Flex, Form, Input, Modal, Select } from "antd";
 import {
-  useGetSelectTeamplatesQuery,
   useLazyAllRoleTemplatesByIdQuery,
-  useLazyGetRolesNotInTemplateQuery,
+  useLazyAllRoleTemplatesQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import { useEffect, useState } from "react";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useRegisterMutation } from "@/app/services/auth/authApi";
+import { useLazyGetRolesNotInTemplateQuery } from "@/app/services/roles/rolesApi";
 
 const schema = z.object({
   email: z.email("Некоректный email"),
@@ -46,9 +46,12 @@ const RegisterUsers = () => {
     },
   });
 
-  const { data: templatesSelect, isLoading } = useGetSelectTeamplatesQuery();
-  const [triggerTemplateRoles, { data: usedRoles, isLoading: isLoadRoles }] =
-    useLazyAllRoleTemplatesByIdQuery();
+  const [triggerRoleTemplatesSelect, { data: templatesSelect, isLoading }] =
+    useLazyAllRoleTemplatesQuery();
+  const [
+    triggerRoleTemplatesUsed,
+    { data: usedRoles, isLoading: isLoadRoles },
+  ] = useLazyAllRoleTemplatesByIdQuery();
   const [
     triggerRolesNotInTemplate,
     { data: unsedRoles, isLoading: isLoadUnsedRoles },
@@ -58,6 +61,8 @@ const RegisterUsers = () => {
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenSelect, setIsOpenSelect] = useState(false);
+
   const [showButtonRules, setShowButtonRules] = useState(false);
   const [typeModal, setTypeModal] = useState<"ADD" | "DELETE" | null>(null);
   const onCancel = () => {
@@ -75,7 +80,7 @@ const RegisterUsers = () => {
   const getRolesByTemplateId = async (id: string) => {
     try {
       if (id) {
-        const { success } = await triggerTemplateRoles(id).unwrap();
+        const { success } = await triggerRoleTemplatesUsed(id).unwrap();
         await triggerRolesNotInTemplate(id).unwrap();
         setShowButtonRules(success);
       }
@@ -83,19 +88,6 @@ const RegisterUsers = () => {
       callMessage.error(errorMessages(err));
     }
   };
-
-  useEffect(() => {
-    if (rolesByTemplateId) {
-      getRolesByTemplateId(rolesByTemplateId);
-    }
-  }, [rolesByTemplateId]);
-
-  const roleTemplates = (templatesSelect?.data ?? []).map((item) => {
-    return {
-      value: item.id,
-      label: item.name,
-    };
-  });
 
   const { callMessage } = useUiContext();
   const [registerUser] = useRegisterMutation();
@@ -112,6 +104,26 @@ const RegisterUsers = () => {
       reset();
     }
   };
+
+  const roleTemplates = (templatesSelect?.data?.templates ?? []).map((item) => {
+    return {
+      value: item.id,
+      label: item.name,
+    };
+  });
+
+  useEffect(() => {
+    if (isOpenSelect) {
+      triggerRoleTemplatesSelect();
+    }
+  }, [isOpenSelect]);
+
+  useEffect(() => {
+    if (rolesByTemplateId) {
+      getRolesByTemplateId(rolesByTemplateId);
+    }
+  }, [rolesByTemplateId]);
+
   return (
     <Form
       name="basic"
@@ -157,6 +169,7 @@ const RegisterUsers = () => {
             render={({ field }) => (
               <Select
                 loading={isLoading}
+                onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
                 {...field}
                 showSearch
                 optionFilterProp="label"

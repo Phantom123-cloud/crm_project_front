@@ -8,11 +8,11 @@ import { errorMessages } from "@/utils/is-error-message";
 import {
   useAllRoleTemplatesByIdQuery,
   useLazyAllRoleTemplatesQuery,
-  useLazyGetRolesNotInTemplateQuery,
   useUpdateRoleTemplateMutation,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
+import { useLazyGetRolesNotInTemplateQuery } from "@/app/services/roles/rolesApi";
 
 type Props = {
   isOpen: boolean;

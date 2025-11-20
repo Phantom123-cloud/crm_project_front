@@ -2,7 +2,7 @@ export const useDownloadFile = () => {
   const url = import.meta.env.VITE_API_URL;
 
   const handleDownload = async (filename: string, userId: string) => {
-    const ROUTE = `${url}/files/download?fileName=${encodeURIComponent(
+    const ROUTE = `${url}/files/download/passports?fileName=${encodeURIComponent(
       filename
     )}&userId=${userId}`;
     const res = await fetch(ROUTE, {

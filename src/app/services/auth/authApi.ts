@@ -45,6 +45,13 @@ export const authApi = api.injectEndpoints({
       }),
     }),
 
+    logoutByUserId: builder.mutation<ApiResponse, string>({
+      query: (id) => ({
+        url: `/auth/logout-user/${id}`,
+        method: METHODS.POST,
+      }),
+    }),
+
     getMe: builder.query<
       ApiResponse<{
         roles: RolesObj[];
@@ -67,4 +74,5 @@ export const {
   useLazyGetMeQuery,
   useRegisterMutation,
   useUpdateAccountCredentialsMutation,
+  useLogoutByUserIdMutation,
 } = authApi;

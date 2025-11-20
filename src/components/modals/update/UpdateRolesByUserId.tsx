@@ -1,23 +1,35 @@
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
-import {
-  useLazyFullInformationOnRolesQuery,
-  useUpdateUserRolesMutation,
-} from "@/app/services/roles/rolesApi";
+import { useLazyFullInformationOnRolesQuery } from "@/app/services/roles/rolesApi";
 import { Button, Flex, Form, Modal, Tabs, Tag, Tooltip } from "antd";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import CheckboxRolesGroupContoller from "../../CheckboxRolesGroupContoller";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { useLazyUserByIdQuery } from "@/app/services/users/usersApi";
+import {
+  useLazyUserByIdQuery,
+  useUpdateUserRolesMutation,
+} from "@/app/services/users/usersApi";
 
 type Props = {
   userId: string;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
+
+type Tabs = {
+  array: (RolesObj | undefined)[];
+  key:
+    | "blockedTemplateRoles"
+    | "individualAvailableRoles"
+    | "templateAvailableRoles"
+    | "unusedRoles";
+  label: string;
+  name: "unlock" | "removeIndividual" | "blockCurrent" | "addUnused";
+  guide: string;
+}[];
 
 const schema = z.object({
   unlock: z.array(z.string()),
@@ -64,17 +76,7 @@ const UpdateRolesByUserId: React.FC<Props> = ({
   // список не юзаных ролей (всех)
   const unusedRoles = data?.data?.unusedRoles ?? [];
 
-  const tabItems: {
-    array: (RolesObj | undefined)[];
-    key:
-      | "blockedTemplateRoles"
-      | "individualAvailableRoles"
-      | "templateAvailableRoles"
-      | "unusedRoles";
-    label: string;
-    name: "unlock" | "removeIndividual" | "blockCurrent" | "addUnused";
-    guide: string;
-  }[] = [
+  const tabItems: Tabs = [
     {
       array: templateAvailableRoles,
       key: "templateAvailableRoles",

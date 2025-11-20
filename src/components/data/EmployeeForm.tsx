@@ -13,14 +13,14 @@ import { removeUnchangedFields } from "@/utils/removeUnchangedEmployeeItems";
 import EmployeeKnowledgeAndContacts from "../EmployeeKnowledgeAndContacts";
 
 const schema = z.object({
-  notes: z.string(),
-  tradingСode: z.string(),
-  dateFirstTrip: z.string(),
-  isInMarriage: z.boolean(),
-  isHaveChildren: z.boolean(),
-  isHaveDriverLicense: z.boolean(),
-  drivingExperience: z.string(),
-  isHaveInterPassport: z.boolean(),
+  notes: z.optional(z.string()),
+  tradingСode: z.optional(z.string()),
+  dateFirstTrip: z.optional(z.string()),
+  isInMarriage: z.optional(z.boolean()),
+  isHaveChildren: z.optional(z.boolean()),
+  isHaveDriverLicense: z.optional(z.boolean()),
+  drivingExperience: z.optional(z.string()),
+  isHaveInterPassport: z.optional(z.boolean()),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -60,12 +60,12 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
       reset({
         tradingСode: tradingСode ?? "",
         dateFirstTrip: dateFirstTrip ?? "",
+        drivingExperience: drivingExperience ?? "",
+        notes: notes ?? "",
         isInMarriage,
         isHaveChildren,
         isHaveDriverLicense,
-        drivingExperience,
         isHaveInterPassport,
-        notes: notes ?? "",
       });
     }
   }, [employee, reset]);
@@ -86,7 +86,7 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
     }
   };
 
-  const yesOrNoData = [
+  const selected = [
     { label: "В браке?", name: "isInMarriage" },
     { label: "Есть дети?", name: "isHaveChildren" },
     { label: "Загран паспорт?", name: "isHaveInterPassport" },
@@ -123,7 +123,7 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
         />
       </Form.Item>
 
-      {yesOrNoData.map((item, index) => (
+      {selected.map((item, index) => (
         <Form.Item
           key={index}
           label={item.label}

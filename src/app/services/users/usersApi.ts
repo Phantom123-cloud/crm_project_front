@@ -5,10 +5,26 @@ import type { User, UsersData } from "./usersType";
 
 export const usersApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    logoutByUserId: builder.mutation<ApiResponse, string>({
-      query: (id) => ({
-        url: `/users/logout-user/${id}`,
-        method: METHODS.POST,
+    updateUserRoles: builder.mutation<
+      ApiResponse,
+      {
+        userId: string;
+        unlock?: string[];
+        removeIndividual?: string[];
+        blockCurrent?: string[];
+        addUnused?: string[];
+      }
+    >({
+      query: ({
+        userId,
+        unlock,
+        removeIndividual,
+        blockCurrent,
+        addUnused,
+      }) => ({
+        url: `/users/update-roles-by-user/${userId}`,
+        method: METHODS.PUT,
+        body: { unlock, removeIndividual, blockCurrent, addUnused },
       }),
     }),
 
@@ -56,8 +72,8 @@ export const usersApi = api.injectEndpoints({
 export const {
   useAllUsersQuery,
   useLazyAllUsersQuery,
-  useLogoutByUserIdMutation,
   useIsActiveUserMutation,
   useUserByIdQuery,
   useLazyUserByIdQuery,
+  useUpdateUserRolesMutation,
 } = usersApi;

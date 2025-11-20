@@ -2,7 +2,6 @@ import { authState } from "@/app/features/authSlice";
 import {
   useIsActiveUserMutation,
   useLazyAllUsersQuery,
-  useLogoutByUserIdMutation,
 } from "@/app/services/users/usersApi";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
@@ -17,6 +16,7 @@ import TagBoolean from "../../UI/TagBoolean";
 import { isDate } from "@/utils/is-date";
 import ColorTab from "@/components/UI/ColorTabContactNumType";
 import ColorTabLanguagesLevel from "@/components/UI/ColorTabLanguagesLevel";
+import { useLogoutByUserIdMutation } from "@/app/services/auth/authApi";
 
 const UsersData = () => {
   const [isFullData, setIsFullData] = useState<boolean>(

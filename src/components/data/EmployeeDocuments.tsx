@@ -13,7 +13,7 @@ type Props = {
   passports: string[];
 };
 
-const EmployeePassports: React.FC<Props> = ({ userId, passports }) => {
+const EmployeeDocuments: React.FC<Props> = ({ userId, passports }) => {
   const { handleDownload } = useDownloadFile();
   const [deleteFile] = useDeleteFileMutation();
   const { callMessage } = useUiContext();
@@ -74,4 +74,4 @@ const EmployeePassports: React.FC<Props> = ({ userId, passports }) => {
   );
 };
 
-export default EmployeePassports;
+export default EmployeeDocuments;

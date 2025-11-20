@@ -1,7 +1,7 @@
 import { useUserByIdQuery } from "@/app/services/users/usersApi";
 import EmployeeData from "@/components/data/EmployeeForm";
 import EmployeePassport from "@/components/data/EmployeePassport";
-import EmpoleePassports from "@/components/data/EmpoleePassports";
+import EmployeeDocuments from "@/components/data/EmployeeDocuments";
 import UserAccount from "@/components/data/UserAccount";
 import { Tabs } from "antd";
 import { useParams } from "react-router-dom";
@@ -32,7 +32,7 @@ const User = () => {
     {
       label: "Сканы документов",
       children: (
-        <EmpoleePassports
+        <EmployeeDocuments
           userId={id as string}
           passports={data?.data?.passports ?? []}
         />

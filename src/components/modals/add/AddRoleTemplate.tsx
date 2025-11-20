@@ -6,11 +6,11 @@ import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import {
   useCreateRoleTemplateMutation,
-  useLazyAllRolesByTypeQuery,
   useLazyAllRoleTemplatesQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useEffect } from "react";
+import { useLazyAllRolesByTypeQuery } from "@/app/services/roles/rolesApi";
 
 type Props = {
   isOpen: boolean;
