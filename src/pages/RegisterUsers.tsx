@@ -237,7 +237,7 @@ const RegisterUsers = () => {
             onCancel={onCancel}
             loading={typeModal === "DELETE" ? isLoadRoles : isLoadUnsedRoles}
           >
-            <Form.Item label={null}>
+            <Form.Item label={null} className="max-h-[700px] overflow-auto">
               <CheckboxRolesGroupContoller
                 name={
                   typeModal === "DELETE" ? "arrayBlockedRoles" : "arrayAddRoles"

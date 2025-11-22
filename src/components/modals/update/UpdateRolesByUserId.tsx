@@ -134,12 +134,12 @@ const UpdateRolesByUserId: React.FC<Props> = ({
 
   return (
     <Modal
-      title="Манипуляции с правами доступа"
+      title="Действия с правами доступа"
       closable={{ "aria-label": "Custom Close Button" }}
       open={isOpen}
       footer={null}
       onCancel={onCancel}
-      width={800}
+      width={700}
       loading={isLoading}
     >
       <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
@@ -157,11 +157,13 @@ const UpdateRolesByUserId: React.FC<Props> = ({
                       <Tag color="#cd201f">как пользоваться?</Tag>
                     </Tooltip>
                   </div>
-                  <CheckboxRolesGroupContoller
-                    name={item.name}
-                    control={control}
-                    roles={item?.array as RolesObj[]}
-                  />
+                  <div className="max-h-[700px] overflow-auto">
+                    <CheckboxRolesGroupContoller
+                      name={item.name}
+                      control={control}
+                      roles={item?.array as RolesObj[]}
+                    />
+                  </div>
                 </Form.Item>
               ),
             };

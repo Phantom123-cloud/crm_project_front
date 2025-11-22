@@ -23,3 +23,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .ant-table-thead > tr > th {
     white-space: nowrap !important;
 }
+
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 10px;
+}
+
+* ::-webkit-scrollbar-thumb {
+    /* border-radius: 5px; */
+    background-color: gray;
+}
