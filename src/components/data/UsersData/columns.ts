@@ -40,6 +40,11 @@ export const columnsData = (isFullData: boolean) => {
             key: "actualAddress",
           },
           {
+            title: "Пасспорт",
+            dataIndex: "passportNumber",
+            key: "passportNumber",
+          },
+          {
             title: "Языки",
             dataIndex: "foreignLanguages",
             key: "foreignLanguages",

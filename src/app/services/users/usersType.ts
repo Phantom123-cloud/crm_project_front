@@ -10,6 +10,7 @@ export type User = {
 export type Employee = {
   birthDate: string | null;
   fullName: string;
+  passportNumber: string;
   notes: string | null;
   registrationAddress: string | null;
   actualAddress: string | null;

@@ -6,6 +6,7 @@ import type { TModal } from "@/types";
 import { useAllLanguagesQuery } from "@/app/services/languages/languagesApi";
 import UpdateLanguage from "../modals/update/UpdateLanguage";
 import DeleteLanguage from "../modals/delete/DeleteLanguage";
+import RolesGuard from "../layout/RolesGuard";
 
 const LanguagesData = () => {
   const [isOpen, setOpen] = useState(false);
@@ -31,24 +32,28 @@ const LanguagesData = () => {
       localeEn: item.localeEn,
       actions: (
         <div className="flex gap-5">
-          <Button
-            color="primary"
-            variant="outlined"
-            icon={<EditOutlined />}
-            onClick={() => getInfo(item, "UPDATE")}
-            size="small"
-          >
-            изменить
-          </Button>
-          <Button
-            color="danger"
-            variant="outlined"
-            icon={<DeleteOutlined />}
-            onClick={() => getInfo(item, "DELETE")}
-            size="small"
-          >
-            удалить
-          </Button>
+          <RolesGuard access={"update_languages"}>
+            <Button
+              color="primary"
+              variant="outlined"
+              icon={<EditOutlined />}
+              onClick={() => getInfo(item, "UPDATE")}
+              size="small"
+            >
+              изменить
+            </Button>
+          </RolesGuard>
+          <RolesGuard access={"delete_languages"}>
+            <Button
+              color="danger"
+              variant="outlined"
+              icon={<DeleteOutlined />}
+              onClick={() => getInfo(item, "DELETE")}
+              size="small"
+            >
+              удалить
+            </Button>{" "}
+          </RolesGuard>
         </div>
       ),
     };

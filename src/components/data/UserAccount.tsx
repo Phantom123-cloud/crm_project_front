@@ -5,9 +5,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input } from "antd";
-import { useEffect, useState, type SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { useUpdateAccountCredentialsMutation } from "@/app/services/auth/authApi";
 import UpdateRolesByUserId from "../modals/update/UpdateRolesByUserId";
+import RolesGuard from "../layout/RolesGuard";
 
 const schema = z.object({
   oldPassword: z.optional(z.string()),
@@ -66,7 +67,7 @@ const UserAccount: React.FC<Props> = ({ email, userId }) => {
   const onOpen = () => setIsOpen(true);
 
   return (
-    <>
+    <RolesGuard access={"update_accounts"}>
       <div className="flex justify-end">
         <Button onClick={onOpen} type="primary">
           Редактировать роли
@@ -130,7 +131,7 @@ const UserAccount: React.FC<Props> = ({ email, userId }) => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />
-    </>
+    </RolesGuard>
   );
 };
 

@@ -12,6 +12,7 @@ export type UpdateEmployeeForm = {
 
 export type UpdateEmployeePassport = {
   fullName: string;
+  passportNumber: string;
   citizenships: string[];
   birthDate: string;
   registrationAddress: string;

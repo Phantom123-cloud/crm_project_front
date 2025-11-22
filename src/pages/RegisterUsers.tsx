@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useRegisterMutation } from "@/app/services/auth/authApi";
 import { useLazyGetRolesNotInTemplateQuery } from "@/app/services/roles/rolesApi";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 const schema = z.object({
   email: z.email("Некоректный email"),
@@ -125,132 +126,134 @@ const RegisterUsers = () => {
   }, [rolesByTemplateId]);
 
   return (
-    <Form
-      name="basic"
-      layout="vertical"
-      onFinish={handleSubmit(onSubmit)}
-      autoComplete="off"
-    >
-      <Form.Item
-        label="Email"
-        validateStatus={errors.email ? "error" : ""}
-        help={errors.email?.message}
-        required={true}
+    <RolesGuard access={"register_users"}>
+      <Form
+        name="basic"
+        layout="vertical"
+        onFinish={handleSubmit(onSubmit)}
+        autoComplete="off"
       >
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => <Input type="email" {...field} />}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Пароль"
-        validateStatus={errors.password ? "error" : ""}
-        help={errors.password?.message}
-        required={true}
-      >
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => <Input.Password {...field} />}
-        />
-      </Form.Item>
-
-      <Form.Item
-        label="Тип роли"
-        validateStatus={errors.roleTemplatesId ? "error" : ""}
-        help={errors.roleTemplatesId?.message}
-        required={true}
-      >
-        <Flex wrap gap={10}>
-          <Controller
-            name="roleTemplatesId"
-            control={control}
-            render={({ field }) => (
-              <Select
-                loading={isLoading}
-                onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
-                {...field}
-                showSearch
-                optionFilterProp="label"
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                options={roleTemplates}
-                onChange={(value) => {
-                  onTemplateIdChange(value);
-                  field.onChange(value);
-                }}
-              />
-            )}
-          />
-
-          {showButtonRules && (
-            <Flex gap="small" wrap>
-              <Button
-                color="cyan"
-                variant="solid"
-                onClick={() => showModal("ADD")}
-              >
-                расширить права
-              </Button>
-              <Button
-                color="danger"
-                variant="solid"
-                onClick={() => showModal("DELETE")}
-              >
-                ограничить права
-              </Button>
-            </Flex>
-          )}
-        </Flex>
-      </Form.Item>
-
-      <Flex justify="flex-end">
-        <Form.Item label={null}>
-          <Button
-            variant="solid"
-            color="blue"
-            htmlType="submit"
-            loading={isSubmitting}
-            disabled={!isDirty}
-          >
-            Зарегистрировать
-          </Button>
-        </Form.Item>
-      </Flex>
-
-      {isModalOpen && (
-        <Modal
-          title={
-            typeModal === "DELETE"
-              ? "Выберите права для ограничения"
-              : "Добавить новые права"
-          }
-          closable={{ "aria-label": "Custom Close Button" }}
-          open={isModalOpen}
-          footer={null}
-          onCancel={onCancel}
-          loading={typeModal === "DELETE" ? isLoadRoles : isLoadUnsedRoles}
+        <Form.Item
+          label="Email"
+          validateStatus={errors.email ? "error" : ""}
+          help={errors.email?.message}
+          required={true}
         >
-          <Form.Item label={null}>
-            <CheckboxRolesGroupContoller
-              name={
-                typeModal === "DELETE" ? "arrayBlockedRoles" : "arrayAddRoles"
-              }
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => <Input type="email" {...field} />}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Пароль"
+          validateStatus={errors.password ? "error" : ""}
+          help={errors.password?.message}
+          required={true}
+        >
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => <Input.Password {...field} />}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Тип роли"
+          validateStatus={errors.roleTemplatesId ? "error" : ""}
+          help={errors.roleTemplatesId?.message}
+          required={true}
+        >
+          <Flex wrap gap={10}>
+            <Controller
+              name="roleTemplatesId"
               control={control}
-              roles={
-                typeModal === "DELETE"
-                  ? usedRoles?.data?.roles ?? []
-                  : unsedRoles?.data?.roles ?? []
-              }
+              render={({ field }) => (
+                <Select
+                  loading={isLoading}
+                  onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
+                  {...field}
+                  showSearch
+                  optionFilterProp="label"
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={roleTemplates}
+                  onChange={(value) => {
+                    onTemplateIdChange(value);
+                    field.onChange(value);
+                  }}
+                />
+              )}
             />
+
+            {showButtonRules && (
+              <Flex gap="small" wrap>
+                <Button
+                  color="cyan"
+                  variant="solid"
+                  onClick={() => showModal("ADD")}
+                >
+                  расширить права
+                </Button>
+                <Button
+                  color="danger"
+                  variant="solid"
+                  onClick={() => showModal("DELETE")}
+                >
+                  ограничить права
+                </Button>
+              </Flex>
+            )}
+          </Flex>
+        </Form.Item>
+
+        <Flex justify="flex-end">
+          <Form.Item label={null}>
+            <Button
+              variant="solid"
+              color="blue"
+              htmlType="submit"
+              loading={isSubmitting}
+              disabled={!isDirty}
+            >
+              Зарегистрировать
+            </Button>
           </Form.Item>
-        </Modal>
-      )}
-    </Form>
+        </Flex>
+
+        {isModalOpen && (
+          <Modal
+            title={
+              typeModal === "DELETE"
+                ? "Выберите права для ограничения"
+                : "Добавить новые права"
+            }
+            closable={{ "aria-label": "Custom Close Button" }}
+            open={isModalOpen}
+            footer={null}
+            onCancel={onCancel}
+            loading={typeModal === "DELETE" ? isLoadRoles : isLoadUnsedRoles}
+          >
+            <Form.Item label={null}>
+              <CheckboxRolesGroupContoller
+                name={
+                  typeModal === "DELETE" ? "arrayBlockedRoles" : "arrayAddRoles"
+                }
+                control={control}
+                roles={
+                  typeModal === "DELETE"
+                    ? usedRoles?.data?.roles ?? []
+                    : unsedRoles?.data?.roles ?? []
+                }
+              />
+            </Form.Item>
+          </Modal>
+        )}
+      </Form>
+    </RolesGuard>
   );
 };
 

@@ -95,6 +95,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen }) => {
           validateStatus={errors.array ? "error" : ""}
           help={errors.array?.message}
           required={true}
+          className="max-h-[700px] overflow-auto"
         >
           <CheckboxRolesGroupContoller
             name="array"

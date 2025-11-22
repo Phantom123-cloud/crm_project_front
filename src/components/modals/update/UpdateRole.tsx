@@ -31,7 +31,7 @@ const schema = z.object({
     .string()
     .nonempty("Обязательное поле")
     .min(5, "Минимальная длина - 5")
-    .max(20, "Максимальная длина - 20"),
+    .max(30, "Максимальная длина - 30"),
   descriptions: z
     .string()
     .nonempty("Обязательное поле")
@@ -110,7 +110,7 @@ const UpdateRole: React.FC<Props> = ({
   return (
     modalType === "UPDATE" && (
       <Modal
-        title="Изменить имя для типа роли"
+        title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}

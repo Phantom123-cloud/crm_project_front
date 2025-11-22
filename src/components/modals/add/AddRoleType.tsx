@@ -20,7 +20,7 @@ const schema = z.object({
   name: z
     .string()
     .nonempty("Обязательное поле")
-    .min(5, "Минимальная длина - 5")
+    .min(4, "Минимальная длина - 4")
     .max(20, "Максимальная длина - 20"),
   descriptions: z
     .string()

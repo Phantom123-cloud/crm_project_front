@@ -5,7 +5,8 @@ import { useAllCitizenshipsQuery } from "@/app/services/citizenships/citizenship
 import DeleteCitizenship from "../modals/delete/DeleteCitizenship";
 import type { CitizenshipAndLanguageData } from "@/app/services/citizenships/citizenshipType";
 import type { TModal } from "@/types";
-import UpdateCitizenships from "../modals/update/UpdateLanguage";
+import RolesGuard from "../layout/RolesGuard";
+import UpdateCitizenships from "../modals/update/UpdateCitizenships";
 
 const CitizenshipsData = () => {
   const [isOpen, setOpen] = useState(false);
@@ -23,6 +24,7 @@ const CitizenshipsData = () => {
   };
 
   const { data, isLoading } = useAllCitizenshipsQuery();
+
   const dataSource = (data?.data ?? []).map((item) => {
     return {
       key: item.id,
@@ -31,24 +33,28 @@ const CitizenshipsData = () => {
       localeEn: item.localeEn,
       actions: (
         <div className="flex gap-5">
-          <Button
-            color="primary"
-            variant="outlined"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => getInfo(item, "UPDATE")}
-          >
-            изменить
-          </Button>
-          <Button
-            color="danger"
-            variant="outlined"
-            size="small"
-            icon={<DeleteOutlined />}
-            onClick={() => getInfo(item, "DELETE")}
-          >
-            удалить
-          </Button>
+          <RolesGuard access={"update_citizenships"}>
+            <Button
+              color="primary"
+              variant="outlined"
+              size="small"
+              icon={<EditOutlined />}
+              onClick={() => getInfo(item, "UPDATE")}
+            >
+              изменить
+            </Button>
+          </RolesGuard>
+          <RolesGuard access={"delete_citizenships"}>
+            <Button
+              color="danger"
+              variant="outlined"
+              size="small"
+              icon={<DeleteOutlined />}
+              onClick={() => getInfo(item, "DELETE")}
+            >
+              удалить
+            </Button>
+          </RolesGuard>
         </div>
       ),
     };
@@ -85,13 +91,6 @@ const CitizenshipsData = () => {
         columns={columns}
         pagination={false}
       />
-      <DeleteCitizenship
-        isOpen={isOpen}
-        setOpen={setOpen}
-        localeRu={localeRu}
-        id={id}
-        modalType={modalType}
-      />
       <UpdateCitizenships
         isOpen={isOpen}
         setOpen={setOpen}
@@ -101,6 +100,13 @@ const CitizenshipsData = () => {
         id={id}
         modalType={modalType}
         loading={isLoading}
+      />
+      <DeleteCitizenship
+        isOpen={isOpen}
+        setOpen={setOpen}
+        localeRu={localeRu}
+        id={id}
+        modalType={modalType}
       />
     </>
   );

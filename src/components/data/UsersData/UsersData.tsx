@@ -17,6 +17,7 @@ import { isDate } from "@/utils/is-date";
 import ColorTab from "@/components/UI/ColorTabContactNumType";
 import ColorTabLanguagesLevel from "@/components/UI/ColorTabLanguagesLevel";
 import { useLogoutByUserIdMutation } from "@/app/services/auth/authApi";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 const UsersData = () => {
   const [isFullData, setIsFullData] = useState<boolean>(
@@ -96,6 +97,7 @@ const UsersData = () => {
         registrationAddress: (
           <div className="w-[250px]">{employeeData.registrationAddress}</div>
         ),
+        passportNumber: <div>{employeeData.passportNumber}</div>,
         actualAddress: (
           <div className="w-[250px]">{employeeData.actualAddress}</div>
         ),
@@ -151,7 +153,7 @@ const UsersData = () => {
     <>
       <Flex justify="space-between" style={{ marginBottom: 10 }}>
         <Select
-          defaultValue="all"
+          defaultValue="active"
           style={{ width: 120 }}
           options={selectOptions}
           onChange={changeSelect}

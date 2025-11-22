@@ -13,10 +13,12 @@ import { useEffect, useState } from "react";
 import type { Employee } from "@/app/services/users/usersType";
 import { useLazyAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
 import { removeUnchangedFields } from "@/utils/removeUnchangedEmployeeItems";
+import RolesGuard from "../layout/RolesGuard";
 
 const schema = z.object({
   fullName: z.string(),
   birthDate: z.string(),
+  passportNumber: z.string(),
   citizenships: z.array(z.string()),
   registrationAddress: z.string(),
   actualAddress: z.string(),
@@ -63,13 +65,19 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
 
   useEffect(() => {
     if (employee) {
-      const { fullName, birthDate, registrationAddress, actualAddress } =
-        employee;
+      const {
+        fullName,
+        birthDate,
+        registrationAddress,
+        actualAddress,
+        passportNumber,
+      } = employee;
       reset({
         fullName: fullName ?? "",
         birthDate: birthDate ?? "",
         registrationAddress: registrationAddress ?? "",
         actualAddress: actualAddress ?? "",
+        passportNumber: passportNumber ?? "",
         citizenships: [],
       });
     }
@@ -136,6 +144,17 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
         />
       </Form.Item>
       <Form.Item
+        label="Номер пасспорта"
+        validateStatus={errors.passportNumber ? "error" : ""}
+        help={errors.passportNumber?.message}
+      >
+        <Controller
+          name="passportNumber"
+          control={control}
+          render={({ field }) => <Input {...field} />}
+        />
+      </Form.Item>
+      <Form.Item
         label="Адрес прописки"
         validateStatus={errors.registrationAddress ? "error" : ""}
         help={errors.registrationAddress?.message}
@@ -179,51 +198,55 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
         </div>
       </div>
       <Divider />
-      <Form.Item
-        label="Добавить гражданство"
-        validateStatus={errors.citizenships ? "error" : ""}
-        help={errors.citizenships?.message}
-      >
-        <Controller
-          name="citizenships"
-          control={control}
-          render={({ field }) => (
-            <Select
-              loading={isLoading}
-              maxCount={3}
-              {...field}
-              showSearch
-              mode="multiple"
-              optionFilterProp="label"
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
-              onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
-              options={citizenshipsSelect}
-              onChange={(checkedValues) => {
-                const citizenshipsIds = citizenshipsSelect.map((r) => r.value);
-                const others = field.value.filter(
-                  (v: string) => !citizenshipsIds?.includes(v)
-                );
-                field.onChange([...others, ...checkedValues]);
-              }}
-            />
-          )}
-        />
-      </Form.Item>
-      <Form.Item label={null}>
-        <Button
-          variant="solid"
-          color="blue"
-          htmlType="submit"
-          loading={isSubmitting}
-          disabled={!isDirty}
+      <RolesGuard access={"update_accounts"}>
+        <Form.Item
+          label="Добавить гражданство"
+          validateStatus={errors.citizenships ? "error" : ""}
+          help={errors.citizenships?.message}
         >
-          Обновить данные
-        </Button>
-      </Form.Item>
+          <Controller
+            name="citizenships"
+            control={control}
+            render={({ field }) => (
+              <Select
+                loading={isLoading}
+                maxCount={3}
+                {...field}
+                showSearch
+                mode="multiple"
+                optionFilterProp="label"
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
+                onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
+                options={citizenshipsSelect}
+                onChange={(checkedValues) => {
+                  const citizenshipsIds = citizenshipsSelect.map(
+                    (r) => r.value
+                  );
+                  const others = field.value.filter(
+                    (v: string) => !citizenshipsIds?.includes(v)
+                  );
+                  field.onChange([...others, ...checkedValues]);
+                }}
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item label={null}>
+          <Button
+            variant="solid"
+            color="blue"
+            htmlType="submit"
+            loading={isSubmitting}
+            disabled={!isDirty}
+          >
+            Обновить данные
+          </Button>
+        </Form.Item>
+      </RolesGuard>
     </Form>
   );
 };

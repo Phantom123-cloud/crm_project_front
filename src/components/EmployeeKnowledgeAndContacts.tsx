@@ -15,6 +15,7 @@ import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import ColorTab from "./UI/ColorTabContactNumType";
 import ColorTabLanguagesLevel from "./UI/ColorTabLanguagesLevel";
+import RolesGuard from "./layout/RolesGuard";
 
 type Props = {
   foreignLanguages: {
@@ -88,25 +89,29 @@ const EmployeeKnowledgeAndContacts: React.FC<Props> = ({
             >
               <span>{l.language.localeRu}</span>
               <ColorTabLanguagesLevel level={l.level} />
-              <Button
-                type="primary"
-                danger
-                onClick={() => deleteItem(l.id, "language")}
-              >
-                удалить
-              </Button>
+              <RolesGuard access={"update_accounts"}>
+                <Button
+                  type="primary"
+                  danger
+                  onClick={() => deleteItem(l.id, "language")}
+                >
+                  удалить
+                </Button>
+              </RolesGuard>
             </div>
           ))}
         </div>
-        <div className="flex justify-end">
-          <Button
-            type="primary"
-            color="primary"
-            onClick={() => openModal("language")}
-          >
-            добавить
-          </Button>
-        </div>
+        <RolesGuard access={"update_accounts"}>
+          <div className="flex justify-end">
+            <Button
+              type="primary"
+              color="primary"
+              onClick={() => openModal("language")}
+            >
+              добавить
+            </Button>
+          </div>
+        </RolesGuard>
       </div>
       <Divider variant="dashed" />
 
@@ -120,25 +125,30 @@ const EmployeeKnowledgeAndContacts: React.FC<Props> = ({
             >
               <span>{phone.number}</span>
               <ColorTab option={phone.option} />
-              <Button
-                type="primary"
-                danger
-                onClick={() => deleteItem(phone.id, "contact")}
-              >
-                удалить
-              </Button>
+
+              <RolesGuard access={"update_accounts"}>
+                <Button
+                  type="primary"
+                  danger
+                  onClick={() => deleteItem(phone.id, "contact")}
+                >
+                  удалить
+                </Button>
+              </RolesGuard>
             </div>
           ))}
         </div>
-        <div className="flex justify-end">
-          <Button
-            type="primary"
-            color="primary"
-            onClick={() => openModal("contact")}
-          >
-            добавить
-          </Button>
-        </div>
+        <RolesGuard access={"update_accounts"}>
+          <div className="flex justify-end">
+            <Button
+              type="primary"
+              color="primary"
+              onClick={() => openModal("contact")}
+            >
+              добавить
+            </Button>
+          </div>
+        </RolesGuard>
 
         <AddLanguageToEmployee
           isOpen={isOpen}

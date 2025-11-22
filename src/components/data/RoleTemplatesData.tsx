@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Templates } from "@/app/services/role-templates/roleTemplatesTypes";
 import DeleteRoleTemplate from "../modals/delete/DeleteRoleTemplate";
 import UpdateRoleTemplate from "../modals/update/UpdateRoleTemplate";
+import RolesGuard from "../layout/RolesGuard";
 
 type Props = {
   templates: Templates[];
@@ -19,24 +20,28 @@ const RoleTemplatesData: React.FC<Props> = ({ templates, isLoading }) => {
       template: item.name,
       actions: (
         <div className="flex gap-5">
-          <Button
-            color="primary"
-            variant="outlined"
-            icon={<EditOutlined />}
-            onClick={() => getInfo(item, "UPDATE")}
-            size="small"
-          >
-            изменить
-          </Button>
-          <Button
-            color="danger"
-            variant="outlined"
-            icon={<DeleteOutlined />}
-            onClick={() => getInfo(item, "DELETE")}
-            size="small"
-          >
-            удалить
-          </Button>
+          <RolesGuard access={"update_templates"}>
+            <Button
+              color="primary"
+              variant="outlined"
+              icon={<EditOutlined />}
+              onClick={() => getInfo(item, "UPDATE")}
+              size="small"
+            >
+              изменить
+            </Button>
+          </RolesGuard>
+          <RolesGuard access={"delete_templates"}>
+            <Button
+              color="danger"
+              variant="outlined"
+              icon={<DeleteOutlined />}
+              onClick={() => getInfo(item, "DELETE")}
+              size="small"
+            >
+              удалить
+            </Button>
+          </RolesGuard>
         </div>
       ),
     };

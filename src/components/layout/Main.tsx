@@ -11,7 +11,6 @@ import { Footer } from "antd/es/layout/layout";
 import { useUiContext } from "@/UIContext";
 import UiButton from "../UI/buttons/UiButton";
 import { Outlet, useNavigate } from "react-router-dom";
-import { pageStructure } from "./page-structure";
 import type { MenuItem } from "@/types";
 import {
   useLazyGetMeQuery,
@@ -19,9 +18,12 @@ import {
 } from "@/app/services/auth/authApi";
 import { useSelector } from "react-redux";
 import { authState } from "@/app/features/authSlice";
+import { pageStructure } from "./page-structure";
 const { Header, Sider, Content } = Layout;
 
 const Main = () => {
+  const { handleToggleTheme, isDark, callMessage, isAcces } = useUiContext();
+
   const [collapsed, setCollapsed] = useState(false);
   const handleCollapse = () => setCollapsed(!collapsed);
   const {
@@ -47,7 +49,7 @@ const Main = () => {
 
   const navigate = useNavigate();
 
-  const items: MenuItem[] = pageStructure.map(
+  const items: MenuItem[] = pageStructure(isAcces).map(
     ({ label, path, Icon, children }, index) => {
       return getItem(
         label,
@@ -60,8 +62,6 @@ const Main = () => {
       );
     }
   );
-
-  const { handleToggleTheme, isDark, callMessage } = useUiContext();
 
   const [logoutMe] = useLogoutMeMutation();
   const [triggerMe] = useLazyGetMeQuery();

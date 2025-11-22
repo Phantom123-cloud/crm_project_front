@@ -1,7 +1,11 @@
 import { useProtectedImage } from "@/hooks/useProtectedImage";
 import { Image } from "antd";
 
-const PassportImage: React.FC<{ fileName: string }> = ({ fileName }) => {
+const PassportImage: React.FC<{ fileName: string | null }> = ({ fileName }) => {
+  if (!fileName) {
+    return null;
+  }
+
   const imgUrl = useProtectedImage(fileName);
   return (
     <Image

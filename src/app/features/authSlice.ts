@@ -1,10 +1,10 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { authApi } from "../services/auth/authApi";
 import type { RootState } from "../store";
-import type { RolesObj } from "../services/role-templates/roleTemplatesTypes";
+// import type { RolesObj } from "../services/role-templates/roleTemplatesTypes";
 
 const initialState: {
-  roles: RolesObj[] | null;
+  roles: string[] | null;
   meData: { id: string; email: string; fullName: string } | null;
 } = {
   roles: null,
@@ -37,4 +37,10 @@ export const authState = createSelector(
   (state: RootState) => state.auth,
   ({ roles, meData }) => ({ roles, meData })
 );
+
+// export const isAccess = (access: string) =>
+//   createSelector(
+//     (state: RootState) => state.auth,
+//     ({ roles }) => roles?.some((role) => role === access)
+//   );
 export default slice.reducer;

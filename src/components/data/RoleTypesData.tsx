@@ -5,6 +5,7 @@ import DeleteRoleType from "../modals/delete/DeleteRoleType";
 import { useState } from "react";
 import UpdateRoleType from "../modals/update/UpdateRoleType";
 import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
+import RolesGuard from "../layout/RolesGuard";
 
 const RoleTypesData = () => {
   const [isOpen, setOpen] = useState(false);
@@ -18,24 +19,28 @@ const RoleTypesData = () => {
       descriptions: item.descriptions,
       actions: (
         <div className="flex gap-5">
-          <Button
-            color="primary"
-            variant="outlined"
-            icon={<EditOutlined />}
-            onClick={() => getInfo(item, "UPDATE")}
-            size="small"
-          >
-            изменить
-          </Button>
-          <Button
-            color="danger"
-            variant="outlined"
-            icon={<DeleteOutlined />}
-            onClick={() => getInfo(item, "DELETE")}
-            size="small"
-          >
-            удалить
-          </Button>
+          <RolesGuard access={"update_role_types"}>
+            <Button
+              color="primary"
+              variant="outlined"
+              icon={<EditOutlined />}
+              onClick={() => getInfo(item, "UPDATE")}
+              size="small"
+            >
+              изменить
+            </Button>
+          </RolesGuard>
+          <RolesGuard access={"delete_role_types"}>
+            <Button
+              color="danger"
+              variant="outlined"
+              icon={<DeleteOutlined />}
+              onClick={() => getInfo(item, "DELETE")}
+              size="small"
+            >
+              удалить
+            </Button>
+          </RolesGuard>
         </div>
       ),
     };

@@ -1,5 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { ConfigProvider, message, theme as antTheme } from "antd";
+import { useSelector } from "react-redux";
+import { authState } from "./app/features/authSlice";
+import { useRolesGuard } from "./hooks/useRolesGuard";
 
 type MessageType = {
   success: (content: string) => void;
@@ -11,6 +14,7 @@ type ContextType = {
   handleToggleTheme: () => void;
   callMessage: MessageType;
   isDark: boolean;
+  isAcces: (access: string) => boolean;
 };
 
 const AntContext = createContext<ContextType | null>(null);
@@ -19,27 +23,28 @@ export const AntUIProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [messageApi, contextHolder] = message.useMessage();
-
   const callMessage: MessageType = {
     success: (content) => messageApi.open({ type: "success", content }),
     error: (content) => messageApi.open({ type: "error", content }),
     warning: (content) => messageApi.open({ type: "warning", content }),
   };
-
   const [isDark, setIsDark] = useState<boolean>(() => {
     return localStorage.getItem("theme") === "dark";
   });
-
   const handleToggleTheme = () => setIsDark(!isDark);
-
   useEffect(() => {
     localStorage.setItem("theme", isDark ? "dark" : "light");
     document.body.style.backgroundColor = isDark ? "#141414" : "#f0f0f0";
     document.body.style.color = isDark ? "#f0f0f0" : "#141414";
   }, [isDark]);
 
+  const { roles } = useSelector(authState);
+  const { isAcces } = useRolesGuard(roles ?? []);
+
   return (
-    <AntContext.Provider value={{ callMessage, handleToggleTheme, isDark }}>
+    <AntContext.Provider
+      value={{ callMessage, handleToggleTheme, isDark, isAcces }}
+    >
       <ConfigProvider
         theme={{
           algorithm: isDark

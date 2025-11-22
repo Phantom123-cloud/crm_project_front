@@ -11,6 +11,7 @@ import TextArea from "antd/es/input/TextArea";
 import type { Employee } from "@/app/services/users/usersType";
 import { removeUnchangedFields } from "@/utils/removeUnchangedEmployeeItems";
 import EmployeeKnowledgeAndContacts from "../EmployeeKnowledgeAndContacts";
+import RolesGuard from "../layout/RolesGuard";
 
 const schema = z.object({
   notes: z.optional(z.string()),
@@ -168,17 +169,19 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
           render={({ field }) => <TextArea {...field} rows={4} />}
         />
       </Form.Item>
-      <Form.Item label={null}>
-        <Button
-          variant="solid"
-          color="blue"
-          htmlType="submit"
-          loading={isSubmitting}
-          disabled={!isDirty}
-        >
-          Обновить данные
-        </Button>
-      </Form.Item>
+      <RolesGuard access={"update_accounts"}>
+        <Form.Item label={null}>
+          <Button
+            variant="solid"
+            color="blue"
+            htmlType="submit"
+            loading={isSubmitting}
+            disabled={!isDirty}
+          >
+            Обновить данные
+          </Button>
+        </Form.Item>
+      </RolesGuard>
       <EmployeeKnowledgeAndContacts
         userId={userId}
         foreignLanguages={employee?.foreignLanguages ?? []}

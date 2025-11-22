@@ -5,32 +5,60 @@ import {
   TeamOutlined,
 } from "@ant-design/icons";
 
-export const pageStructure = [
+export const pageStructure = (isAcces: (access: string) => boolean) => [
   {
     label: "Роли",
     path: null,
     Icon: LockOutlined,
     children: [
-      {
-        label: "Типы",
-        path: "role-types",
-      },
-      {
-        label: "Роли",
-        path: "roles",
-      },
-      {
-        label: "Шаблоны",
-        path: "role-templates",
-      },
+      ...(isAcces("view_role_types")
+        ? [
+            {
+              label: "Типы",
+              path: "role-types",
+            },
+          ]
+        : []),
+
+      ...(isAcces("view_roles")
+        ? [
+            {
+              label: "Роли",
+              path: "roles",
+            },
+          ]
+        : []),
+      ...(isAcces("view_templates")
+        ? [
+            {
+              label: "Шаблоны",
+              path: "role-templates",
+            },
+          ]
+        : []),
     ],
   },
-  {
-    label: "Пользователи",
-    path: "users",
-    Icon: TeamOutlined,
-  },
-  { label: "Страны", path: "citizenships", Icon: GlobalOutlined },
-  { label: "Языки", path: "languages", Icon: FontColorsOutlined },
-  // { label: "Языки", path: "languages", Icon: FontColorsOutlined },
+
+  ...(isAcces("view_users")
+    ? [
+        {
+          label: "Пользователи",
+          path: "users",
+          Icon: TeamOutlined,
+        },
+      ]
+    : []),
+  ...(isAcces("view_citizenships")
+    ? [
+        {
+          label: "Страны",
+          path: "citizenships",
+          Icon: GlobalOutlined,
+        },
+      ]
+    : []),
+
+  ...(isAcces("view_languages")
+    ? [{ label: "Языки", path: "languages", Icon: FontColorsOutlined }]
+    : []),
 ];

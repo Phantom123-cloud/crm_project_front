@@ -134,12 +134,12 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   return (
     modalType === "UPDATE" && (
       <Modal
-        title="Изменить имя для типа роли"
+        title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}
         onCancel={onCancel}
-        width={600}
+        // width={"80%"}
         loading={loading}
       >
         <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
@@ -164,7 +164,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
                 label: item.label,
                 forceRender: true,
                 children: (
-                  <Form.Item>
+                  <Form.Item className="max-h-[700px] overflow-auto">
                     <CheckboxRolesGroupContoller
                       name={item.name}
                       control={control}

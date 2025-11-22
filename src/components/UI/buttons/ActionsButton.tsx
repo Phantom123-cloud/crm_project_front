@@ -1,3 +1,4 @@
+import RolesGuard from "@/components/layout/RolesGuard";
 import { Button } from "antd";
 
 type Props = {
@@ -17,24 +18,28 @@ const ActionsButton: React.FC<Props> = ({
 }) => {
   return (
     <div className="flex gap-5">
-      <Button
-        color="default"
-        variant="outlined"
-        size="small"
-        disabled={disabledLogout}
-        onClick={onClickLogout}
-      >
-        выйти
-      </Button>
-      <Button
-        color={isActive ? "danger" : "green"}
-        variant="outlined"
-        size="small"
-        disabled={disabledActions}
-        onClick={onClickActions}
-      >
-        {isActive ? "забло-ть" : "актив-ть"}
-      </Button>
+      <RolesGuard access={"logout_users"}>
+        <Button
+          color="default"
+          variant="outlined"
+          size="small"
+          disabled={disabledLogout}
+          onClick={onClickLogout}
+        >
+          выйти
+        </Button>
+      </RolesGuard>
+      <RolesGuard access={"change_account_status"}>
+        <Button
+          color={isActive ? "danger" : "green"}
+          variant="outlined"
+          size="small"
+          disabled={disabledActions}
+          onClick={onClickActions}
+        >
+          {isActive ? "забло-ть" : "актив-ть"}
+        </Button>
+      </RolesGuard>
     </div>
   );
 };

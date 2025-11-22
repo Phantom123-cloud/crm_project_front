@@ -95,7 +95,7 @@ const UpdateCitizenships: React.FC<Props> = ({
   return (
     modalType === "UPDATE" && (
       <Modal
-        title="Изменить имя для типа роли"
+        title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}

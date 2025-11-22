@@ -54,7 +54,7 @@ export const authApi = api.injectEndpoints({
 
     getMe: builder.query<
       ApiResponse<{
-        roles: RolesObj[];
+        roles: string[];
         meData: { id: string; email: string; fullName: string };
       }>,
       void

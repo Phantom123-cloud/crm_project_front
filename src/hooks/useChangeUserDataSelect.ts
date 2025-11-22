@@ -5,7 +5,7 @@ export const useChangeUserDataSelect = (isFullData: boolean) => {
     page: 1,
     limit: 20,
     isOnline: undefined,
-    isActive: undefined,
+    isActive: true,
     isFullData,
   };
   const [query, setQuery] = useState<{
@@ -31,7 +31,7 @@ export const useChangeUserDataSelect = (isFullData: boolean) => {
         setQuery({ ...initQuery, isActive: false });
         break;
       case "all":
-        setQuery(initQuery);
+        setQuery({ ...initQuery, isActive: undefined });
         break;
 
       default:

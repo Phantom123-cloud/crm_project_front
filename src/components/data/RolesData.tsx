@@ -6,6 +6,7 @@ import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
 import UpdateRole from "../modals/update/UpdateRole";
 import type { TSelect } from "@/types";
+import RolesGuard from "../layout/RolesGuard";
 
 type Props = {
   page: number;
@@ -34,27 +35,31 @@ const RolesData: React.FC<Props> = ({
       descriptions: item.descriptions,
       actions: (
         <div className="flex gap-5">
-          <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-            icon={<EditOutlined />}
-            onClick={() => {
-              setRoleTypeId(item.typeId);
-              getInfo(item, "UPDATE");
-            }}
-          >
-            изменить
-          </Button>
-          <Button
-            color="danger"
-            size="small"
-            variant="outlined"
-            icon={<DeleteOutlined />}
-            onClick={() => getInfo(item, "DELETE")}
-          >
-            удалить
-          </Button>
+          <RolesGuard access={"update_roles"}>
+            <Button
+              color="primary"
+              size="small"
+              variant="outlined"
+              icon={<EditOutlined />}
+              onClick={() => {
+                setRoleTypeId(item.typeId);
+                getInfo(item, "UPDATE");
+              }}
+            >
+              изменить
+            </Button>
+          </RolesGuard>
+          <RolesGuard access={"delete_roles"}>
+            <Button
+              color="danger"
+              size="small"
+              variant="outlined"
+              icon={<DeleteOutlined />}
+              onClick={() => getInfo(item, "DELETE")}
+            >
+              удалить
+            </Button>
+          </RolesGuard>
         </div>
       ),
     };

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 import AddRole from "@/components/modals/add/AddRole";
 import AddButton from "@/components/UI/buttons/AddButton";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 const Roles = () => {
   const [page, setPage] = useState(1);
@@ -18,8 +19,17 @@ const Roles = () => {
   });
 
   return (
-    <>
-      <AddButton onClick={() => setOpen(true)} text="Добавить" />
+    <RolesGuard access={"view_roles"}>
+      <RolesGuard access={"create_roles"}>
+        <AddButton onClick={() => setOpen(true)} text="Добавить" />
+        <AddRole
+          isOpen={isOpen}
+          page={page}
+          limit={limit}
+          setOpen={setOpen}
+          roleTypes={roleTypes}
+        />
+      </RolesGuard>
       <RolesData
         page={page}
         setPage={setPage}
@@ -27,14 +37,7 @@ const Roles = () => {
         setLimit={setLimit}
         roleTypes={roleTypes}
       />
-      <AddRole
-        isOpen={isOpen}
-        page={page}
-        limit={limit}
-        setOpen={setOpen}
-        roleTypes={roleTypes}
-      />
-    </>
+    </RolesGuard>
   );
 };
 

@@ -24,7 +24,7 @@ const schema = z.object({
     .string()
     .nonempty("Обязательное поле")
     .min(5, "Минимальная длина - 5")
-    .max(20, "Максимальная длина - 20"),
+    .max(30, "Максимальная длина - 30"),
   descriptions: z
     .string()
     .nonempty("Обязательное поле")
