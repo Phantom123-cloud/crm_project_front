@@ -1,6 +1,6 @@
 export const useRolesGuard = (roles: string[]) => {
-  const isAcces = (access: string) =>
-    (roles ?? []).some((role) => role === access);
+  const roleSet = new Set(roles ?? []);
+  const isAcces = (access: string) => roleSet.has(access);
 
   return { isAcces };
 };
