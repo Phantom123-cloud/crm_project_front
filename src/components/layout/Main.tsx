@@ -19,9 +19,11 @@ import {
 import { useSelector } from "react-redux";
 import { authState } from "@/app/features/authSlice";
 import { pageStructure } from "./page-structure";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
 const { Header, Sider, Content } = Layout;
 
 const Main = () => {
+  useSocketConnection();
   const { handleToggleTheme, isDark, callMessage, isAcces } = useUiContext();
 
   const [collapsed, setCollapsed] = useState(false);

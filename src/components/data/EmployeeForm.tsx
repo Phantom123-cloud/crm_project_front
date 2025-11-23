@@ -169,7 +169,7 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
           render={({ field }) => <TextArea {...field} rows={4} />}
         />
       </Form.Item>
-      <RolesGuard access={"update_accounts"}>
+      <RolesGuard access={"update_employee"}>
         <Form.Item label={null}>
           <Button
             variant="solid"

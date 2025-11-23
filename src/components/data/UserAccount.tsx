@@ -67,12 +67,14 @@ const UserAccount: React.FC<Props> = ({ email, userId }) => {
   const onOpen = () => setIsOpen(true);
 
   return (
-    <RolesGuard access={"update_accounts"}>
-      <div className="flex justify-end">
-        <Button onClick={onOpen} type="primary">
-          Редактировать роли
-        </Button>
-      </div>
+    <>
+      <RolesGuard access={"update_account_roles"}>
+        <div className="flex justify-end">
+          <Button onClick={onOpen} type="primary">
+            Редактировать роли
+          </Button>
+        </div>
+      </RolesGuard>
 
       <Form
         name="basic"
@@ -131,7 +133,7 @@ const UserAccount: React.FC<Props> = ({ email, userId }) => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />
-    </RolesGuard>
+    </>
   );
 };
 

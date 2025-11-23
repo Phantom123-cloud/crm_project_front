@@ -6,38 +6,42 @@ import {
 } from "@ant-design/icons";
 
 export const pageStructure = (isAcces: (access: string) => boolean) => [
-  {
-    label: "Роли",
-    path: null,
-    Icon: LockOutlined,
-    children: [
-      ...(isAcces("view_role_types")
-        ? [
-            {
-              label: "Типы",
-              path: "role-types",
-            },
-          ]
-        : []),
+  ...(isAcces("view_roles")
+    ? [
+        {
+          label: "Роли",
+          path: null,
+          Icon: LockOutlined,
+          children: [
+            ...(isAcces("view_role_types")
+              ? [
+                  {
+                    label: "Типы",
+                    path: "role-types",
+                  },
+                ]
+              : []),
 
-      ...(isAcces("view_roles")
-        ? [
-            {
-              label: "Роли",
-              path: "roles",
-            },
-          ]
-        : []),
-      ...(isAcces("view_templates")
-        ? [
-            {
-              label: "Шаблоны",
-              path: "role-templates",
-            },
-          ]
-        : []),
-    ],
-  },
+            ...(isAcces("view_roles")
+              ? [
+                  {
+                    label: "Роли",
+                    path: "roles",
+                  },
+                ]
+              : []),
+            ...(isAcces("view_templates")
+              ? [
+                  {
+                    label: "Шаблоны",
+                    path: "role-templates",
+                  },
+                ]
+              : []),
+          ],
+        },
+      ]
+    : []),
 
   ...(isAcces("view_users")
     ? [

@@ -186,19 +186,21 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
               className="flex items-center w-[200px] justify-between"
             >
               <span>{c.localeRu}</span>
-              <Button
-                type="primary"
-                danger
-                onClick={() => disconnectCitizenship(c.id)}
-              >
-                удалить
-              </Button>
+              <RolesGuard access={"update_employee"}>
+                <Button
+                  type="primary"
+                  danger
+                  onClick={() => disconnectCitizenship(c.id)}
+                >
+                  удалить
+                </Button>
+              </RolesGuard>
             </div>
           ))}
         </div>
       </div>
       <Divider />
-      <RolesGuard access={"update_accounts"}>
+      <RolesGuard access={"update_employee"}>
         <Form.Item
           label="Добавить гражданство"
           validateStatus={errors.citizenships ? "error" : ""}
