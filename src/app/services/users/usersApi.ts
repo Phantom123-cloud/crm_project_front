@@ -35,6 +35,17 @@ export const usersApi = api.injectEndpoints({
       }),
     }),
 
+    changeRoleTemplate: builder.mutation<
+      ApiResponse,
+      { userId: string; roleTemplatesId: string }
+    >({
+      query: ({ userId, roleTemplatesId }) => ({
+        url: `/users/change-role-template`,
+        method: METHODS.PUT,
+        params: { userId, roleTemplatesId },
+      }),
+    }),
+
     allUsers: builder.query<
       ApiResponse<UsersData>,
       {
@@ -76,4 +87,5 @@ export const {
   useUserByIdQuery,
   useLazyUserByIdQuery,
   useUpdateUserRolesMutation,
+  useChangeRoleTemplateMutation,
 } = usersApi;

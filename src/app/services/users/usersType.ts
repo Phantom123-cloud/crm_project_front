@@ -1,6 +1,7 @@
 export type User = {
   id: string;
   email: string;
+  roleTemplatesId: string;
   createdAt: Date;
   isActive: boolean;
   isOnline: boolean;

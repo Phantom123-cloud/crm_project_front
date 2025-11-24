@@ -58,6 +58,7 @@ const User = () => {
               <UserAccount
                 userId={id as string}
                 email={data?.data?.user?.email as string}
+                roleTemplatesId={data?.data?.user?.roleTemplatesId ?? ""}
               />
             ),
           },

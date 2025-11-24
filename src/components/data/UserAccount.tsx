@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useUpdateAccountCredentialsMutation } from "@/app/services/auth/authApi";
 import UpdateRolesByUserId from "../modals/update/UpdateRolesByUserId";
 import RolesGuard from "../layout/RolesGuard";
+import UpdateRolesTemplate from "../modals/update/UpdateRolesTemplate";
 
 const schema = z.object({
   oldPassword: z.optional(z.string()),
@@ -21,12 +22,14 @@ type FormValues = z.infer<typeof schema>;
 type Props = {
   email: string;
   userId: string;
+  roleTemplatesId: string;
 };
 
-const UserAccount: React.FC<Props> = ({ email, userId }) => {
+const UserAccount: React.FC<Props> = ({ email, userId, roleTemplatesId }) => {
   const [updateAccount] = useUpdateAccountCredentialsMutation();
   const [triggerUserData] = useLazyUserByIdQuery();
   const { callMessage } = useUiContext();
+  const [modalType, setModalType] = useState<"roles" | "templates">("roles");
 
   const {
     handleSubmit,
@@ -64,17 +67,29 @@ const UserAccount: React.FC<Props> = ({ email, userId }) => {
     }
   };
   const [isOpen, setIsOpen] = useState(false);
-  const onOpen = () => setIsOpen(true);
+  const onOpen = (modalType: "roles" | "templates") => {
+    setModalType(modalType);
+    setIsOpen(true);
+  };
 
   return (
     <>
-      <RolesGuard access={"update_account_roles"}>
-        <div className="flex justify-end">
-          <Button onClick={onOpen} type="primary">
+      <div className="flex justify-end gap-2">
+        <RolesGuard access={"update_account_roles"}>
+          <Button onClick={() => onOpen("roles")} type="primary">
             Редактировать роли
           </Button>
-        </div>
-      </RolesGuard>
+        </RolesGuard>
+        <RolesGuard access={"update_roles_template"}>
+          <Button
+            color="danger"
+            variant="solid"
+            onClick={() => onOpen("templates")}
+          >
+            Сменить шаблон
+          </Button>
+        </RolesGuard>
+      </div>
 
       <Form
         name="basic"
@@ -128,11 +143,21 @@ const UserAccount: React.FC<Props> = ({ email, userId }) => {
         </Form.Item>
       </Form>
 
-      <UpdateRolesByUserId
-        userId={userId}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      />
+      {modalType === "roles" && (
+        <UpdateRolesByUserId
+          userId={userId}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
+      )}
+      {modalType === "templates" && (
+        <UpdateRolesTemplate
+          userId={userId}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          roleTemplatesId={roleTemplatesId}
+        />
+      )}
     </>
   );
 };

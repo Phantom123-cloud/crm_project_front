@@ -9,6 +9,7 @@ import {
 } from "@/app/services/auth/authApi";
 import { errorMessages } from "@/utils/is-error-message";
 import { useNavigate } from "react-router-dom";
+import { socket } from "@/socket";
 
 const schema = z.object({
   email: z.email("Некоректный email"),

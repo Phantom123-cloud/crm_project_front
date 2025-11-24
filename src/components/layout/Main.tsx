@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LogoutOutlined,
   MenuFoldOutlined,
@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { authState } from "@/app/features/authSlice";
 import { pageStructure } from "./page-structure";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
+import { socket } from "@/socket";
 const { Header, Sider, Content } = Layout;
 
 const Main = () => {
@@ -79,6 +80,16 @@ const Main = () => {
   };
 
   const { meData } = useSelector(authState);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      socket.emit("ping", meData?.id);
+      console.log(`online`);
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -97,7 +108,7 @@ const Main = () => {
               Icon={collapsed ? MenuUnfoldOutlined : MenuFoldOutlined}
               text={"меню"}
             />
-            <span>{meData?.email}</span>
+            {/* <span>{meData?.email}</span> */}
           </div>
           <div className="">
             <UiButton
