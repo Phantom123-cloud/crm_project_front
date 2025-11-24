@@ -9,7 +9,7 @@ import { Button, Form, Input, Select } from "antd";
 import { useEffect } from "react";
 import TextArea from "antd/es/input/TextArea";
 import type { Employee } from "@/app/services/users/usersType";
-import { removeUnchangedFields } from "@/utils/removeUnchangedEmployeeItems";
+import { removeUnchangedFields } from "@/utils/remove-unchanged-employee-items";
 import EmployeeKnowledgeAndContacts from "../EmployeeKnowledgeAndContacts";
 import RolesGuard from "../layout/RolesGuard";
 

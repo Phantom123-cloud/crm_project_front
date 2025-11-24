@@ -72,6 +72,7 @@ const Main = () => {
   const logoutSession = async () => {
     try {
       const { message } = await logoutMe().unwrap();
+      socket.disconnect();
       callMessage.success(message);
       await triggerMe().unwrap();
     } catch (err) {

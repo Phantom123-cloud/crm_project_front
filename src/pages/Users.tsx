@@ -9,7 +9,7 @@ const Users = () => {
   const isRegisterPage = pathname.includes("register");
 
   return (
-    <div>
+    <>
       <RolesGuard access={"register_users"}>
         <AddButton
           onClick={() => navigate(isRegisterPage ? "/users" : "register")}
@@ -23,7 +23,7 @@ const Users = () => {
       <RolesGuard access={"view_users"}>
         {!isRegisterPage && <UsersData />}
       </RolesGuard>
-    </div>
+    </>
   );
 };
 

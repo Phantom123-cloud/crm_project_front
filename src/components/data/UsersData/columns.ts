@@ -98,11 +98,11 @@ export const columnsData = (isFullData: boolean) => {
       dataIndex: "isActive",
       key: "isActive",
     },
-    {
-      title: "Онлайн?",
-      dataIndex: "isOnline",
-      key: "isOnline",
-    },
+    // {
+    //   title: "Онлайн?",
+    //   dataIndex: "isOnline",
+    //   key: "isOnline",
+    // },
     {
       title: "Действия",
       dataIndex: "actions",

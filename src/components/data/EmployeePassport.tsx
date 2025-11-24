@@ -12,7 +12,7 @@ import { Button, Divider, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
 import type { Employee } from "@/app/services/users/usersType";
 import { useLazyAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
-import { removeUnchangedFields } from "@/utils/removeUnchangedEmployeeItems";
+import { removeUnchangedFields } from "@/utils/remove-unchanged-employee-items";
 import RolesGuard from "../layout/RolesGuard";
 
 const schema = z.object({

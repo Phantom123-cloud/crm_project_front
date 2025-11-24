@@ -1,8 +1,9 @@
+import { baseUrl } from "@/constants";
+
 export const useDownloadFile = () => {
-  const url = import.meta.env.VITE_API_URL;
 
   const handleDownload = async (filename: string, userId: string) => {
-    const ROUTE = `${url}/files/download/passports?fileName=${encodeURIComponent(
+    const ROUTE = `${baseUrl}/files/download/passports?fileName=${encodeURIComponent(
       filename
     )}&userId=${userId}`;
     const res = await fetch(ROUTE, {
@@ -21,7 +22,6 @@ export const useDownloadFile = () => {
     link.href = ROUTE;
     link.target = "_blank";
     link.click();
-
     window.URL.revokeObjectURL(URL);
   };
 

@@ -1,3 +1,4 @@
+import { baseUrl } from "@/constants";
 import { useEffect, useState } from "react";
 
 export function useProtectedImage(filename?: string) {
@@ -10,15 +11,11 @@ export function useProtectedImage(filename?: string) {
 
     const load = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/files/passports/${filename}`,
-          {
-            credentials: "include", // если кука с JWT
-            // headers: { Authorization: `Bearer ${token}` }, // если токен
-          }
-        );
+        const res = await fetch(`${baseUrl}/files/passports/${filename}`, {
+          credentials: "include",
+        });
 
-        if (!res.ok) throw new Error("Failed to load image");
+        if (!res.ok) throw new Error("Ошибка ");
 
         const blob = await res.blob();
         const objectUrl = URL.createObjectURL(blob);

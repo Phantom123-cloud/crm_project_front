@@ -17,7 +17,6 @@ import { isDate } from "@/utils/is-date";
 import ColorTab from "@/components/UI/ColorTabContactNumType";
 import ColorTabLanguagesLevel from "@/components/UI/ColorTabLanguagesLevel";
 import { useLogoutByUserIdMutation } from "@/app/services/auth/authApi";
-import RolesGuard from "@/components/layout/RolesGuard";
 
 const UsersData = () => {
   const [isFullData, setIsFullData] = useState<boolean>(
@@ -50,7 +49,16 @@ const UsersData = () => {
 
     return {
       key: item.id,
-      email: <Link to={`/user/${item.id}`}>{item.email}</Link>,
+      email: (
+        <Link to={`/user/${item.id}`} className="flex items-center gap-1">
+          <span> {item.email}</span>
+          <span
+            className={`h-[5px] w-[5px] rounded-[10px] bg-[${
+              item.isOnline ? "green" : "red"
+            }]`}
+          ></span>
+        </Link>
+      ),
       fullName: (
         <Flex gap={isMe ? 5 : 0} className="whitespace-nowrap">
           {employeeData?.fullName}
@@ -114,7 +122,7 @@ const UsersData = () => {
       }),
 
       isActive: <TagBoolean isBool={item.isActive} />,
-      isOnline: <TagBoolean isBool={item.isOnline} />,
+      // isOnline: <TagBoolean isBool={item.isOnline} />,
       actions: (
         <ActionsButton
           disabledLogout={!item.isActive || isMe}
@@ -173,6 +181,7 @@ const UsersData = () => {
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
+        bordered
         pagination={{
           pageSize: query.limit,
           total: data?.data?.total ?? 1,
