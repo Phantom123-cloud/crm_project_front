@@ -249,6 +249,14 @@ const RegisterUsers = () => {
                     : unsedRoles?.data?.roles ?? []
                 }
               />
+
+              {typeModal === "DELETE" &&
+              (usedRoles?.data?.roles ?? []).length === 0
+                ? "Шаблон не содержит ролей"
+                : typeModal === "ADD" &&
+                  (unsedRoles?.data?.roles ?? []).length === 0
+                ? "В шаблоне уже все права"
+                : ""}
             </Form.Item>
           </Modal>
         )}
