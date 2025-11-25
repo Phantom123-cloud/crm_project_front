@@ -1,5 +1,6 @@
 import { baseUrl } from "@/constants";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export function useProtectedImage(filename?: string) {
   const [url, setUrl] = useState<string | null>(null);
@@ -7,31 +8,22 @@ export function useProtectedImage(filename?: string) {
   useEffect(() => {
     if (!filename) return;
 
-    let isMounted = true;
-
     const load = async () => {
       try {
-        const res = await fetch(`${baseUrl}/files/passports/${filename}`, {
-          credentials: "include",
+        const res = await axios.get(`${baseUrl}/files/passports/${filename}`, {
+          withCredentials: true,
+          responseType: "blob",
         });
-
-        if (!res.ok) throw new Error("Ошибка загрузки изображения");
-
-        const blob = await res.blob();
-        const objectUrl = URL.createObjectURL(blob);
-
-        if (isMounted) setUrl(objectUrl);
+        
+        const objectUrl = URL.createObjectURL(res.data);
+        setUrl(objectUrl);
       } catch (e) {
         console.error("Image load error:", e);
-        if (isMounted) setUrl(null);
+        setUrl(null);
       }
     };
 
     load();
-
-    return () => {
-      isMounted = false;
-    };
   }, [filename]);
 
   return url ?? "/";

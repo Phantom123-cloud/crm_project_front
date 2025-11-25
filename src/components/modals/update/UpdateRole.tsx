@@ -9,8 +9,9 @@ import {
   useLazyAllRoleQuery,
   useUpdateRoleMutation,
 } from "@/app/services/roles/rolesApi";
-import type { TModal, TSelect } from "@/types";
+import type { TModal } from "@/types";
 import RoleForm from "@/components/forms/RoleForm";
+import { useLazyAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 
 type Props = {
   isOpen: boolean;
@@ -22,7 +23,6 @@ type Props = {
   modalType: TModal;
   limit: number;
   page: number;
-  roleTypes: TSelect[];
   loading: boolean;
 };
 
@@ -52,7 +52,6 @@ const UpdateRole: React.FC<Props> = ({
   roleTypeId,
   limit,
   page,
-  roleTypes,
   loading,
 }) => {
   const {
@@ -73,11 +72,25 @@ const UpdateRole: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [updateRole] = useUpdateRoleMutation();
   const [triggerRole] = useLazyAllRoleQuery();
+  const [triggerData, { data }] = useLazyAllRolesTypeQuery();
 
   const onCancel = () => {
     setOpen(false);
     reset();
   };
+
+  const roleTypes = (data?.data ?? []).map((item) => {
+    return {
+      value: item.id,
+      label: item.name,
+    };
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      triggerData();
+    }
+  }, [isOpen]);
 
   const onSubmit = async (data: FormValues) => {
     try {

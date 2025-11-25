@@ -60,9 +60,8 @@ const UsersData = () => {
         </Link>
       ),
       fullName: (
-        <Flex gap={isMe ? 5 : 0} className="whitespace-nowrap">
+        <Flex className="whitespace-nowrap">
           {employeeData?.fullName}
-          <span className="text-red-700">{isMe ? "(Я)" : ""}</span>
         </Flex>
       ),
       createdAt: isDate(item.createdAt),

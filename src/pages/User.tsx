@@ -75,7 +75,6 @@ const User = () => {
           return {
             ...item,
             key: `${index}`,
-            forceRender: true,
           };
         })}
       />

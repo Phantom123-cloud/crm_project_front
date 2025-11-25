@@ -1,6 +1,6 @@
 import RolesData from "@/components/data/RolesData";
-import { useState } from "react";
-import { useAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
+import { useEffect, useState } from "react";
+import { useLazyAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 import AddRole from "@/components/modals/add/AddRole";
 import AddButton from "@/components/UI/buttons/AddButton";
 import RolesGuard from "@/components/layout/RolesGuard";
@@ -9,7 +9,7 @@ const Roles = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [isOpen, setOpen] = useState(false);
-  const { data } = useAllRolesTypeQuery();
+  const [triggerData, { data }] = useLazyAllRolesTypeQuery();
 
   const roleTypes = (data?.data ?? []).map((item) => {
     return {
@@ -17,6 +17,12 @@ const Roles = () => {
       label: item.name,
     };
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      triggerData();
+    }
+  }, [isOpen]);
 
   return (
     <RolesGuard access={"view_roles"}>
@@ -35,7 +41,6 @@ const Roles = () => {
         setPage={setPage}
         limit={limit}
         setLimit={setLimit}
-        roleTypes={roleTypes}
       />
     </RolesGuard>
   );

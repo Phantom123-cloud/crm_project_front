@@ -5,7 +5,6 @@ import DeleteRole from "../modals/delete/DeleteRole";
 import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
 import UpdateRole from "../modals/update/UpdateRole";
-import type { TSelect } from "@/types";
 import RolesGuard from "../layout/RolesGuard";
 
 type Props = {
@@ -13,16 +12,9 @@ type Props = {
   setPage(page: number): void;
   limit: number;
   setLimit(page: number): void;
-  roleTypes: TSelect[];
 };
 
-const RolesData: React.FC<Props> = ({
-  page,
-  setPage,
-  limit,
-  setLimit,
-  roleTypes,
-}) => {
+const RolesData: React.FC<Props> = ({ page, setPage, limit, setLimit }) => {
   const { data, isLoading } = useAllRoleQuery({ page, limit });
   const [isOpen, setOpen] = useState(false);
   const { getInfo, itemInfo } = useGetRoleModalsInfo(setOpen);
@@ -125,7 +117,6 @@ const RolesData: React.FC<Props> = ({
         page={page}
         descriptions={descriptions ?? ""}
         roleTypeId={roleTypeId}
-        roleTypes={roleTypes}
         loading={isLoading}
       />
     </div>
