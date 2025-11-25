@@ -35,7 +35,6 @@ const RoleForm: React.FC<Props> = ({
 }) => {
   return (
     <Form
-      name="basic"
       onFinish={handleSubmit(onSubmit)}
       autoComplete="off"
       labelCol={{ span: 5 }}

@@ -92,7 +92,6 @@ const UserAccount: React.FC<Props> = ({ email, userId, roleTemplatesId }) => {
       </div>
 
       <Form
-        name="basic"
         onFinish={handleSubmit(onSubmit)}
         autoComplete="off"
         layout="vertical"

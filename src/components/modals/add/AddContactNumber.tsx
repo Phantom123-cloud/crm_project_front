@@ -70,7 +70,6 @@ const AddContactNumber: React.FC<Props> = ({
       >
         <Form
           layout="vertical"
-          name="basic"
           onFinish={handleSubmit(onSubmit)}
           autoComplete="off"
           labelCol={{ span: 5 }}

@@ -90,7 +90,7 @@ const UpdateRolesTemplate: React.FC<Props> = ({
         удалены
       </Title>
 
-      <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
+      <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
         <Form.Item
           label={"Шаблон"}
           validateStatus={errors.roleTemplatesId ? "error" : ""}

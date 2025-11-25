@@ -128,7 +128,6 @@ const RegisterUsers = () => {
   return (
     <RolesGuard access={"register_users"}>
       <Form
-        name="basic"
         layout="vertical"
         onFinish={handleSubmit(onSubmit)}
         autoComplete="off"

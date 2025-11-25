@@ -142,7 +142,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
         // width={"80%"}
         loading={loading}
       >
-        <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
+        <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
           <Form.Item
             label="Имя"
             validateStatus={errors.name ? "error" : ""}

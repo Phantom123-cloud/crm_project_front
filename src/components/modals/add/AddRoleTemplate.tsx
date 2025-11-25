@@ -78,7 +78,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen }) => {
       footer={null}
       onCancel={onCancel}
     >
-      <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
+      <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
         <Form.Item
           label="Имя"
           validateStatus={errors.name ? "error" : ""}

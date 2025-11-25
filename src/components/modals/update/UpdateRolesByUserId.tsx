@@ -142,7 +142,7 @@ const UpdateRolesByUserId: React.FC<Props> = ({
       width={700}
       loading={isLoading}
     >
-      <Form name="basic" onFinish={handleSubmit(onSubmit)} autoComplete="off">
+      <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
         <Tabs
           defaultActiveKey="blockCurrent"
           items={tabItems.map((item) => {

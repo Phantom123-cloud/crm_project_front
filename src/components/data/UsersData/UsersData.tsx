@@ -53,9 +53,9 @@ const UsersData = () => {
         <Link to={`/user/${item.id}`} className="flex items-center gap-1">
           <span> {item.email}</span>
           <span
-            className={`h-[5px] w-[5px] rounded-[10px] bg-[${
-              item.isOnline ? "green" : "red"
-            }]`}
+            className={`h-[5px] w-[5px] rounded-[10px] ${
+              item.isOnline ? "bg-[green]" : "bg-[red]"
+            }`}
           ></span>
         </Link>
       ),

@@ -116,7 +116,6 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
 
   return (
     <Form
-      name="basic"
       onFinish={handleSubmit(onSubmit)}
       autoComplete="off"
       layout="vertical"
@@ -215,6 +214,7 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
                 maxCount={3}
                 {...field}
                 showSearch
+                
                 mode="multiple"
                 optionFilterProp="label"
                 filterSort={(optionA, optionB) =>

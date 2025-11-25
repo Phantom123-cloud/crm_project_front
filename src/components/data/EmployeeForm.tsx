@@ -96,7 +96,6 @@ const EmployeeForm: React.FC<Props> = ({ employee, userId }) => {
 
   return (
     <Form
-      name="basic"
       onFinish={handleSubmit(onSubmit)}
       autoComplete="off"
       layout="vertical"

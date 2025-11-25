@@ -87,7 +87,6 @@ const AddLanguageToEmployee: React.FC<Props> = ({
         onCancel={onCancel}
       >
         <Form
-          name="basic"
           onFinish={handleSubmit(onSubmit)}
           autoComplete="off"
           layout="vertical"

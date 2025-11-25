@@ -59,7 +59,6 @@ const FormPassportFiles: React.FC<Props> = ({ userId }) => {
   const { getRootProps, getInputProps } = useDropzone();
   return (
     <Form
-      name="basic"
       onFinish={handleSubmit(onSubmit)}
       autoComplete="off"
       layout="vertical"

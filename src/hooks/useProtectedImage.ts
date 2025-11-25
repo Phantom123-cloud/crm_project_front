@@ -15,7 +15,7 @@ export function useProtectedImage(filename?: string) {
           credentials: "include",
         });
 
-        if (!res.ok) throw new Error("Ошибка ");
+        if (!res.ok) throw new Error("Ошибка загрузки изображения");
 
         const blob = await res.blob();
         const objectUrl = URL.createObjectURL(blob);
