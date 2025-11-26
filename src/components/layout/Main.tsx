@@ -14,17 +14,26 @@ import { Outlet, useNavigate } from "react-router-dom";
 import type { MenuItem } from "@/types";
 import {
   useLazyGetMeQuery,
+  useLogoutByUserIdMutation,
   useLogoutMeMutation,
 } from "@/app/services/auth/authApi";
-import { useSelector } from "react-redux";
-import { authState } from "@/app/features/authSlice";
 import { pageStructure } from "./page-structure";
-import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { socket } from "@/socket";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { authState } from "@/app/features/authSlice";
+import { addData } from "@/app/features/socketSlice";
+import { getItem } from "../data/UsersData/get-Item";
 const { Header, Sider, Content } = Layout;
 
+type SocketData = {
+  offline: number | null;
+  online: number | null;
+  blocked: number | null;
+  userId?: string;
+  type?: "logoutById" | "isActive" | undefined;
+};
+
 const Main = () => {
-  useSocketConnection();
   const { handleToggleTheme, isDark, callMessage, isAcces } = useUiContext();
 
   const [collapsed, setCollapsed] = useState(false);
@@ -32,23 +41,6 @@ const Main = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
-  const changePage = (path: string) => navigate(path);
-  const getItem = (
-    label: React.ReactNode,
-    key: React.Key,
-    path?: string | null,
-    icon?: React.ReactNode,
-    children?: MenuItem[]
-  ): MenuItem => {
-    return {
-      key,
-      icon,
-      children,
-      label,
-      onClick: () => path && changePage(path),
-    } as MenuItem;
-  };
 
   const navigate = useNavigate();
 
@@ -68,10 +60,14 @@ const Main = () => {
 
   const [logoutMe] = useLogoutMeMutation();
   const [triggerMe] = useLazyGetMeQuery();
+  const [logoutById] = useLogoutByUserIdMutation();
+  const dispatch = useAppDispatch();
 
-  const logoutSession = async () => {
+  const logoutSession = async (id?: string) => {
     try {
-      const { message } = await logoutMe().unwrap();
+      const { message } = id
+        ? await logoutById(id).unwrap()
+        : await logoutMe().unwrap();
       socket.disconnect();
       callMessage.success(message);
       await triggerMe().unwrap();
@@ -80,22 +76,48 @@ const Main = () => {
     }
   };
 
-  const { meData } = useSelector(authState);
+  const { meData } = useAppSelector(authState);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      socket.emit("ping", meData?.id);
-      console.log(`online`);
-    }, 60000);
+    if (!meData?.id) return;
+    let interval: NodeJS.Timeout | null = null;
 
-    return () => clearInterval(interval);
+    if (!socket.connected) {
+      socket.connect();
+      console.log("connect");
+
+      socket.emit("register", meData?.id);
+      console.log("register");
+
+      socket.on(
+        "usersSystemStatus",
+        ({ offline, online, blocked, userId, type }: SocketData) => {
+          dispatch(addData({ offline, online, blocked }));
+
+          if (type && userId && userId === meData?.id) {
+            logoutSession(userId);
+          }
+        }
+      );
+      console.log("usersSystemStatus");
+
+      interval = setInterval(() => {
+        socket.emit("ping", meData?.id);
+        console.log("ping");
+      }, 60000);
+    }
+
+    return () => {
+      socket.disconnect();
+      socket.off("usersSystemStatus");
+      interval && clearInterval(interval);
+    };
   }, []);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
-
         <Menu theme="dark" mode="inline" items={items} />
       </Sider>
       <Layout>
@@ -109,7 +131,6 @@ const Main = () => {
               Icon={collapsed ? MenuUnfoldOutlined : MenuFoldOutlined}
               text={"меню"}
             />
-            {/* <span>{meData?.email}</span> */}
           </div>
           <div className="">
             <UiButton
@@ -136,7 +157,7 @@ const Main = () => {
           <Outlet />
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          ©{new Date().getFullYear()} Created by SLP
         </Footer>
       </Layout>
     </Layout>

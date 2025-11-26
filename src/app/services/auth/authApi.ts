@@ -2,7 +2,6 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type { Login, Register } from "./authTypes";
-import type { RolesObj } from "../role-templates/roleTemplatesTypes";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({

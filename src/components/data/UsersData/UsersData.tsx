@@ -7,7 +7,6 @@ import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import { Flex, Segmented, Select, Table } from "antd";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { columnsData } from "./columns";
 import { useChangeUserDataSelect } from "@/hooks/useChangeUserDataSelect";
@@ -17,6 +16,8 @@ import { isDate } from "@/utils/is-date";
 import ColorTab from "@/components/UI/ColorTabContactNumType";
 import ColorTabLanguagesLevel from "@/components/UI/ColorTabLanguagesLevel";
 import { useLogoutByUserIdMutation } from "@/app/services/auth/authApi";
+import { useAppSelector } from "@/app/hooks";
+import { socketState } from "@/app/features/socketSlice";
 
 const UsersData = () => {
   const [isFullData, setIsFullData] = useState<boolean>(
@@ -29,7 +30,8 @@ const UsersData = () => {
   const [logoutUser] = useLogoutByUserIdMutation();
   const [isActiveUser] = useIsActiveUserMutation();
   const { callMessage } = useUiContext();
-  const { meData } = useSelector(authState);
+  const { meData } = useAppSelector(authState);
+  const { offline, online, blocked } = useAppSelector(socketState);
 
   const onActions = async (id: string, type: "logout" | "active") => {
     try {
@@ -37,7 +39,6 @@ const UsersData = () => {
         ? isActiveUser(id)
         : logoutUser(id)
       ).unwrap();
-      await triggerUsers(query).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
@@ -60,9 +61,7 @@ const UsersData = () => {
         </Link>
       ),
       fullName: (
-        <Flex className="whitespace-nowrap">
-          {employeeData?.fullName}
-        </Flex>
+        <Flex className="whitespace-nowrap">{employeeData?.fullName}</Flex>
       ),
       createdAt: isDate(item.createdAt),
 
@@ -155,6 +154,16 @@ const UsersData = () => {
   useEffect(() => {
     triggerUsers({ ...query, isFullData });
   }, [query.page, query.limit, query.isActive, query.isOnline, isFullData]);
+
+  useEffect(() => {
+    if (
+      data?.data?.online !== online ||
+      data?.data?.offline !== offline ||
+      data?.data?.blocked !== blocked
+    ) {
+      triggerUsers(query);
+    }
+  }, [online, offline, blocked]);
 
   return (
     <>

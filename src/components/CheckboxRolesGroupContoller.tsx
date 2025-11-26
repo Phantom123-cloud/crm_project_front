@@ -21,13 +21,16 @@ const CheckboxRolesGroupContoller: React.FC<Props> = ({
       render={({ field }) => (
         <div className="grid gap-5">
           {roles.map((type) => {
+            // список всех id
             const roleIds = type.roles.map((r) => r.id);
 
+            // список выбранных всех id
             const selected = field.value.filter((v: string) =>
               roleIds.includes(v)
             );
             const isAllChecked = selected.length === roleIds.length;
 
+            // срабатывает когда выбран 1 или более чекбоксов
             const isIndeterminate =
               selected.length > 0 && selected.length < roleIds.length;
 
@@ -40,17 +43,19 @@ const CheckboxRolesGroupContoller: React.FC<Props> = ({
                     indeterminate={isIndeterminate}
                     checked={isAllChecked}
                     onChange={(e) => {
+                      // если нажали
                       if (e.target.checked) {
+                        // делаем новую копию массива всех ранее выделенных и исходного,
+                        // делаем Set что бы не было дублей
+                        // и в массив преобразуем
                         const newValues = Array.from(
                           new Set([...field.value, ...roleIds])
                         );
+                        // передаём в форму
                         field.onChange(newValues);
                       } else {
-                        field.onChange(
-                          field.value.filter(
-                            (v: string) => !roleIds.includes(v)
-                          )
-                        );
+                        // если вернули false,удаляем из формы все которые ранее были выбраны
+                        field.onChange([]);
                       }
                     }}
                   >

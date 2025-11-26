@@ -46,6 +46,9 @@ export type UsersData = {
   countPages: number;
   page: number;
   limit: number;
+  online: number;
+  offline: number;
+  blocked: number;
 };
 
 export type PhoneSelection = "mobile" | "whatsapp" | "telegram";

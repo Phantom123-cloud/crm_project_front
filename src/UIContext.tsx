@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { ConfigProvider, message, theme as antTheme } from "antd";
-import { useSelector } from "react-redux";
 import { authState } from "./app/features/authSlice";
 import { useRolesGuard } from "./hooks/useRolesGuard";
+import { useAppSelector } from "./app/hooks";
 
 type MessageType = {
   success: (content: string) => void;
@@ -38,7 +38,7 @@ export const AntUIProvider: React.FC<{ children: React.ReactNode }> = ({
     document.body.style.color = isDark ? "#f0f0f0" : "#141414";
   }, [isDark]);
 
-  const { roles } = useSelector(authState);
+  const { roles } = useAppSelector(authState);
   const { isAcces } = useRolesGuard(roles ?? []);
 
   return (
