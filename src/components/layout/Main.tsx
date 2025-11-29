@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   LogoutOutlined,
   MenuFoldOutlined,
@@ -14,24 +14,14 @@ import { Outlet, useNavigate } from "react-router-dom";
 import type { MenuItem } from "@/types";
 import {
   useLazyGetMeQuery,
-  useLogoutByUserIdMutation,
   useLogoutMeMutation,
 } from "@/app/services/auth/authApi";
 import { pageStructure } from "./page-structure";
-import { socket } from "@/socket";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { authState } from "@/app/features/authSlice";
-import { addData } from "@/app/features/socketSlice";
+// import { socket } from "@/socket";
+// import { useAppSelector } from "@/app/hooks";
+// import { authState } from "@/app/features/authSlice";
 import { getItem } from "../data/UsersData/get-Item";
 const { Header, Sider, Content } = Layout;
-
-type SocketData = {
-  offline: number | null;
-  online: number | null;
-  blocked: number | null;
-  userId?: string;
-  type?: "logoutById" | "isActive" | undefined;
-};
 
 const Main = () => {
   const { handleToggleTheme, isDark, callMessage, isAcces } = useUiContext();
@@ -60,15 +50,13 @@ const Main = () => {
 
   const [logoutMe] = useLogoutMeMutation();
   const [triggerMe] = useLazyGetMeQuery();
-  const [logoutById] = useLogoutByUserIdMutation();
-  const dispatch = useAppDispatch();
+  // const [logoutById] = useLogoutByUserIdMutation();
+  // const dispatch = useAppDispatch();
 
-  const logoutSession = async (id?: string) => {
+  const logoutSession = async () => {
     try {
-      const { message } = id
-        ? await logoutById(id).unwrap()
-        : await logoutMe().unwrap();
-      socket.disconnect();
+      const { message } = await logoutMe().unwrap();
+      // socket.disconnect();
       callMessage.success(message);
       await triggerMe().unwrap();
     } catch (err) {
@@ -76,43 +64,27 @@ const Main = () => {
     }
   };
 
-  const { meData } = useAppSelector(authState);
+  // const { meData } = useAppSelector(authState);
 
-  useEffect(() => {
-    if (!meData?.id) return;
-    let interval: NodeJS.Timeout | null = null;
+  // useEffect(() => {
+  //   if (!meData?.id) return;
+  //   let interval: NodeJS.Timeout | null = null;
 
-    if (!socket.connected) {
-      socket.connect();
-      console.log("connect");
+  //   if (!socket.connected) {
+  //     socket.connect();
+  //     // socket.emit("register", meData?.id);
 
-      socket.emit("register", meData?.id);
-      console.log("register");
+  //     interval = setInterval(() => {
+  //       socket.emit("ping", meData?.id);
+  //       console.log('ping');
+  //     }, 100_000);
+  //   }
 
-      socket.on(
-        "usersSystemStatus",
-        ({ offline, online, blocked, userId, type }: SocketData) => {
-          dispatch(addData({ offline, online, blocked }));
-
-          if (type && userId && userId === meData?.id) {
-            logoutSession(userId);
-          }
-        }
-      );
-      console.log("usersSystemStatus");
-
-      interval = setInterval(() => {
-        socket.emit("ping", meData?.id);
-        console.log("ping");
-      }, 60000);
-    }
-
-    return () => {
-      socket.disconnect();
-      socket.off("usersSystemStatus");
-      interval && clearInterval(interval);
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect();
+  //     interval && clearInterval(interval);
+  //   };
+  // }, []);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
