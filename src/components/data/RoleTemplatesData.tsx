@@ -1,11 +1,11 @@
 import { Table, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
 import type { Templates } from "@/app/services/role-templates/roleTemplatesTypes";
 import DeleteRoleTemplate from "../modals/delete/DeleteRoleTemplate";
 import UpdateRoleTemplate from "../modals/update/UpdateRoleTemplate";
 import RolesGuard from "../layout/RolesGuard";
+import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
 
 type Props = {
   templates: Templates[];
@@ -13,7 +13,7 @@ type Props = {
 };
 const RoleTemplatesData: React.FC<Props> = ({ templates, isLoading }) => {
   const [isOpen, setOpen] = useState(false);
-  const { getInfo, itemInfo } = useGetRoleModalsInfo(setOpen);
+  const { getInfo, itemInfo } = useGetModalsInfo(setOpen);
   const dataSource = (templates ?? []).map((item) => {
     return {
       key: item.id,

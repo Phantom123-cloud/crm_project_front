@@ -106,6 +106,23 @@ export const employeesApi = api.injectEndpoints({
         params: { citizenshipId, userId },
       }),
     }),
+
+    allEmployeeTradings: builder.query<
+      ApiResponse<
+        {
+          fullName: string | null;
+          userId: string;
+          user: { email: string };
+        }[]
+      >,
+      { isNotAll: boolean }
+    >({
+      query: ({ isNotAll }) => ({
+        url: `/employees/all-employee-tradings`,
+        method: METHODS.GET,
+        params: { isNotAll },
+      }),
+    }),
   }),
 });
 
@@ -113,7 +130,8 @@ export const {
   useUpdateEmployeeFormMutation,
   useUpdateEmployeePassportMutation,
   useDisconnectCitizenshipMutation,
-
+  useAllEmployeeTradingsQuery,
+  useLazyAllEmployeeTradingsQuery,
   useAddContactNumberToEmployeeMutation,
   useAddLanguageToEmployeeMutation,
   useDeleteContactNumberToEmployeeMutation,

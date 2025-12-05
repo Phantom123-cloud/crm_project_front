@@ -69,7 +69,7 @@ const Login = () => {
           label="Email"
           validateStatus={errors.email ? "error" : ""}
           help={errors.email?.message}
-          required={true}
+          required
         >
           <Controller
             name="email"
@@ -84,7 +84,7 @@ const Login = () => {
           label="Пароль"
           validateStatus={errors.password ? "error" : ""}
           help={errors.password?.message}
-          required={true}
+          required
         >
           <Controller
             name="password"

@@ -9,13 +9,14 @@ type TitemInfo = {
   descriptions?: string;
 };
 
-export const useGetRoleModalsInfo = (
-  setOpen: Dispatch<SetStateAction<boolean>>
+export const useGetModalsInfo = (
+  setOpen: Dispatch<SetStateAction<boolean>>,
+  desc: boolean = true
 ) => {
   const [itemInfo, setItemInfo] = useState<TitemInfo>({
     id: "",
     name: "",
-    descriptions: "",
+    ...(desc && { descriptions: "" }),
     modalType: "DELETE",
   });
 

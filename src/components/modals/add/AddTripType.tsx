@@ -4,12 +4,16 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
-import { errorMessages } from "@/utils/is-error-message";
 import {
-  useCreateCitizenshipMutation,
-  useLazyAllCitizenshipsQuery,
-} from "@/app/services/citizenships/citizenshipsApi";
-import CitizenshipForm from "@/components/forms/CitizenshipAndLanguagesForm";
+  useCreateRolesTypeMutation,
+  useLazyAllRolesTypeQuery,
+} from "@/app/services/role-types/roleTypesApi";
+import { errorMessages } from "@/utils/is-error-message";
+import TripTypeForm from "@/components/forms/TripTypeForm";
+import {
+  useCreateTripTypesMutation,
+  useLazyAllTripTypesQuery,
+} from "@/app/services/trip-types/tripTypesApi";
 
 type Props = {
   isOpen: boolean;
@@ -17,14 +21,16 @@ type Props = {
 };
 
 const schema = z.object({
-  code: z.string().nonempty("Обязательное поле"),
-  localeEn: z.string().nonempty("Обязательное поле"),
-  localeRu: z.string().nonempty("Обязательное поле"),
+  name: z
+    .string()
+    .nonempty("Обязательное поле")
+    .min(5, "Минимальная длина - 5")
+    .max(20, "Максимальная длина - 20"),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-const AddCitizenship: React.FC<Props> = ({ isOpen, setOpen }) => {
+const AddTripType: React.FC<Props> = ({ isOpen, setOpen }) => {
   const {
     handleSubmit,
     control,
@@ -33,15 +39,13 @@ const AddCitizenship: React.FC<Props> = ({ isOpen, setOpen }) => {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      code: "",
-      localeEn: "",
-      localeRu: "",
+      name: "",
     },
   });
 
   const { callMessage } = useUiContext();
-  const [createCitizenship] = useCreateCitizenshipMutation();
-  const [triggerCitizenships] = useLazyAllCitizenshipsQuery();
+  const [createTripType] = useCreateTripTypesMutation();
+  const [triggerTripTypes] = useLazyAllTripTypesQuery();
 
   const onCancel = () => {
     setOpen(false);
@@ -50,8 +54,8 @@ const AddCitizenship: React.FC<Props> = ({ isOpen, setOpen }) => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const { message } = await createCitizenship(data).unwrap();
-      await triggerCitizenships().unwrap();
+      const { message } = await createTripType(data).unwrap();
+      await triggerTripTypes().unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
@@ -68,18 +72,18 @@ const AddCitizenship: React.FC<Props> = ({ isOpen, setOpen }) => {
       footer={null}
       onCancel={onCancel}
     >
-      <CitizenshipForm
+      <TripTypeForm
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         errors={errors}
         control={control}
         isSubmitting={isSubmitting}
-        required
         onCancel={onCancel}
-        text="Сохранить"
+        text="Добавить"
+        required
       />
     </Modal>
   );
 };
 
-export default AddCitizenship;
+export default AddTripType;

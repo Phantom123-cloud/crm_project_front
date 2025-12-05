@@ -136,7 +136,7 @@ const RegisterUsers = () => {
           label="Email"
           validateStatus={errors.email ? "error" : ""}
           help={errors.email?.message}
-          required={true}
+          required
         >
           <Controller
             name="email"
@@ -148,7 +148,7 @@ const RegisterUsers = () => {
           label="Пароль"
           validateStatus={errors.password ? "error" : ""}
           help={errors.password?.message}
-          required={true}
+          required
         >
           <Controller
             name="password"
@@ -161,7 +161,7 @@ const RegisterUsers = () => {
           label="Тип роли"
           validateStatus={errors.roleTemplatesId ? "error" : ""}
           help={errors.roleTemplatesId?.message}
-          required={true}
+          required
         >
           <Flex wrap gap={10}>
             <Controller

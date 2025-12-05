@@ -82,7 +82,7 @@ const AddRoleType: React.FC<Props> = ({ isOpen, setOpen }) => {
         isSubmitting={isSubmitting}
         onCancel={onCancel}
         text="Добавить"
-        required={true}
+        required
       />
     </Modal>
   );

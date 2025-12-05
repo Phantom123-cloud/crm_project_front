@@ -1,46 +1,45 @@
-import { useAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 import { Button, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import DeleteRoleType from "../modals/delete/DeleteRoleType";
+import DeleteTripType from "../modals/delete/DeleteTripType";
 import { useState } from "react";
-import UpdateRoleType from "../modals/update/UpdateRoleType";
+import UpdateTripType from "../modals/update/UpdateTripType";
 import RolesGuard from "../layout/RolesGuard";
 import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
+import { useAllTripTypesQuery } from "@/app/services/trip-types/tripTypesApi";
 
-const RoleTypesData = () => {
+const TripTypesData = () => {
   const [isOpen, setOpen] = useState(false);
-  const { getInfo, itemInfo } = useGetModalsInfo(setOpen);
+  const { getInfo, itemInfo } = useGetModalsInfo(setOpen, false);
 
-  const { data, isLoading } = useAllRolesTypeQuery();
+  const { data, isLoading } = useAllTripTypesQuery();
   const dataSource = (data?.data ?? []).map((item) => {
     return {
       key: item.id,
       name: item.name,
-      descriptions: item.descriptions,
       actions: (
         <div className="flex gap-5">
-          <RolesGuard access={"update_role_types"}>
-            <Button
-              color="primary"
-              variant="outlined"
-              icon={<EditOutlined />}
-              onClick={() => getInfo(item, "UPDATE")}
-              size="small"
-            >
-              изменить
-            </Button>
-          </RolesGuard>
-          <RolesGuard access={"delete_role_types"}>
-            <Button
-              color="danger"
-              variant="outlined"
-              icon={<DeleteOutlined />}
-              onClick={() => getInfo(item, "DELETE")}
-              size="small"
-            >
-              удалить
-            </Button>
-          </RolesGuard>
+          {/* <RolesGuard access={"update_role_types"}> */}
+          <Button
+            color="primary"
+            variant="outlined"
+            icon={<EditOutlined />}
+            onClick={() => getInfo(item, "UPDATE")}
+            size="small"
+          >
+            изменить
+          </Button>
+          {/* </RolesGuard> */}
+          {/* <RolesGuard access={"delete_role_types"}> */}
+          <Button
+            color="danger"
+            variant="outlined"
+            icon={<DeleteOutlined />}
+            onClick={() => getInfo(item, "DELETE")}
+            size="small"
+          >
+            удалить
+          </Button>
+          {/* </RolesGuard> */}
         </div>
       ),
     };
@@ -52,11 +51,7 @@ const RoleTypesData = () => {
       dataIndex: "name",
       key: "name",
     },
-    {
-      title: "Описание",
-      dataIndex: "descriptions",
-      key: "descriptions",
-    },
+
     {
       title: "Действия",
       dataIndex: "actions",
@@ -72,14 +67,14 @@ const RoleTypesData = () => {
         columns={columns}
         pagination={false}
       />
-      <DeleteRoleType
+      <DeleteTripType
         isOpen={isOpen}
         setOpen={setOpen}
         name={name ?? ""}
         id={id}
         modalType={modalType}
       />
-      <UpdateRoleType
+      <UpdateTripType
         isOpen={isOpen}
         setOpen={setOpen}
         name={name ?? ""}
@@ -92,4 +87,4 @@ const RoleTypesData = () => {
   );
 };
 
-export default RoleTypesData;
+export default TripTypesData;

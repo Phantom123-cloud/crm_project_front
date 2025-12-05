@@ -94,7 +94,7 @@ const AddRole: React.FC<Props> = ({
         onCancel={onCancel}
         text={"Добавить"}
         roleTypes={roleTypes}
-        required={true}
+        required
       />
     </Modal>
   );

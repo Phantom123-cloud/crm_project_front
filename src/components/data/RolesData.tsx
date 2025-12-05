@@ -2,10 +2,10 @@ import { useAllRoleQuery } from "@/app/services/roles/rolesApi";
 import { Table, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DeleteRole from "../modals/delete/DeleteRole";
-import { useGetRoleModalsInfo } from "@/hooks/useGetRoleModalsInfo";
 import { useState } from "react";
 import UpdateRole from "../modals/update/UpdateRole";
 import RolesGuard from "../layout/RolesGuard";
+import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
 
 type Props = {
   page: number;
@@ -17,7 +17,7 @@ type Props = {
 const RolesData: React.FC<Props> = ({ page, setPage, limit, setLimit }) => {
   const { data, isLoading } = useAllRoleQuery({ page, limit });
   const [isOpen, setOpen] = useState(false);
-  const { getInfo, itemInfo } = useGetRoleModalsInfo(setOpen);
+  const { getInfo, itemInfo } = useGetModalsInfo(setOpen);
   const [roleTypeId, setRoleTypeId] = useState("");
   const dataSource = (data?.data?.roles ?? []).map((item) => {
     return {

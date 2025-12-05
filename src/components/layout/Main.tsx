@@ -40,7 +40,7 @@ const Main = () => {
         label,
         index,
         path,
-        <Icon />,
+        <Icon size={15} />,
         children?.map((item, subIndex) =>
           getItem(item.label, `sub_${index}_${subIndex}`, item.path)
         )

@@ -1,9 +1,11 @@
 import {
+  CarOutlined,
   FontColorsOutlined,
   GlobalOutlined,
   LockOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
+import { Warehouse } from "lucide-react";
 
 export const pageStructure = (isAcces: (access: string) => boolean) => [
   ...(isAcces("view_roles")
@@ -42,7 +44,6 @@ export const pageStructure = (isAcces: (access: string) => boolean) => [
         },
       ]
     : []),
-
   ...(isAcces("view_users")
     ? [
         {
@@ -61,8 +62,34 @@ export const pageStructure = (isAcces: (access: string) => boolean) => [
         },
       ]
     : []),
-
   ...(isAcces("view_languages")
     ? [{ label: "Языки", path: "languages", Icon: FontColorsOutlined }]
     : []),
+
+  {
+    label: "Выезда",
+    path: null,
+    Icon: CarOutlined,
+    children: [
+      {
+        label: "Список выездов",
+        path: "trips",
+      },
+      {
+        label: "Типы",
+        path: "trip-types",
+      },
+    ],
+  },
+  {
+    label: "Склады",
+    path: null,
+    Icon: Warehouse,
+    children: [
+      {
+        label: "Список складов",
+        path: "warehouses",
+      },
+    ],
+  },
 ];

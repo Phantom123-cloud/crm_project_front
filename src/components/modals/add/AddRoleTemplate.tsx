@@ -83,7 +83,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen }) => {
           label="Имя"
           validateStatus={errors.name ? "error" : ""}
           help={errors.name?.message}
-          required={true}
+          required
         >
           <Controller
             name="name"
@@ -94,7 +94,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen }) => {
         <Form.Item
           validateStatus={errors.array ? "error" : ""}
           help={errors.array?.message}
-          required={true}
+          required
           className="max-h-[700px] overflow-auto"
         >
           <CheckboxRolesGroupContoller

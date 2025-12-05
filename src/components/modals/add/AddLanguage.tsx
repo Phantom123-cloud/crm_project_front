@@ -74,7 +74,7 @@ const AddLanguage: React.FC<Props> = ({ isOpen, setOpen }) => {
         errors={errors}
         control={control}
         isSubmitting={isSubmitting}
-        required={true}
+        required
         onCancel={onCancel}
         text="Сохранить"
       />

@@ -15,6 +15,10 @@ import Languages from "./pages/Languages.tsx";
 import Users from "./pages/Users.tsx";
 import RegisterUsers from "./pages/RegisterUsers.tsx";
 import User from "./pages/User.tsx";
+import TripTypes from "./pages/TripTypes.tsx";
+import Trips from "./pages/Trips.tsx";
+import CreateTrips from "./pages/CreateTrips.tsx";
+import Warehouses from "./pages/Warehouses.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +40,17 @@ const router = createBrowserRouter([
             children: [{ path: "register", element: <RegisterUsers /> }],
           },
           { path: "user/:id", element: <User /> },
+          { path: "trip-types", element: <TripTypes /> },
+          {
+            path: "trips",
+            element: <Trips />,
+            children: [{ path: "create", element: <CreateTrips /> }],
+          },
+          {
+            path: "warehouses",
+            element: <Warehouses />,
+            // children: [{ path: "create", element: <CreateTrips /> }],
+          },
         ],
       },
     ],
