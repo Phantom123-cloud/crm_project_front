@@ -90,6 +90,10 @@ export const pageStructure = (isAcces: (access: string) => boolean) => [
         label: "Список складов",
         path: "warehouses",
       },
+      {
+        label: "Товар",
+        path: "products",
+      },
     ],
   },
 ];
