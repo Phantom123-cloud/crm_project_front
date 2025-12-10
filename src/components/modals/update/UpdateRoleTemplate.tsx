@@ -25,6 +25,8 @@ type Props = {
     label: string;
   }[];
   loading: boolean;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -46,6 +48,8 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   name,
   modalType,
   loading,
+  page,
+  limit,
 }) => {
   const {
     handleSubmit,
@@ -118,7 +122,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
         ...resultData,
         id,
       }).unwrap();
-      await triggerRoleTemplate().unwrap();
+      await triggerRoleTemplate({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

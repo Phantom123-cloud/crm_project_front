@@ -9,8 +9,8 @@ import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
 
 type Props = {
   page: number;
-  setPage(page: number): void;
   limit: number;
+  setPage(page: number): void;
   setLimit(page: number): void;
 };
 

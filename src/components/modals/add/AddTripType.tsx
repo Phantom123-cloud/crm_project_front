@@ -13,7 +13,9 @@ import {
 
 type Props = {
   isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
+  setOpen: (value: boolean) => void;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -26,7 +28,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddTripType: React.FC<Props> = ({ isOpen, setOpen }) => {
+const AddTripType: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -51,7 +53,7 @@ const AddTripType: React.FC<Props> = ({ isOpen, setOpen }) => {
   const onSubmit = async (data: FormValues) => {
     try {
       const { message } = await createTripType(data).unwrap();
-      await triggerTripTypes().unwrap();
+      await triggerTripTypes({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

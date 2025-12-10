@@ -18,6 +18,8 @@ type Props = {
   id: string;
   modalType: "UPDATE" | "DELETE";
   loading: boolean;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -37,6 +39,8 @@ const UpdateProducts: React.FC<Props> = ({
   modalType,
   name,
   loading,
+  page,
+  limit,
 }) => {
   const {
     handleSubmit,
@@ -70,7 +74,7 @@ const UpdateProducts: React.FC<Props> = ({
           name: nameResult,
           id,
         }).unwrap();
-        await triggerProduct().unwrap();
+        await triggerProduct({ page, limit }).unwrap();
         callMessage.success(message);
       }
     } catch (err) {

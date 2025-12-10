@@ -15,6 +15,8 @@ import { useLazyAllRolesByTypeQuery } from "@/app/services/roles/rolesApi";
 type Props = {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
+  page: number;
+  limit: number;
 };
 const schema = z.object({
   name: z
@@ -27,7 +29,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen }) => {
+const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -56,7 +58,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen }) => {
   const onSubmit = async (data: FormValues) => {
     try {
       const { message } = await createRoleTemplate(data).unwrap();
-      await triggerRoleTemplates().unwrap();
+      await triggerRoleTemplates({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

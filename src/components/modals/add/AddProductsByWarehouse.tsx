@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { useLazyAllProductsQuery } from "@/app/services/products/productsApi";
+import { useLazyAllProductsQuery, useLazyAllProductsSelectQuery } from "@/app/services/products/productsApi";
 import {
   useAddProductByWarehouseMutation,
   useLazyWarehouseByIdApiQuery,
@@ -53,7 +53,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [addProduct] = useAddProductByWarehouseMutation();
   const [isOpenSelect, setIsOpenSelect] = useState<boolean>(false);
-  const [triggerProducts, { data, isLoading }] = useLazyAllProductsQuery();
+  const [triggerProducts, { data, isLoading }] = useLazyAllProductsSelectQuery();
   const [triggerWarehouseById] = useLazyWarehouseByIdApiQuery();
   const products = (data?.data ?? []).map((item) => {
     return {

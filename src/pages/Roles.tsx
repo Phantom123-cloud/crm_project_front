@@ -1,6 +1,9 @@
 import RolesData from "@/components/data/RolesData";
 import { useEffect, useState } from "react";
-import { useLazyAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
+import {
+  useLazyAllRolesTypeQuery,
+  useLazyAllSelectRolesTypeQuery,
+} from "@/app/services/role-types/roleTypesApi";
 import AddRole from "@/components/modals/add/AddRole";
 import AddButton from "@/components/UI/buttons/AddButton";
 import RolesGuard from "@/components/layout/RolesGuard";
@@ -9,7 +12,7 @@ const Roles = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [isOpen, setOpen] = useState(false);
-  const [triggerData, { data }] = useLazyAllRolesTypeQuery();
+  const [triggerData, { data }] = useLazyAllSelectRolesTypeQuery();
 
   const roleTypes = (data?.data ?? []).map((item) => {
     return {

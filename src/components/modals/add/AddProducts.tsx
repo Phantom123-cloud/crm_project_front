@@ -1,17 +1,20 @@
 import { Modal } from "antd";
-import type { SetStateAction } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import ProductsForm from "@/components/forms/ProductsForm";
-import { useCreateProductMutation, useLazyAllProductsQuery } from "@/app/services/products/productsApi";
-
+import {
+  useCreateProductMutation,
+  useLazyAllProductsQuery,
+} from "@/app/services/products/productsApi";
 
 type Props = {
   isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
+  setOpen: (value: boolean) => void;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -24,7 +27,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddProducts: React.FC<Props> = ({ isOpen, setOpen }) => {
+const AddProducts: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -49,7 +52,7 @@ const AddProducts: React.FC<Props> = ({ isOpen, setOpen }) => {
   const onSubmit = async (data: FormValues) => {
     try {
       const { message } = await createProduct(data).unwrap();
-      await triggerProducts().unwrap();
+      await triggerProducts({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

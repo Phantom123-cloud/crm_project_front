@@ -35,11 +35,28 @@ export const roleTemplatesApi = api.injectEndpoints({
       }),
     }),
     allRoleTemplates: builder.query<
+      ApiResponse<{
+        templates: Templates[];
+        total: number;
+        countPages: number;
+        page: number;
+        limit: number;
+      }>,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page, limit }) => ({
+        url: `/role-templates/all`,
+        method: METHODS.GET,
+        params: { page, limit },
+      }),
+    }),
+
+    allRoleTemplatesSelect: builder.query<
       ApiResponse<{ templates: Templates[] }>,
       void
     >({
       query: () => ({
-        url: `/role-templates/all`,
+        url: `/role-templates/select-all`,
         method: METHODS.GET,
       }),
     }),
@@ -57,11 +74,13 @@ export const roleTemplatesApi = api.injectEndpoints({
 });
 
 export const {
+  useAllRoleTemplatesByIdQuery,
   useAllRoleTemplatesQuery,
+  useAllRoleTemplatesSelectQuery,
   useCreateRoleTemplateMutation,
   useDeleteRoleTemplateMutation,
-  useUpdateRoleTemplateMutation,
-  useLazyAllRoleTemplatesQuery,
-  useAllRoleTemplatesByIdQuery,
   useLazyAllRoleTemplatesByIdQuery,
+  useLazyAllRoleTemplatesQuery,
+  useLazyAllRoleTemplatesSelectQuery,
+  useUpdateRoleTemplateMutation,
 } = roleTemplatesApi;

@@ -19,6 +19,8 @@ type Props = {
   id: string;
   modalType: "UPDATE" | "DELETE";
   loading: boolean;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -38,6 +40,8 @@ const UpdateTripType: React.FC<Props> = ({
   name,
   modalType,
   loading,
+  page,
+  limit,
 }) => {
   const {
     handleSubmit,
@@ -67,7 +71,7 @@ const UpdateTripType: React.FC<Props> = ({
         name: data.name !== name && data.name?.length ? data.name : undefined,
       };
       const { message } = await updateTypeTrip({ ...resultData, id }).unwrap();
-      await triggerTripTypes().unwrap();
+      await triggerTripTypes({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

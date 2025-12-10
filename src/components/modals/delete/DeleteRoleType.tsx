@@ -13,6 +13,8 @@ type Props = {
   name: string;
   id: string;
   modalType: "UPDATE" | "DELETE";
+  page: number;
+  limit: number;
 };
 
 const DeleteRoleType: React.FC<Props> = ({
@@ -21,6 +23,8 @@ const DeleteRoleType: React.FC<Props> = ({
   id,
   name,
   modalType,
+  page,
+  limit,
 }) => {
   const { callMessage } = useUiContext();
   const [deleteRoleType] = useDeleteRolesTypeMutation();
@@ -33,7 +37,7 @@ const DeleteRoleType: React.FC<Props> = ({
   const handleDelete = async () => {
     try {
       const { message } = await deleteRoleType(id).unwrap();
-      await triggerRoleTypes().unwrap();
+      await triggerRoleTypes({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

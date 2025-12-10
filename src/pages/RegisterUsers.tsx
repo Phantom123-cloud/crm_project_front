@@ -6,7 +6,7 @@ import { errorMessages } from "@/utils/is-error-message";
 import { Button, Flex, Form, Input, Modal, Select } from "antd";
 import {
   useLazyAllRoleTemplatesByIdQuery,
-  useLazyAllRoleTemplatesQuery,
+  useLazyAllRoleTemplatesSelectQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import { useEffect, useState } from "react";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
@@ -48,7 +48,7 @@ const RegisterUsers = () => {
   });
 
   const [triggerRoleTemplatesSelect, { data: templatesSelect, isLoading }] =
-    useLazyAllRoleTemplatesQuery();
+    useLazyAllRoleTemplatesSelectQuery();
   const [
     triggerRoleTemplatesUsed,
     { data: usedRoles, isLoading: isLoadRoles },
@@ -115,6 +115,8 @@ const RegisterUsers = () => {
 
   useEffect(() => {
     if (isOpenSelect) {
+      console.log(templatesSelect);
+
       triggerRoleTemplatesSelect();
     }
   }, [isOpenSelect]);

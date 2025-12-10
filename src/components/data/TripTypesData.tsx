@@ -3,16 +3,30 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DeleteTripType from "../modals/delete/DeleteTripType";
 import { useState } from "react";
 import UpdateTripType from "../modals/update/UpdateTripType";
-import RolesGuard from "../layout/RolesGuard";
 import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
-import { useAllTripTypesQuery } from "@/app/services/trip-types/tripTypesApi";
+type Props = {
+  tripTypes: { id: string; name: string }[];
+  isLoading: boolean;
+  page: number;
+  limit: number;
+  setPage(page: number): void;
+  setLimit(page: number): void;
+  total: number;
+};
 
-const TripTypesData = () => {
+const TripTypesData: React.FC<Props> = ({
+  tripTypes,
+  isLoading,
+  page,
+  limit,
+  setPage,
+  setLimit,
+  total,
+}) => {
   const [isOpen, setOpen] = useState(false);
   const { getInfo, itemInfo } = useGetModalsInfo(setOpen, false);
 
-  const { data, isLoading } = useAllTripTypesQuery();
-  const dataSource = (data?.data ?? []).map((item) => {
+  const dataSource = tripTypes.map((item) => {
     return {
       key: item.id,
       name: item.name,
@@ -65,7 +79,16 @@ const TripTypesData = () => {
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
-        pagination={false}
+        pagination={{
+          pageSize: limit,
+          total,
+          current: page,
+          onChange: (page, limit) => {
+            setPage(page);
+            setLimit(limit);
+          },
+          showSizeChanger: true,
+        }}
       />
       <DeleteTripType
         isOpen={isOpen}
@@ -73,6 +96,8 @@ const TripTypesData = () => {
         name={name ?? ""}
         id={id}
         modalType={modalType}
+        page={page}
+        limit={limit}
       />
       <UpdateTripType
         isOpen={isOpen}
@@ -82,6 +107,8 @@ const TripTypesData = () => {
         id={id}
         modalType={modalType}
         loading={isLoading}
+        page={page}
+        limit={limit}
       />
     </>
   );

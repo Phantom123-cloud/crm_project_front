@@ -3,12 +3,29 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import type { CitizenshipAndLanguageData } from "@/app/services/citizenships/citizenshipType";
 import type { TModal } from "@/types";
-import { useAllLanguagesQuery } from "@/app/services/languages/languagesApi";
 import UpdateLanguage from "../modals/update/UpdateLanguage";
 import DeleteLanguage from "../modals/delete/DeleteLanguage";
 import RolesGuard from "../layout/RolesGuard";
 
-const LanguagesData = () => {
+type Props = {
+  languages: CitizenshipAndLanguageData[];
+  isLoading: boolean;
+  page: number;
+  limit: number;
+  setPage(page: number): void;
+  setLimit(page: number): void;
+  total: number;
+};
+
+const LanguagesData: React.FC<Props> = ({
+  languages,
+  isLoading,
+  page,
+  limit,
+  setPage,
+  setLimit,
+  total,
+}) => {
   const [isOpen, setOpen] = useState(false);
   const [itemInfo, setItemInfo] = useState<CitizenshipAndLanguageData>({
     id: "",
@@ -23,8 +40,7 @@ const LanguagesData = () => {
     setOpen(true);
   };
 
-  const { data, isLoading } = useAllLanguagesQuery();
-  const dataSource = (data?.data ?? []).map((item) => {
+  const dataSource = languages.map((item) => {
     return {
       key: item.id,
       code: item.code,
@@ -88,7 +104,16 @@ const LanguagesData = () => {
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
-        pagination={false}
+        pagination={{
+          pageSize: limit,
+          total,
+          current: page,
+          onChange: (page, limit) => {
+            setPage(page);
+            setLimit(limit);
+          },
+          showSizeChanger: true,
+        }}
       />
       <DeleteLanguage
         isOpen={isOpen}
@@ -96,6 +121,8 @@ const LanguagesData = () => {
         localeRu={localeRu}
         id={id}
         modalType={modalType}
+        page={page}
+        limit={limit}
       />
       <UpdateLanguage
         isOpen={isOpen}
@@ -106,6 +133,8 @@ const LanguagesData = () => {
         id={id}
         modalType={modalType}
         loading={isLoading}
+        page={page}
+        limit={limit}
       />
     </>
   );

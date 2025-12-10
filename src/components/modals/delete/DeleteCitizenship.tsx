@@ -2,7 +2,10 @@ import { Button, Flex, Modal } from "antd";
 import type { SetStateAction } from "react";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { useDeleteCitizenshipMutation, useLazyAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
+import {
+  useDeleteCitizenshipMutation,
+  useLazyAllCitizenshipsQuery,
+} from "@/app/services/citizenships/citizenshipsApi";
 
 type Props = {
   isOpen: boolean;
@@ -10,6 +13,8 @@ type Props = {
   localeRu: string;
   id: string;
   modalType: "UPDATE" | "DELETE";
+  page: number;
+  limit: number;
 };
 
 const DeleteCitizenship: React.FC<Props> = ({
@@ -18,6 +23,8 @@ const DeleteCitizenship: React.FC<Props> = ({
   id,
   localeRu,
   modalType,
+  page,
+  limit,
 }) => {
   const { callMessage } = useUiContext();
   const [deleteCitizenship] = useDeleteCitizenshipMutation();
@@ -30,7 +37,7 @@ const DeleteCitizenship: React.FC<Props> = ({
   const handleDelete = async () => {
     try {
       const { message } = await deleteCitizenship(id).unwrap();
-      await triggerCitizenships().unwrap();
+      await triggerCitizenships({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

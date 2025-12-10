@@ -14,6 +14,8 @@ import {
 type Props = {
   isOpen: boolean;
   setOpen: (value: SetStateAction<boolean>) => void;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -24,7 +26,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddLanguage: React.FC<Props> = ({ isOpen, setOpen }) => {
+const AddLanguage: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -51,7 +53,7 @@ const AddLanguage: React.FC<Props> = ({ isOpen, setOpen }) => {
   const onSubmit = async (data: FormValues) => {
     try {
       const { message } = await createLanguage(data).unwrap();
-      await triggerLanguages().unwrap();
+      await triggerLanguages({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

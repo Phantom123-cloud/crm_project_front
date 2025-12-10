@@ -9,7 +9,7 @@ import {
   useChangeRoleTemplateMutation,
   useLazyUserByIdQuery,
 } from "@/app/services/users/usersApi";
-import { useAllRoleTemplatesQuery } from "@/app/services/role-templates/roleTemplatesApi";
+import { useAllRoleTemplatesSelectQuery } from "@/app/services/role-templates/roleTemplatesApi";
 import Title from "antd/es/typography/Title";
 
 type Props = {
@@ -44,7 +44,7 @@ const UpdateRolesTemplate: React.FC<Props> = ({
     mode: "onChange",
   });
 
-  const { data, isLoading } = useAllRoleTemplatesQuery();
+  const { data, isLoading } = useAllRoleTemplatesSelectQuery();
   const [updateRoleTemplate] = useChangeRoleTemplateMutation();
   const [triggerUserData] = useLazyUserByIdQuery();
   const { callMessage } = useUiContext();

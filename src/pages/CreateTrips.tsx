@@ -7,7 +7,7 @@ import { errorMessages } from "@/utils/is-error-message";
 import { Button, Flex, Form, Input, Select } from "antd";
 import { useLazyAllEmployeeTradingsQuery } from "@/app/services/employees/employeesApi";
 import { useEffect, useState } from "react";
-import { useLazyAllTripTypesQuery } from "@/app/services/trip-types/tripTypesApi";
+import { useLazyAllTripTypesSelectQuery } from "@/app/services/trip-types/tripTypesApi";
 
 const schema = z.object({
   dateFrom: z.string().nonempty("Обязательное поле"),
@@ -45,7 +45,7 @@ const CreateTrips = () => {
   const [triggerTradings, { data, isLoading }] =
     useLazyAllEmployeeTradingsQuery();
   const [triggerTripTypes, { data: types, isLoading: isLoadingTypes }] =
-    useLazyAllTripTypesQuery();
+    useLazyAllTripTypesSelectQuery();
 
   const tradings = (data?.data ?? []).map((item) => {
     return {

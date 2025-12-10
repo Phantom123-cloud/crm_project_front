@@ -7,7 +7,7 @@ import { errorMessages } from "@/utils/is-error-message";
 
 import { useAddLanguageToEmployeeMutation } from "@/app/services/employees/employeesApi";
 import { useLazyUserByIdQuery } from "@/app/services/users/usersApi";
-import { useLazyAllLanguagesQuery } from "@/app/services/languages/languagesApi";
+import { useLazyAllLanguagesQuery, useLazyAllLanguagesSelectQuery } from "@/app/services/languages/languagesApi";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -48,7 +48,7 @@ const AddLanguageToEmployee: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [addLanguageToEmployee] = useAddLanguageToEmployeeMutation();
   const [triggerUserData] = useLazyUserByIdQuery();
-  const [triggerAllLanguages, { data }] = useLazyAllLanguagesQuery();
+  const [triggerAllLanguages, { data }] = useLazyAllLanguagesSelectQuery();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
 
   useEffect(() => {

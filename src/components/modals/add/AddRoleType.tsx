@@ -1,5 +1,4 @@
 import { Modal } from "antd";
-import type { SetStateAction } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -13,7 +12,9 @@ import RoleTypeForm from "@/components/forms/RoleTypeForm";
 
 type Props = {
   isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
+  setOpen: (value: boolean) => void;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -31,7 +32,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddRoleType: React.FC<Props> = ({ isOpen, setOpen }) => {
+const AddRoleType: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -57,7 +58,7 @@ const AddRoleType: React.FC<Props> = ({ isOpen, setOpen }) => {
   const onSubmit = async (data: FormValues) => {
     try {
       const { message } = await createRoleType(data).unwrap();
-      await triggerRoleTypes().unwrap();
+      await triggerRoleTypes({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

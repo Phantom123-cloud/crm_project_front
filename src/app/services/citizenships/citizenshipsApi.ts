@@ -34,13 +34,30 @@ export const citizenshipsApi = api.injectEndpoints({
       }),
     }),
 
-    allCitizenships: builder.query<
+    allCitizenshipsSelect: builder.query<
       ApiResponse<CitizenshipAndLanguageData[]>,
       void
     >({
       query: () => ({
+        url: `/citizenships/select-all`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    allCitizenships: builder.query<
+      ApiResponse<{
+        citizenships: CitizenshipAndLanguageData[];
+        total: number;
+        countPages: number;
+        page: number;
+        limit: number;
+      }>,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page, limit }) => ({
         url: `/citizenships/all`,
         method: METHODS.GET,
+        params: { page, limit },
       }),
     }),
   }),
@@ -52,4 +69,6 @@ export const {
   useDeleteCitizenshipMutation,
   useLazyAllCitizenshipsQuery,
   useUpdateCitizenshipMutation,
+  useAllCitizenshipsSelectQuery,
+  useLazyAllCitizenshipsSelectQuery,
 } = citizenshipsApi;

@@ -20,6 +20,8 @@ type Props = {
   id: string;
   modalType: "UPDATE" | "DELETE";
   loading: boolean;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -39,6 +41,8 @@ const UpdateCitizenships: React.FC<Props> = ({
   localeRu,
   localeEn,
   loading,
+  page,
+  limit,
 }) => {
   const {
     handleSubmit,
@@ -79,7 +83,7 @@ const UpdateCitizenships: React.FC<Props> = ({
       };
 
       const { message } = await updateCitizenship({ body, id }).unwrap();
-      await triggerCitizenship().unwrap();
+      await triggerCitizenship({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

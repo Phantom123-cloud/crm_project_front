@@ -1,12 +1,12 @@
 import { Button, Flex, Modal } from "antd";
 import type { SetStateAction } from "react";
 import { useUiContext } from "@/UIContext";
-import {
-  useDeleteRolesTypeMutation,
-  useLazyAllRolesTypeQuery,
-} from "@/app/services/role-types/roleTypesApi";
+
 import { errorMessages } from "@/utils/is-error-message";
-import { useDeleteTripTypesMutation, useLazyAllTripTypesQuery } from "@/app/services/trip-types/tripTypesApi";
+import {
+  useDeleteTripTypesMutation,
+  useLazyAllTripTypesQuery,
+} from "@/app/services/trip-types/tripTypesApi";
 
 type Props = {
   isOpen: boolean;
@@ -14,6 +14,8 @@ type Props = {
   name: string;
   id: string;
   modalType: "UPDATE" | "DELETE";
+  page: number;
+  limit: number;
 };
 
 const DeleteTripType: React.FC<Props> = ({
@@ -22,6 +24,8 @@ const DeleteTripType: React.FC<Props> = ({
   id,
   name,
   modalType,
+  page,
+  limit,
 }) => {
   const { callMessage } = useUiContext();
   const [deleteTripType] = useDeleteTripTypesMutation();
@@ -34,7 +38,7 @@ const DeleteTripType: React.FC<Props> = ({
   const handleDelete = async () => {
     try {
       const { message } = await deleteTripType(id).unwrap();
-      await triggerTripTypes().unwrap();
+      await triggerTripTypes({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

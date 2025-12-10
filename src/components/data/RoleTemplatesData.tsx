@@ -10,8 +10,21 @@ import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
 type Props = {
   templates: Templates[];
   isLoading: boolean;
+  page: number;
+  limit: number;
+  setPage(page: number): void;
+  setLimit(page: number): void;
+  total: number;
 };
-const RoleTemplatesData: React.FC<Props> = ({ templates, isLoading }) => {
+const RoleTemplatesData: React.FC<Props> = ({
+  templates,
+  isLoading,
+  page,
+  limit,
+  setPage,
+  setLimit,
+  total,
+}) => {
   const [isOpen, setOpen] = useState(false);
   const { getInfo, itemInfo } = useGetModalsInfo(setOpen);
   const dataSource = (templates ?? []).map((item) => {
@@ -68,7 +81,16 @@ const RoleTemplatesData: React.FC<Props> = ({ templates, isLoading }) => {
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
-        pagination={false}
+        pagination={{
+          pageSize: limit,
+          total,
+          current: page,
+          onChange: (page, limit) => {
+            setPage(page);
+            setLimit(limit);
+          },
+          showSizeChanger: true,
+        }}
       />
       <DeleteRoleTemplate
         isOpen={isOpen}
@@ -76,6 +98,8 @@ const RoleTemplatesData: React.FC<Props> = ({ templates, isLoading }) => {
         name={name ?? ""}
         id={id}
         modalType={modalType}
+        page={page}
+        limit={limit}
       />
 
       {isOpen && (
@@ -87,6 +111,8 @@ const RoleTemplatesData: React.FC<Props> = ({ templates, isLoading }) => {
           modalType={modalType}
           roleTypes={[]}
           loading={isLoading}
+          page={page}
+          limit={limit}
         />
       )}
     </div>

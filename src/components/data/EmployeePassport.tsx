@@ -11,7 +11,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Button, Divider, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
 import type { Employee } from "@/app/services/users/usersType";
-import { useLazyAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
+import { useLazyAllCitizenshipsSelectQuery } from "@/app/services/citizenships/citizenshipsApi";
 import { removeUnchangedFields } from "@/utils/remove-unchanged-employee-items";
 import RolesGuard from "../layout/RolesGuard";
 
@@ -33,7 +33,7 @@ type Props = {
 const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
   const [triggerUserData] = useLazyUserByIdQuery();
   const [triggerCitizenData, { data, isLoading }] =
-    useLazyAllCitizenshipsQuery();
+    useLazyAllCitizenshipsSelectQuery();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
 
   const [updateEmployee] = useUpdateEmployeePassportMutation();

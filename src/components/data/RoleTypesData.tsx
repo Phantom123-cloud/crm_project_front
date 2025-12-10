@@ -7,12 +7,19 @@ import UpdateRoleType from "../modals/update/UpdateRoleType";
 import RolesGuard from "../layout/RolesGuard";
 import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
 
-const RoleTypesData = () => {
+type Props = {
+  page: number;
+  limit: number;
+  setPage(page: number): void;
+  setLimit(page: number): void;
+};
+
+const RoleTypesData: React.FC<Props> = ({ page, limit, setPage, setLimit }) => {
   const [isOpen, setOpen] = useState(false);
   const { getInfo, itemInfo } = useGetModalsInfo(setOpen);
+  const { data, isLoading } = useAllRolesTypeQuery({ page, limit });
 
-  const { data, isLoading } = useAllRolesTypeQuery();
-  const dataSource = (data?.data ?? []).map((item) => {
+  const dataSource = (data?.data?.rolesTypeData ?? []).map((item) => {
     return {
       key: item.id,
       name: item.name,
@@ -70,7 +77,16 @@ const RoleTypesData = () => {
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
-        pagination={false}
+        pagination={{
+          pageSize: limit,
+          total: data?.data?.total ?? 1,
+          current: page,
+          onChange: (page, limit) => {
+            setPage(page);
+            setLimit(limit);
+          },
+          showSizeChanger: true,
+        }}
       />
       <DeleteRoleType
         isOpen={isOpen}
@@ -78,6 +94,8 @@ const RoleTypesData = () => {
         name={name ?? ""}
         id={id}
         modalType={modalType}
+        page={page}
+        limit={limit}
       />
       <UpdateRoleType
         isOpen={isOpen}

@@ -4,9 +4,13 @@ import { useState } from "react";
 import CitizenshipsData from "@/components/data/CitizenshipsData";
 import AddCitizenship from "@/components/modals/add/AddCitizenship";
 import RolesGuard from "@/components/layout/RolesGuard";
+import { useAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
 
 const Citizenships = () => {
   const [isOpen, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const { data, isLoading } = useAllCitizenshipsQuery({ page, limit });
 
   return (
     <RolesGuard access={"view_citizenships"}>
@@ -22,9 +26,22 @@ const Citizenships = () => {
               Добавить
             </Button>
           </div>
-          <AddCitizenship isOpen={isOpen} setOpen={setOpen} />
+          <AddCitizenship
+            isOpen={isOpen}
+            setOpen={setOpen}
+            page={page}
+            limit={limit}
+          />
         </RolesGuard>
-        <CitizenshipsData />
+        <CitizenshipsData
+          citizenships={data?.data?.citizenships ?? []}
+          isLoading={isLoading}
+          page={page}
+          limit={limit}
+          setPage={setPage}
+          setLimit={setLimit}
+          total={data?.data?.total ?? 1}
+        />
       </div>
     </RolesGuard>
   );

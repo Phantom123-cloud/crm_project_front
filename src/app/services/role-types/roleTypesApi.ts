@@ -33,19 +33,30 @@ export const rolesTypeApi = api.injectEndpoints({
       }),
     }),
 
-    allRolesType: builder.query<
-      ApiResponse<
-        {
-          id: string;
-          name: string;
-          descriptions: string;
-        }[]
-      >,
+    allSelectRolesType: builder.query<
+      ApiResponse<{ id: string; name: string; descriptions: string }[]>,
       void
     >({
       query: () => ({
+        url: `/role-types/select-all`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    allRolesType: builder.query<
+      ApiResponse<{
+        rolesTypeData: { id: string; name: string; descriptions: string }[];
+        total: number;
+        countPages: number;
+        page: number;
+        limit: number;
+      }>,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page, limit }) => ({
         url: `/role-types/all`,
         method: METHODS.GET,
+        params: { page, limit },
       }),
     }),
   }),
@@ -57,4 +68,6 @@ export const {
   useDeleteRolesTypeMutation,
   useLazyAllRolesTypeQuery,
   useUpdateRolesTypeMutation,
+  useAllSelectRolesTypeQuery,
+  useLazyAllSelectRolesTypeQuery,
 } = rolesTypeApi;

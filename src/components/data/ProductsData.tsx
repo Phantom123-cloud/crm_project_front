@@ -5,11 +5,28 @@ import type { TModal } from "@/types";
 import UpdateProducts from "../modals/update/UpdateProducts";
 import DeleteProducts from "../modals/delete/DeleteProducts";
 import RolesGuard from "../layout/RolesGuard";
-import { useAllProductsQuery } from "@/app/services/products/productsApi";
 
 type Product = { id: string; name: string };
 
-const ProductsData = () => {
+type Props = {
+  products: Product[];
+  isLoading: boolean;
+  page: number;
+  limit: number;
+  setPage(page: number): void;
+  setLimit(page: number): void;
+  total: number;
+};
+
+const ProductsData: React.FC<Props> = ({
+  products,
+  isLoading,
+  page,
+  limit,
+  setPage,
+  setLimit,
+  total,
+}) => {
   const [isOpen, setOpen] = useState(false);
   const [itemInfo, setItemInfo] = useState<Product>({
     id: "",
@@ -22,8 +39,7 @@ const ProductsData = () => {
     setOpen(true);
   };
 
-  const { data, isLoading } = useAllProductsQuery();
-  const dataSource = (data?.data ?? []).map((item) => {
+  const dataSource = products.map((item) => {
     return {
       key: item.id,
       name: item.name,
@@ -75,7 +91,16 @@ const ProductsData = () => {
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
-        pagination={false}
+        pagination={{
+          pageSize: limit,
+          total,
+          current: page,
+          onChange: (page, limit) => {
+            setPage(page);
+            setLimit(limit);
+          },
+          showSizeChanger: true,
+        }}
       />
       <DeleteProducts
         isOpen={isOpen}
@@ -83,6 +108,8 @@ const ProductsData = () => {
         name={name}
         id={id}
         modalType={modalType}
+        page={page}
+        limit={limit}
       />
       <UpdateProducts
         isOpen={isOpen}
@@ -91,6 +118,8 @@ const ProductsData = () => {
         id={id}
         modalType={modalType}
         loading={isLoading}
+        page={page}
+        limit={limit}
       />
     </>
   );

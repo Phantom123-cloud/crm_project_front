@@ -27,13 +27,33 @@ export const productsApi = api.injectEndpoints({
       }),
     }),
 
-    allProducts: builder.query<
+    allProductsSelect: builder.query<
       ApiResponse<{ name: string; id: string }[]>,
       void
     >({
       query: () => ({
+        url: `/products/select-all`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    allProducts: builder.query<
+      ApiResponse<{
+        products: {
+          id: string;
+          name: string;
+        }[];
+        total: number;
+        countPages: number;
+        page: number;
+        limit: number;
+      }>,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page, limit }) => ({
         url: `/products/all`,
         method: METHODS.GET,
+        params: { page, limit },
       }),
     }),
   }),
@@ -45,4 +65,6 @@ export const {
   useDeleteProductMutation,
   useLazyAllProductsQuery,
   useUpdateProductMutation,
+  useAllProductsSelectQuery,
+  useLazyAllProductsSelectQuery,
 } = productsApi;

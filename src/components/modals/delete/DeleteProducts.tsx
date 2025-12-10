@@ -2,7 +2,10 @@ import { Button, Flex, Modal } from "antd";
 import type { SetStateAction } from "react";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { useDeleteProductMutation, useLazyAllProductsQuery } from "@/app/services/products/productsApi";
+import {
+  useDeleteProductMutation,
+  useLazyAllProductsQuery,
+} from "@/app/services/products/productsApi";
 
 type Props = {
   isOpen: boolean;
@@ -10,6 +13,8 @@ type Props = {
   name: string;
   id: string;
   modalType: "UPDATE" | "DELETE";
+  page: number;
+  limit: number;
 };
 
 const DeleteProducts: React.FC<Props> = ({
@@ -18,6 +23,8 @@ const DeleteProducts: React.FC<Props> = ({
   id,
   name,
   modalType,
+  page,
+  limit,
 }) => {
   const { callMessage } = useUiContext();
   const [deleteProduct] = useDeleteProductMutation();
@@ -30,7 +37,7 @@ const DeleteProducts: React.FC<Props> = ({
   const handleDelete = async () => {
     try {
       const { message } = await deleteProduct(id).unwrap();
-      await triggerProducts().unwrap();
+      await triggerProducts({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

@@ -2,7 +2,10 @@ import { Button, Flex, Modal } from "antd";
 import type { SetStateAction } from "react";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { useDeleteLanguageMutation, useLazyAllLanguagesQuery } from "@/app/services/languages/languagesApi";
+import {
+  useDeleteLanguageMutation,
+  useLazyAllLanguagesQuery,
+} from "@/app/services/languages/languagesApi";
 
 type Props = {
   isOpen: boolean;
@@ -10,6 +13,8 @@ type Props = {
   localeRu: string;
   id: string;
   modalType: "UPDATE" | "DELETE";
+  page: number;
+  limit: number;
 };
 
 const DeleteLanguage: React.FC<Props> = ({
@@ -18,6 +23,8 @@ const DeleteLanguage: React.FC<Props> = ({
   id,
   localeRu,
   modalType,
+  page,
+  limit,
 }) => {
   const { callMessage } = useUiContext();
   const [deleteLanguage] = useDeleteLanguageMutation();
@@ -30,7 +37,7 @@ const DeleteLanguage: React.FC<Props> = ({
   const handleDelete = async () => {
     try {
       const { message } = await deleteLanguage(id).unwrap();
-      await triggerLanguages().unwrap();
+      await triggerLanguages({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

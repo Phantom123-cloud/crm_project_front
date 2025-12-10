@@ -30,18 +30,33 @@ export const tripTypesApi = api.injectEndpoints({
       }),
     }),
 
-    allTripTypes: builder.query<
-      ApiResponse<
-        {
-          id: string;
-          name: string;
-        }[]
-      >,
+    allTripTypesSelect: builder.query<
+      ApiResponse<{ name: string; id: string }[]>,
       void
     >({
       query: () => ({
+        url: `/trip-types/select-all`,
+        method: METHODS.GET,
+      }),
+    }),
+
+    allTripTypes: builder.query<
+      ApiResponse<{
+        tripTypes: {
+          id: string;
+          name: string;
+        }[];
+        total: number;
+        countPages: number;
+        page: number;
+        limit: number;
+      }>,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page, limit }) => ({
         url: `/trip-types/all`,
         method: METHODS.GET,
+        params: { page, limit },
       }),
     }),
   }),
@@ -53,4 +68,6 @@ export const {
   useDeleteTripTypesMutation,
   useLazyAllTripTypesQuery,
   useUpdateTripTypesMutation,
+  useAllTripTypesSelectQuery,
+  useLazyAllTripTypesSelectQuery,
 } = tripTypesApi;

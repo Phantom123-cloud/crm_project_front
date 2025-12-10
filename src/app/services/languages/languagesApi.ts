@@ -35,11 +35,28 @@ export const languagesApi = api.injectEndpoints({
     }),
 
     allLanguages: builder.query<
+      ApiResponse<{
+        languages: CitizenshipAndLanguageData[];
+        total: number;
+        countPages: number;
+        page: number;
+        limit: number;
+      }>,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page, limit }) => ({
+        url: `/languages/all`,
+        method: METHODS.GET,
+        params: { page, limit },
+      }),
+    }),
+
+    allLanguagesSelect: builder.query<
       ApiResponse<CitizenshipAndLanguageData[]>,
       void
     >({
       query: () => ({
-        url: `/languages/all`,
+        url: `/languages/select-all`,
         method: METHODS.GET,
       }),
     }),
@@ -52,4 +69,6 @@ export const {
   useDeleteLanguageMutation,
   useLazyAllLanguagesQuery,
   useUpdateLanguageMutation,
+  useAllLanguagesSelectQuery,
+  useLazyAllLanguagesSelectQuery,
 } = languagesApi;

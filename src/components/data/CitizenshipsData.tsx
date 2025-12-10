@@ -1,14 +1,31 @@
 import { Button, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { useAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
 import DeleteCitizenship from "../modals/delete/DeleteCitizenship";
 import type { CitizenshipAndLanguageData } from "@/app/services/citizenships/citizenshipType";
 import type { TModal } from "@/types";
 import RolesGuard from "../layout/RolesGuard";
 import UpdateCitizenships from "../modals/update/UpdateCitizenships";
 
-const CitizenshipsData = () => {
+type Props = {
+  citizenships: CitizenshipAndLanguageData[];
+  isLoading: boolean;
+  page: number;
+  limit: number;
+  setPage(page: number): void;
+  setLimit(page: number): void;
+  total: number;
+};
+
+const CitizenshipsData: React.FC<Props> = ({
+  citizenships,
+  isLoading,
+  page,
+  limit,
+  setPage,
+  setLimit,
+  total,
+}) => {
   const [isOpen, setOpen] = useState(false);
   const [itemInfo, setItemInfo] = useState<CitizenshipAndLanguageData>({
     id: "",
@@ -23,9 +40,7 @@ const CitizenshipsData = () => {
     setOpen(true);
   };
 
-  const { data, isLoading } = useAllCitizenshipsQuery();
-
-  const dataSource = (data?.data ?? []).map((item) => {
+  const dataSource = citizenships.map((item) => {
     return {
       key: item.id,
       code: item.code,
@@ -89,7 +104,16 @@ const CitizenshipsData = () => {
         loading={isLoading}
         dataSource={dataSource}
         columns={columns}
-        pagination={false}
+        pagination={{
+          pageSize: limit,
+          total,
+          current: page,
+          onChange: (page, limit) => {
+            setPage(page);
+            setLimit(limit);
+          },
+          showSizeChanger: true,
+        }}
       />
       <UpdateCitizenships
         isOpen={isOpen}
@@ -100,6 +124,8 @@ const CitizenshipsData = () => {
         id={id}
         modalType={modalType}
         loading={isLoading}
+        page={page}
+        limit={limit}
       />
       <DeleteCitizenship
         isOpen={isOpen}
@@ -107,6 +133,8 @@ const CitizenshipsData = () => {
         localeRu={localeRu}
         id={id}
         modalType={modalType}
+        page={page}
+        limit={limit}
       />
     </>
   );

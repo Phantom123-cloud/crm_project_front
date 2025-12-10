@@ -20,6 +20,8 @@ type Props = {
   id: string;
   modalType: "UPDATE" | "DELETE";
   loading: boolean;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -39,6 +41,8 @@ const UpdateLanguage: React.FC<Props> = ({
   localeRu,
   localeEn,
   loading,
+  page,
+  limit,
 }) => {
   const {
     handleSubmit,
@@ -79,7 +83,7 @@ const UpdateLanguage: React.FC<Props> = ({
       };
 
       const { message } = await updateLanguage({ body, id }).unwrap();
-      await triggerLanguage().unwrap();
+      await triggerLanguage({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
