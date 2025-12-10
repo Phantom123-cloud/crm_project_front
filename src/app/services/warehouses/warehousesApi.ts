@@ -1,7 +1,11 @@
 import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
-import type { WarehousesApiData } from "./warehousesType";
+import type {
+  ProductsByWarehouse,
+  Warehouse,
+  WarehousesApiData,
+} from "./warehousesType";
 
 export const warehousesApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -24,6 +28,16 @@ export const warehousesApi = api.injectEndpoints({
       }),
     }),
 
+    warehouseByIdApi: builder.query<
+      ApiResponse<{ warehouse: Warehouse & ProductsByWarehouse }>,
+      string
+    >({
+      query: (id) => ({
+        url: `/warehouses/by/${id}`,
+        method: METHODS.GET,
+      }),
+    }),
+
     isActiveWarehouse: builder.mutation<ApiResponse, string>({
       query: (id) => ({
         url: `/warehouses/is-active/${id}`,
@@ -31,11 +45,34 @@ export const warehousesApi = api.injectEndpoints({
       }),
     }),
 
+    updateWarehouse: builder.mutation<
+      ApiResponse,
+      { name: string; id: string }
+    >({
+      query: ({ id, name }) => ({
+        url: `/warehouses/update/${id}`,
+        method: METHODS.PUT,
+        body: { name },
+      }),
+    }),
+
+    addProductByWarehouse: builder.mutation<
+      ApiResponse,
+      { productId: string; warehouseId: string; quantity: number | null }
+    >({
+      query: ({ productId, warehouseId, quantity }) => ({
+        url: `/warehouses/add-stock-item`,
+        method: METHODS.PUT,
+        body: { quantity },
+        params: { productId, warehouseId },
+      }),
+    }),
+
     createWarehouse: builder.mutation<
       ApiResponse,
       {
         name: string;
-        type: string;
+        type: "CENTRAL" | "PERSONAL" | "TRIP";
         ownerUserId: string;
       }
     >({
@@ -54,4 +91,8 @@ export const {
   useIsActiveWarehouseMutation,
   useLazyAllWarehousesApiQuery,
   useCreateWarehouseMutation,
+  useLazyWarehouseByIdApiQuery,
+  useWarehouseByIdApiQuery,
+  useUpdateWarehouseMutation,
+  useAddProductByWarehouseMutation,
 } = warehousesApi;

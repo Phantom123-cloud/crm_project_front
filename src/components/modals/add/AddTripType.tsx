@@ -4,10 +4,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
-import {
-  useCreateRolesTypeMutation,
-  useLazyAllRolesTypeQuery,
-} from "@/app/services/role-types/roleTypesApi";
 import { errorMessages } from "@/utils/is-error-message";
 import TripTypeForm from "@/components/forms/TripTypeForm";
 import {

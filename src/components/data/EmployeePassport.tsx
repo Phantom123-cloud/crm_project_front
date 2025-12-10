@@ -214,7 +214,6 @@ const EmployeePassport: React.FC<Props> = ({ employee, userId }) => {
                 maxCount={3}
                 {...field}
                 showSearch
-                
                 mode="multiple"
                 optionFilterProp="label"
                 filterSort={(optionA, optionB) =>

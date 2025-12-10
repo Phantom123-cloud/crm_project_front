@@ -35,17 +35,31 @@ const WarehousesData: React.FC<Props> = ({ isOpen, setOpen }) => {
     }
   };
 
+  const trnslateTypes = (type: "CENTRAL" | "PERSONAL" | "TRIP") => {
+    switch (type) {
+      case "CENTRAL":
+        return "Центральный";
+      case "PERSONAL":
+        return "Личный";
+      case "TRIP":
+        return "Для выезда";
+
+      default:
+        return "-";
+    }
+  };
+
   const dataSource = (data?.data?.warehouses ?? []).map((item) => {
     return {
       key: item.id,
       name: (
-        <Link to={`${item.id}`} className="flex items-center gap-1">
+        <Link to={`/warehouse/${item.id}`} className="flex items-center gap-1">
           {item.name}
         </Link>
       ),
       createdAt: isDate(item.createdAt),
       ownerUser: item.user.employee?.fullName ?? "-",
-      type: item.type,
+      type: trnslateTypes(item.type),
       isActive: <TagBoolean isBool={item.isActive} />,
       actions: (
         <Button
@@ -53,6 +67,7 @@ const WarehousesData: React.FC<Props> = ({ isOpen, setOpen }) => {
           variant="outlined"
           size="small"
           onClick={() => onActions(item.id)}
+          disabled={item.type === "CENTRAL"}
         >
           {item.isActive ? "забло-ть" : "актив-ть"}
         </Button>
@@ -129,7 +144,12 @@ const WarehousesData: React.FC<Props> = ({ isOpen, setOpen }) => {
         }}
       />
 
-      <AddWarehouse isOpen={isOpen} setOpen={setOpen} query={query} />
+      <AddWarehouse
+        isOpen={isOpen}
+        setOpen={setOpen}
+        query={query}
+        isExistCentral={dataSource.length > 0}
+      />
     </>
   );
 };

@@ -19,6 +19,7 @@ type Props = {
     limit: number;
     isActive?: boolean;
   };
+  isExistCentral: boolean;
 };
 
 const schema = z.object({
@@ -32,7 +33,12 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddWarehouse: React.FC<Props> = ({ isOpen, setOpen, query }) => {
+const AddWarehouse: React.FC<Props> = ({
+  isOpen,
+  setOpen,
+  query,
+  isExistCentral,
+}) => {
   const {
     handleSubmit,
     control,
@@ -66,7 +72,7 @@ const AddWarehouse: React.FC<Props> = ({ isOpen, setOpen, query }) => {
     try {
       const { message } = await createWarehouse({
         ...data,
-        type: "PERSONAL",
+        type: isExistCentral ? "PERSONAL" : "CENTRAL",
       }).unwrap();
       await triggerWarehouses(query).unwrap();
       callMessage.success(message);
@@ -85,7 +91,11 @@ const AddWarehouse: React.FC<Props> = ({ isOpen, setOpen, query }) => {
 
   return (
     <Modal
-      title="Добавить новый склад"
+      title={
+        isExistCentral
+          ? "Добавить новый склад"
+          : "Добавить центральный склад (единоразовое действие)"
+      }
       closable={{ "aria-label": "Custom Close Button" }}
       open={isOpen}
       footer={null}
