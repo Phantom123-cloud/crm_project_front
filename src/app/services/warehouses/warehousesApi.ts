@@ -3,6 +3,7 @@ import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type {
   ProductsByWarehouse,
+  StockMovementsData,
   Warehouse,
   WarehousesApiData,
 } from "./warehousesType";
@@ -28,8 +29,32 @@ export const warehousesApi = api.injectEndpoints({
       }),
     }),
 
+    allStockMovements: builder.query<
+      ApiResponse<StockMovementsData>,
+      {
+        page: number;
+        limit: number;
+        toWarehouseId: string;
+        status?: "TRANSIT" | "RECEIVED" | "CANCELLED" | undefined;
+      }
+    >({
+      query: ({ page, limit, toWarehouseId, status }) => ({
+        url: `/warehouses/all-stock-movements`,
+        method: METHODS.GET,
+        params: {
+          page,
+          limit,
+          toWarehouseId,
+          status,
+        },
+      }),
+    }),
+
     warehouseByIdApi: builder.query<
-      ApiResponse<{ warehouse: Warehouse & ProductsByWarehouse }>,
+      ApiResponse<{
+        warehouse: Warehouse & ProductsByWarehouse;
+        countTransitProduct: number;
+      }>,
       string
     >({
       query: (id) => ({
@@ -95,4 +120,6 @@ export const {
   useWarehouseByIdApiQuery,
   useUpdateWarehouseMutation,
   useAddProductByWarehouseMutation,
+  useAllStockMovementsQuery,
+  useLazyAllStockMovementsQuery,
 } = warehousesApi;

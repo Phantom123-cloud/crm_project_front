@@ -4,9 +4,11 @@ import Title from "antd/es/typography/Title";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { EditOutlined } from "@ant-design/icons";
-import UpdateWarehouse from "@/components/modals/update/UpdateWarehouse";
 import AddProductsByWarehouse from "@/components/modals/add/AddProductsByWarehouse";
-import { Table } from "antd";
+import { Tabs } from "antd";
+import WarehouseByIdData from "@/components/data/WarehouseByIdData";
+import { useChangeStockItemsSelect } from "@/hooks/useChangeStockItemsSelect";
+import StockItemsData from "@/components/data/StockItemsData";
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -14,47 +16,23 @@ const Warehouse = () => {
   const isTrip = data?.data?.warehouse.type === "TRIP";
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState<"UPDATE" | "ADD">("UPDATE");
-
+  const { query, changeSelect, setQuery } = useChangeStockItemsSelect();
   const openModal = (type: "UPDATE" | "ADD") => {
     setModalType(type);
     setOpen(true);
   };
 
-  const dataSource = (data?.data?.warehouse?.stockItems ?? []).map((item) => {
-    return {
-      key: item.id,
-      name: item.product.name,
-      quantity: item.quantity,
-      // actions: (
-      //   <div className="flex gap-5">
-      //     <RolesGuard access={"update_languages"}>
-      //       <Button
-      //         color="primary"
-      //         variant="outlined"
-      //         icon={<EditOutlined />}
-      //         onClick={() => getInfo(item, "UPDATE")}
-      //         size="small"
-      //       >
-      //         изменить
-      //       </Button>
-      //     </RolesGuard>
-      //     <RolesGuard access={"delete_languages"}>
-      //       <Button
-      //         color="danger"
-      //         variant="outlined"
-      //         icon={<DeleteOutlined />}
-      //         onClick={() => getInfo(item, "DELETE")}
-      //         size="small"
-      //       >
-      //         удалить
-      //       </Button>{" "}
-      //     </RolesGuard>
-      //   </div>
-      // ),
-    };
-  });
+  const dataSourceWarehouse = (data?.data?.warehouse?.stockItems ?? []).map(
+    (item) => {
+      return {
+        key: item.id,
+        name: item.product.name,
+        quantity: item.quantity,
+      };
+    }
+  );
 
-  const columns = [
+  const columnsWarehouse = [
     {
       title: "Наименование",
       dataIndex: "name",
@@ -64,6 +42,37 @@ const Warehouse = () => {
       title: "К-во",
       dataIndex: "quantity",
       key: "quantity",
+    },
+  ];
+
+  const tabItems = [
+    {
+      key: "warehouse",
+      label: "Склад",
+      children: (
+        <WarehouseByIdData
+          loading={isLoading}
+          dataSource={dataSourceWarehouse}
+          columns={columnsWarehouse}
+          isOpen={open}
+          setOpen={setOpen}
+          name={data?.data?.warehouse.name ?? ""}
+          id={id as string}
+          modalType={modalType}
+        />
+      ),
+    },
+    {
+      key: "stockItem",
+      label: "Перемещения",
+      children: (
+        <StockItemsData
+          query={query}
+          changeSelect={changeSelect}
+          setQuery={setQuery}
+          toWarehouseId={id as string}
+        />
+      ),
     },
   ];
 
@@ -89,19 +98,20 @@ const Warehouse = () => {
           </>
         )}
       </div>
-      <Table
-        loading={isLoading}
-        dataSource={dataSource}
-        columns={columns}
-        pagination={false}
-      />
-      <UpdateWarehouse
-        isOpen={open}
-        setOpen={setOpen}
-        name={data?.data?.warehouse.name ?? ""}
-        id={id as string}
-        modalType={modalType}
-        loading={isLoading}
+      <span className="mb-2">
+        К-во не подтверждённого товара: {data?.data?.countTransitProduct}
+      </span>
+
+      <Tabs
+        defaultActiveKey="warehouse"
+        items={tabItems.map((item) => {
+          return {
+            key: item.key,
+            label: item.label,
+            forceRender: true,
+            children: item.children,
+          };
+        })}
       />
     </div>
   );
