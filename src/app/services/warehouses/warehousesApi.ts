@@ -2,9 +2,8 @@ import { METHODS } from "@/utils/methods";
 import { api } from "../api";
 import type { ApiResponse } from "@/types";
 import type {
-  ProductsByWarehouse,
   StockMovementsData,
-  Warehouse,
+  WarehouseById,
   WarehousesApiData,
 } from "./warehousesType";
 
@@ -51,15 +50,16 @@ export const warehousesApi = api.injectEndpoints({
     }),
 
     warehouseByIdApi: builder.query<
-      ApiResponse<{
-        warehouse: Warehouse & ProductsByWarehouse;
-        countTransitProduct: number;
-      }>,
-      string
+      ApiResponse<WarehouseById>,
+      { id: string; page: number; limit: number }
     >({
-      query: (id) => ({
+      query: ({ id, page, limit }) => ({
         url: `/warehouses/by/${id}`,
         method: METHODS.GET,
+        params: {
+          page,
+          limit,
+        },
       }),
     }),
 
@@ -78,6 +78,27 @@ export const warehousesApi = api.injectEndpoints({
         url: `/warehouses/update/${id}`,
         method: METHODS.PUT,
         body: { name },
+      }),
+    }),
+
+    stockMovements: builder.mutation<
+      ApiResponse,
+      {
+        productId: string;
+        fromWarehouseId: string;
+        toWarehouseId: string;
+        quantity: number;
+      }
+    >({
+      query: ({ productId, fromWarehouseId, toWarehouseId, quantity }) => ({
+        url: `/warehouses/stock-movements`,
+        method: METHODS.PUT,
+        params: {
+          productId,
+          fromWarehouseId,
+          toWarehouseId,
+        },
+        body: { quantity },
       }),
     }),
 
@@ -122,4 +143,6 @@ export const {
   useAddProductByWarehouseMutation,
   useAllStockMovementsQuery,
   useLazyAllStockMovementsQuery,
+
+  useStockMovementsMutation,
 } = warehousesApi;

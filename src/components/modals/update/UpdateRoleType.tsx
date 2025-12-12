@@ -19,6 +19,8 @@ type Props = {
   id: string;
   modalType: "UPDATE" | "DELETE";
   loading: boolean;
+  page: number;
+  limit: number;
 };
 
 const schema = z.object({
@@ -44,6 +46,8 @@ const UpdateRoleType: React.FC<Props> = ({
   modalType,
   descriptions,
   loading,
+  page,
+  limit,
 }) => {
   const {
     handleSubmit,
@@ -78,7 +82,7 @@ const UpdateRoleType: React.FC<Props> = ({
             : undefined,
       };
       const { message } = await updateTypeRole({ ...resultData, id }).unwrap();
-      await triggerRoleTypes().unwrap();
+      await triggerRoleTypes({ page, limit }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

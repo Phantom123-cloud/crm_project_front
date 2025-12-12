@@ -61,12 +61,20 @@ export type StockMovementsData = {
 };
 
 export type ProductsByWarehouse = {
-  stockItems: {
+  id: string;
+  quantity: boolean;
+  product: {
     id: string;
-    quantity: boolean;
-    product: {
-      id: string;
-      name: boolean;
-    };
-  }[];
+    name: boolean;
+  };
+};
+
+export type WarehouseById = {
+  warehouse: Warehouse;
+  countTransitProduct: number;
+  stockItems: ProductsByWarehouse[];
+  total: number;
+  countPages: number;
+  page: number;
+  limit: number;
 };

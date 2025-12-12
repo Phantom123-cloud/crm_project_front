@@ -18,6 +18,11 @@ type Props = {
   id: string;
   modalType: "UPDATE" | "ADD";
   loading: boolean;
+  query: {
+    id: string;
+    page: number;
+    limit: number;
+  };
 };
 
 const schema = z.object({
@@ -37,6 +42,7 @@ const UpdateWarehouse: React.FC<Props> = ({
   modalType,
   name,
   loading,
+  query,
 }) => {
   const {
     handleSubmit,
@@ -70,7 +76,7 @@ const UpdateWarehouse: React.FC<Props> = ({
           name: nameResult,
           id,
         }).unwrap();
-        await triggerWarehouse(id).unwrap();
+        await triggerWarehouse(query).unwrap();
         callMessage.success(message);
       }
     } catch (err) {

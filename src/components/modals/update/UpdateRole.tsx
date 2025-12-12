@@ -11,7 +11,7 @@ import {
 } from "@/app/services/roles/rolesApi";
 import type { TModal } from "@/types";
 import RoleForm from "@/components/forms/RoleForm";
-import { useLazyAllRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
+import { useLazyAllSelectRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
 
 type Props = {
   isOpen: boolean;
@@ -72,7 +72,7 @@ const UpdateRole: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [updateRole] = useUpdateRoleMutation();
   const [triggerRole] = useLazyAllRoleQuery();
-  const [triggerData, { data }] = useLazyAllRolesTypeQuery();
+  const [triggerData, { data }] = useLazyAllSelectRolesTypeQuery();
 
   const onCancel = () => {
     setOpen(false);

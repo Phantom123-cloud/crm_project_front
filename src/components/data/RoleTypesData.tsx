@@ -105,6 +105,8 @@ const RoleTypesData: React.FC<Props> = ({ page, limit, setPage, setLimit }) => {
         id={id}
         modalType={modalType}
         loading={isLoading}
+        page={page}
+        limit={limit}
       />
     </>
   );

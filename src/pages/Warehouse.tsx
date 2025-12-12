@@ -1,7 +1,7 @@
-import { useWarehouseByIdApiQuery } from "@/app/services/warehouses/warehousesApi";
+import { useLazyWarehouseByIdApiQuery } from "@/app/services/warehouses/warehousesApi";
 import AddButton from "@/components/UI/buttons/AddButton";
 import Title from "antd/es/typography/Title";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { EditOutlined } from "@ant-design/icons";
 import AddProductsByWarehouse from "@/components/modals/add/AddProductsByWarehouse";
@@ -9,28 +9,39 @@ import { Tabs } from "antd";
 import WarehouseByIdData from "@/components/data/WarehouseByIdData";
 import { useChangeStockItemsSelect } from "@/hooks/useChangeStockItemsSelect";
 import StockItemsData from "@/components/data/StockItemsData";
+import StockMovementsModal from "@/components/modals/StockMovements";
 
 const Warehouse = () => {
   const { id } = useParams();
-  const { data, isLoading } = useWarehouseByIdApiQuery(id as string);
+  const initQuery = {
+    page: 1,
+    limit: 20,
+    id: id as string,
+  };
+  const [queryWarehouse, setQueryWarehouse] = useState<{
+    id: string;
+    page: number;
+    limit: number;
+  }>(initQuery);
+  const [triggerWarehouseById, { data, isLoading }] =
+    useLazyWarehouseByIdApiQuery();
   const isTrip = data?.data?.warehouse.type === "TRIP";
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState<"UPDATE" | "ADD">("UPDATE");
   const { query, changeSelect, setQuery } = useChangeStockItemsSelect();
+
   const openModal = (type: "UPDATE" | "ADD") => {
     setModalType(type);
     setOpen(true);
   };
 
-  const dataSourceWarehouse = (data?.data?.warehouse?.stockItems ?? []).map(
-    (item) => {
-      return {
-        key: item.id,
-        name: item.product.name,
-        quantity: item.quantity,
-      };
-    }
-  );
+  const dataSourceWarehouse = (data?.data?.stockItems ?? []).map((item) => {
+    return {
+      key: item.id,
+      name: item.product.name,
+      quantity: item.quantity,
+    };
+  });
 
   const columnsWarehouse = [
     {
@@ -59,6 +70,9 @@ const Warehouse = () => {
           name={data?.data?.warehouse.name ?? ""}
           id={id as string}
           modalType={modalType}
+          total={data?.data?.total ?? 1}
+          query={queryWarehouse}
+          setQuery={setQueryWarehouse}
         />
       ),
     },
@@ -76,6 +90,10 @@ const Warehouse = () => {
     },
   ];
 
+  useEffect(() => {
+    triggerWarehouseById(queryWarehouse);
+  }, [queryWarehouse.page, queryWarehouse.limit]);
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -92,15 +110,26 @@ const Warehouse = () => {
             <AddProductsByWarehouse
               isOpen={open}
               setOpen={setOpen}
-              warehouseId={id as string}
+              queryWarehouse={queryWarehouse}
+              queryStock={query}
               modalType={modalType}
             />
           </>
         )}
       </div>
-      <span className="mb-2">
+      <div>
+        <StockMovementsModal
+          query={{
+            page: 0,
+            limit: 0,
+            isActive: undefined,
+          }}
+          products={[]}
+        />
+      </div>
+      {/* <span className="mb-2">
         К-во не подтверждённого товара: {data?.data?.countTransitProduct}
-      </span>
+      </span> */}
 
       <Tabs
         defaultActiveKey="warehouse"

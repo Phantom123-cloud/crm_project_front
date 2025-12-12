@@ -5,24 +5,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { useLazyAllProductsQuery, useLazyAllProductsSelectQuery } from "@/app/services/products/productsApi";
+import { useLazyAllProductsSelectQuery } from "@/app/services/products/productsApi";
 import {
   useAddProductByWarehouseMutation,
+  useLazyAllStockMovementsQuery,
   useLazyWarehouseByIdApiQuery,
 } from "@/app/services/warehouses/warehousesApi";
 
 type Props = {
   isOpen: boolean;
   setOpen: (value: SetStateAction<boolean>) => void;
-  warehouseId: string;
   modalType: "UPDATE" | "ADD";
+  queryWarehouse: {
+    id: string;
+    page: number;
+    limit: number;
+  };
+  queryStock: {
+    page: number;
+    limit: number;
+    status?: "TRANSIT" | "RECEIVED" | "CANCELLED";
+  };
 };
 
 const schema = z.object({
   productId: z.string().nonempty("Обязательное поле"),
   quantity: z
     .int()
-    .gt(1, "Значение должно быть больше 0")
+    .gte(1, "Значение должно быть больше 0")
     .nullable()
     .refine((v) => v !== null, {
       message: "Обязательное поле",
@@ -34,8 +44,9 @@ type FormValues = z.infer<typeof schema>;
 const AddProductsByWarehouse: React.FC<Props> = ({
   isOpen,
   setOpen,
-  warehouseId,
   modalType,
+  queryWarehouse,
+  queryStock,
 }) => {
   const {
     handleSubmit,
@@ -53,8 +64,10 @@ const AddProductsByWarehouse: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [addProduct] = useAddProductByWarehouseMutation();
   const [isOpenSelect, setIsOpenSelect] = useState<boolean>(false);
-  const [triggerProducts, { data, isLoading }] = useLazyAllProductsSelectQuery();
+  const [triggerProducts, { data, isLoading }] =
+    useLazyAllProductsSelectQuery();
   const [triggerWarehouseById] = useLazyWarehouseByIdApiQuery();
+  const [triggerStockMovements] = useLazyAllStockMovementsQuery();
   const products = (data?.data ?? []).map((item) => {
     return {
       value: item.id,
@@ -75,8 +88,15 @@ const AddProductsByWarehouse: React.FC<Props> = ({
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const { message } = await addProduct({ ...data, warehouseId }).unwrap();
-      await triggerWarehouseById(warehouseId).unwrap();
+      const { message } = await addProduct({
+        ...data,
+        warehouseId: queryWarehouse.id,
+      }).unwrap();
+      await triggerWarehouseById(queryWarehouse).unwrap();
+      await triggerStockMovements({
+        ...queryStock,
+        toWarehouseId: queryWarehouse.id,
+      }).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
