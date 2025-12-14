@@ -28,22 +28,33 @@ export const warehousesApi = api.injectEndpoints({
       }),
     }),
 
+    allWarehousesSelect: builder.query<
+      ApiResponse<{ id: string; name: string }[]>,
+      string
+    >({
+      query: (notId) => ({
+        url: `/warehouses/select-all`,
+        method: METHODS.GET,
+        params: { notId },
+      }),
+    }),
+
     allStockMovements: builder.query<
       ApiResponse<StockMovementsData>,
       {
         page: number;
         limit: number;
-        toWarehouseId: string;
+        warehouseId: string;
         status?: "TRANSIT" | "RECEIVED" | "CANCELLED" | undefined;
       }
     >({
-      query: ({ page, limit, toWarehouseId, status }) => ({
+      query: ({ page, limit, warehouseId, status }) => ({
         url: `/warehouses/all-stock-movements`,
         method: METHODS.GET,
         params: {
           page,
           limit,
-          toWarehouseId,
+          warehouseId,
           status,
         },
       }),
@@ -81,13 +92,24 @@ export const warehousesApi = api.injectEndpoints({
       }),
     }),
 
+    acceptProduct: builder.mutation<
+      ApiResponse,
+      { stockMovementsId: string; warehouseId: string }
+    >({
+      query: ({ stockMovementsId, warehouseId }) => ({
+        url: `/warehouses/accept-product`,
+        method: METHODS.PUT,
+        params: { stockMovementsId, warehouseId },
+      }),
+    }),
+
     stockMovements: builder.mutation<
       ApiResponse,
       {
         productId: string;
         fromWarehouseId: string;
         toWarehouseId: string;
-        quantity: number;
+        quantity: number | null;
       }
     >({
       query: ({ productId, fromWarehouseId, toWarehouseId, quantity }) => ({
@@ -145,4 +167,8 @@ export const {
   useLazyAllStockMovementsQuery,
 
   useStockMovementsMutation,
+  useAllWarehousesSelectQuery,
+  useLazyAllWarehousesSelectQuery,
+
+  useAcceptProductMutation,
 } = warehousesApi;

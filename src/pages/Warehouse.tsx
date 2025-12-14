@@ -1,15 +1,14 @@
 import { useLazyWarehouseByIdApiQuery } from "@/app/services/warehouses/warehousesApi";
-import AddButton from "@/components/UI/buttons/AddButton";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { EditOutlined } from "@ant-design/icons";
 import AddProductsByWarehouse from "@/components/modals/add/AddProductsByWarehouse";
 import { Tabs } from "antd";
 import WarehouseByIdData from "@/components/data/WarehouseByIdData";
 import { useChangeStockItemsSelect } from "@/hooks/useChangeStockItemsSelect";
 import StockItemsData from "@/components/data/StockItemsData";
 import StockMovementsModal from "@/components/modals/StockMovements";
+import UpdateWarehouse from "@/components/modals/update/UpdateWarehouse";
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -26,15 +25,7 @@ const Warehouse = () => {
   const [triggerWarehouseById, { data, isLoading }] =
     useLazyWarehouseByIdApiQuery();
   const isTrip = data?.data?.warehouse.type === "TRIP";
-  const [open, setOpen] = useState(false);
-  const [modalType, setModalType] = useState<"UPDATE" | "ADD">("UPDATE");
   const { query, changeSelect, setQuery } = useChangeStockItemsSelect();
-
-  const openModal = (type: "UPDATE" | "ADD") => {
-    setModalType(type);
-    setOpen(true);
-  };
-
   const dataSourceWarehouse = (data?.data?.stockItems ?? []).map((item) => {
     return {
       key: item.id,
@@ -62,16 +53,11 @@ const Warehouse = () => {
       label: "Склад",
       children: (
         <WarehouseByIdData
-          loading={isLoading}
           dataSource={dataSourceWarehouse}
           columns={columnsWarehouse}
-          isOpen={open}
-          setOpen={setOpen}
-          name={data?.data?.warehouse.name ?? ""}
-          id={id as string}
-          modalType={modalType}
-          total={data?.data?.total ?? 1}
+          loading={isLoading}
           query={queryWarehouse}
+          total={data?.data?.total ?? 1}
           setQuery={setQueryWarehouse}
         />
       ),
@@ -84,7 +70,8 @@ const Warehouse = () => {
           query={query}
           changeSelect={changeSelect}
           setQuery={setQuery}
-          toWarehouseId={id as string}
+          warehouseId={id as string}
+          queryWarehouse={queryWarehouse}
         />
       ),
     },
@@ -99,37 +86,33 @@ const Warehouse = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
           <Title level={3}>{data?.data?.warehouse.name}</Title>
-          {!isTrip && <EditOutlined onClick={() => openModal("UPDATE")} />}
-        </div>
-        {!isTrip && (
-          <>
-            <AddButton
-              onClick={() => openModal("ADD")}
-              text="Внести поставку товара"
+          {!isTrip && (
+            <UpdateWarehouse
+              loading={isLoading}
+              name={data?.data?.warehouse.name ?? ""}
+              id={id as string}
+              query={queryWarehouse}
             />
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <StockMovementsModal
+            queryStockMove={query}
+            queryWarehouse={queryWarehouse}
+            stockItems={data?.data?.stockItems ?? []}
+          />
+
+          {!isTrip && (
             <AddProductsByWarehouse
-              isOpen={open}
-              setOpen={setOpen}
               queryWarehouse={queryWarehouse}
               queryStock={query}
-              modalType={modalType}
             />
-          </>
-        )}
+          )}
+        </div>
       </div>
-      <div>
-        <StockMovementsModal
-          query={{
-            page: 0,
-            limit: 0,
-            isActive: undefined,
-          }}
-          products={[]}
-        />
-      </div>
-      {/* <span className="mb-2">
+      <span className="mb-2">
         К-во не подтверждённого товара: {data?.data?.countTransitProduct}
-      </span> */}
+      </span>
 
       <Tabs
         defaultActiveKey="warehouse"

@@ -18,22 +18,8 @@ export type StockMovement = {
     name: string;
   };
   quantity: number;
-  warehouseFrom: {
-    user: {
-      email: string;
-      employee: {
-        fullName: string;
-      };
-    };
-  };
-  warehouseTo: {
-    user: {
-      email: string;
-      employee: {
-        fullName: string;
-      };
-    };
-  };
+  warehouseFrom: { id: string; name: string };
+  warehouseTo: { id: string; name: string };
 
   status: "TRANSIT" | "RECEIVED" | "CANCELLED";
   stockMovementType:
@@ -62,10 +48,10 @@ export type StockMovementsData = {
 
 export type ProductsByWarehouse = {
   id: string;
-  quantity: boolean;
+  quantity: number;
   product: {
     id: string;
-    name: boolean;
+    name: string;
   };
 };
 

@@ -1,5 +1,11 @@
-import { useLazyAllStockMovementsQuery } from "@/app/services/warehouses/warehousesApi";
+import {
+  useAcceptProductMutation,
+  useLazyAllStockMovementsQuery,
+  useLazyWarehouseByIdApiQuery,
+} from "@/app/services/warehouses/warehousesApi";
+import { useUiContext } from "@/UIContext";
 import { isDate } from "@/utils/is-date";
+import { errorMessages } from "@/utils/is-error-message";
 import { Button, Flex, Select, Table, Tag } from "antd";
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 
@@ -17,15 +23,20 @@ type Props = {
       status?: "TRANSIT" | "RECEIVED" | "CANCELLED" | undefined;
     }>
   >;
-
-  toWarehouseId: string;
+  queryWarehouse: {
+    id: string;
+    page: number;
+    limit: number;
+  };
+  warehouseId: string;
 };
 
 const StockItemsData: React.FC<Props> = ({
   query,
   changeSelect,
   setQuery,
-  toWarehouseId,
+  warehouseId,
+  queryWarehouse,
 }) => {
   const [triggerStockMove, { data: stockData, isLoading: stockIsLoading }] =
     useLazyAllStockMovementsQuery();
@@ -68,27 +79,52 @@ const StockItemsData: React.FC<Props> = ({
     }
   };
 
+  const [acceptProduct] = useAcceptProductMutation();
+  const [triggerWarehouseById] = useLazyWarehouseByIdApiQuery();
+  const { callMessage } = useUiContext();
+  const onProductMigration = async (stockMovementsId: string) => {
+    try {
+      const { message } = await acceptProduct({
+        stockMovementsId,
+        warehouseId,
+      }).unwrap();
+
+      await triggerStockMove({ ...query, warehouseId }).unwrap();
+      await triggerWarehouseById(queryWarehouse).unwrap();
+      callMessage.success(message);
+    } catch (err) {
+      callMessage.error(errorMessages(err));
+    }
+  };
+
   const dataSourceStockData = (stockData?.data?.stockMovements ?? []).map(
     (item) => {
       const { color, text } = translateStatuses(item.status);
+      const isDisabled = item.status !== "TRANSIT";
+
       return {
         key: item.id,
         name: item.product.name,
         createdAt: isDate(item.createdAt),
-        from: item?.warehouseFrom?.user?.email ?? "-",
-        to: item?.warehouseTo?.user?.email ?? "",
+        from: item?.warehouseFrom?.name ?? "-",
+        to: item?.warehouseTo?.name ?? "",
         type: translatetType(item.stockMovementType),
         status: <Tag color={color}>{text}</Tag>,
         quantity: item.quantity,
 
         actions: (
           <Button
-            color="primary"
+            color={
+              item?.warehouseFrom?.id === warehouseId ? "danger" : "primary"
+            }
             variant="solid"
             size="small"
-            disabled={item.status !== "TRANSIT"}
+            disabled={isDisabled}
+            onClick={() => onProductMigration(item.id)}
           >
-            потвердить
+            {item?.warehouseFrom?.id === warehouseId
+              ? "отменить"
+              : "подтвердить"}
           </Button>
         ),
       };
@@ -146,14 +182,14 @@ const StockItemsData: React.FC<Props> = ({
   ];
 
   useEffect(() => {
-    triggerStockMove({ ...query, toWarehouseId });
+    triggerStockMove({ ...query, warehouseId });
   }, [query.page, query.limit, query.status]);
   return (
     <>
       <Flex justify="space-between" style={{ marginBottom: 10 }}>
         <Select
           defaultValue="ALL"
-          style={{ width: 120 }}
+          style={{ minWidth: 120 }}
           options={selectOptions}
           onChange={changeSelect}
         />

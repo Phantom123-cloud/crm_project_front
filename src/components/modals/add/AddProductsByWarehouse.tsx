@@ -13,9 +13,6 @@ import {
 } from "@/app/services/warehouses/warehousesApi";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
-  modalType: "UPDATE" | "ADD";
   queryWarehouse: {
     id: string;
     page: number;
@@ -42,16 +39,13 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const AddProductsByWarehouse: React.FC<Props> = ({
-  isOpen,
-  setOpen,
-  modalType,
   queryWarehouse,
   queryStock,
 }) => {
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     reset,
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -61,9 +55,9 @@ const AddProductsByWarehouse: React.FC<Props> = ({
     },
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { callMessage } = useUiContext();
   const [addProduct] = useAddProductByWarehouseMutation();
-  const [isOpenSelect, setIsOpenSelect] = useState<boolean>(false);
   const [triggerProducts, { data, isLoading }] =
     useLazyAllProductsSelectQuery();
   const [triggerWarehouseById] = useLazyWarehouseByIdApiQuery();
@@ -76,14 +70,18 @@ const AddProductsByWarehouse: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    if (isOpenSelect) {
+    if (isModalOpen) {
       triggerProducts();
     }
-  }, [isOpenSelect]);
+  }, [isModalOpen]);
 
   const onCancel = () => {
-    setOpen(false);
+    setIsModalOpen(false);
     reset();
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -95,7 +93,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
       await triggerWarehouseById(queryWarehouse).unwrap();
       await triggerStockMovements({
         ...queryStock,
-        toWarehouseId: queryWarehouse.id,
+        warehouseId: queryWarehouse.id,
       }).unwrap();
       callMessage.success(message);
     } catch (err) {
@@ -106,11 +104,14 @@ const AddProductsByWarehouse: React.FC<Props> = ({
   };
 
   return (
-    modalType === "ADD" && (
+    <>
+      <Button onClick={showModal} variant="outlined" color="green">
+        Внести поставку товара
+      </Button>
       <Modal
         title="Добавить новый продукт"
         closable={{ "aria-label": "Custom Close Button" }}
-        open={isOpen}
+        open={isModalOpen}
         footer={null}
         onCancel={onCancel}
       >
@@ -131,7 +132,6 @@ const AddProductsByWarehouse: React.FC<Props> = ({
               render={({ field }) => (
                 <Select
                   loading={isLoading}
-                  onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
                   {...field}
                   showSearch
                   optionFilterProp="label"
@@ -169,7 +169,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
                 color="blue"
                 htmlType="submit"
                 loading={isSubmitting}
-                // disabled={!isDirty}
+                disabled={!isDirty}
               >
                 Добавить
               </Button>
@@ -181,7 +181,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
           </Flex>
         </Form>
       </Modal>
-    )
+    </>
   );
 };
 

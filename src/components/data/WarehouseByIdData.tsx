@@ -1,13 +1,12 @@
 import { Table } from "antd";
-import UpdateWarehouse from "../modals/update/UpdateWarehouse";
 import { type Dispatch, type SetStateAction } from "react";
 
 type Props = {
   loading: boolean;
   dataSource: {
     key: string;
-    name: boolean;
-    quantity: boolean;
+    name: string;
+    quantity: number;
   }[];
   columns: {
     title: string;
@@ -15,13 +14,7 @@ type Props = {
     key: string;
   }[];
 
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
-  name: string;
-  id: string;
-  modalType: "UPDATE" | "ADD";
   total: number;
-
   query: {
     id: string;
     page: number;
@@ -40,11 +33,6 @@ const WarehouseByIdData: React.FC<Props> = ({
   loading,
   dataSource,
   columns,
-  isOpen,
-  setOpen,
-  name,
-  id,
-  modalType,
   total,
   query,
   setQuery,
@@ -64,15 +52,6 @@ const WarehouseByIdData: React.FC<Props> = ({
           },
           showSizeChanger: true,
         }}
-      />
-      <UpdateWarehouse
-        isOpen={isOpen}
-        setOpen={setOpen}
-        name={name}
-        id={id as string}
-        modalType={modalType}
-        loading={loading}
-        query={query}
       />
     </>
   );

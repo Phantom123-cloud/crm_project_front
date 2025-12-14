@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,13 +10,11 @@ import {
   useLazyWarehouseByIdApiQuery,
   useUpdateWarehouseMutation,
 } from "@/app/services/warehouses/warehousesApi";
+import { EditOutlined } from "@ant-design/icons";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
   name: string;
   id: string;
-  modalType: "UPDATE" | "ADD";
   loading: boolean;
   query: {
     id: string;
@@ -35,15 +33,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const UpdateWarehouse: React.FC<Props> = ({
-  isOpen,
-  setOpen,
-  id,
-  modalType,
-  name,
-  loading,
-  query,
-}) => {
+const UpdateWarehouse: React.FC<Props> = ({ id, name, loading, query }) => {
   const {
     handleSubmit,
     control,
@@ -60,10 +50,15 @@ const UpdateWarehouse: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [updateWarehouse] = useUpdateWarehouseMutation();
   const [triggerWarehouse] = useLazyWarehouseByIdApiQuery();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onCancel = () => {
-    setOpen(false);
+    setIsModalOpen(false);
     reset();
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -91,11 +86,12 @@ const UpdateWarehouse: React.FC<Props> = ({
   }, [name, reset]);
 
   return (
-    modalType === "UPDATE" && (
+    <>
+      <EditOutlined onClick={showModal} />
       <Modal
         title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
-        open={isOpen}
+        open={isModalOpen}
         footer={null}
         onCancel={onCancel}
         loading={loading}
@@ -111,7 +107,7 @@ const UpdateWarehouse: React.FC<Props> = ({
           text="Сохранить"
         />
       </Modal>
-    )
+    </>
   );
 };
 
