@@ -1,5 +1,5 @@
-import { Modal } from "antd";
-import { useEffect, type SetStateAction } from "react";
+import { Button, Modal } from "antd";
+import { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,18 +9,16 @@ import {
   useLazyAllRoleQuery,
   useUpdateRoleMutation,
 } from "@/app/services/roles/rolesApi";
-import type { TModal } from "@/types";
 import RoleForm from "@/components/forms/RoleForm";
 import { useLazyAllSelectRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
+import { useOnModal } from "@/hooks/useOnModal";
+import { EditOutlined } from "@ant-design/icons";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
   name: string;
   descriptions: string;
   id: string;
   roleTypeId: string;
-  modalType: TModal;
   limit: number;
   page: number;
   loading: boolean;
@@ -43,11 +41,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const UpdateRole: React.FC<Props> = ({
-  isOpen,
-  setOpen,
   id,
   name,
-  modalType,
   descriptions,
   roleTypeId,
   limit,
@@ -73,11 +68,7 @@ const UpdateRole: React.FC<Props> = ({
   const [updateRole] = useUpdateRoleMutation();
   const [triggerRole] = useLazyAllRoleQuery();
   const [triggerData, { data }] = useLazyAllSelectRolesTypeQuery();
-
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const roleTypes = (data?.data ?? []).map((item) => {
     return {
@@ -113,6 +104,7 @@ const UpdateRole: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
@@ -121,7 +113,16 @@ const UpdateRole: React.FC<Props> = ({
   }, [name, descriptions, roleTypeId, reset]);
 
   return (
-    modalType === "UPDATE" && (
+    <>
+      <Button
+        color="primary"
+        size="small"
+        variant="outlined"
+        icon={<EditOutlined />}
+        onClick={onOpen}
+      >
+        изменить
+      </Button>
       <Modal
         title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
@@ -142,7 +143,7 @@ const UpdateRole: React.FC<Props> = ({
           isDirty={isDirty}
         />
       </Modal>
-    )
+    </>
   );
 };
 

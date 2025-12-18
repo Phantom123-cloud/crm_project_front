@@ -1,43 +1,50 @@
 import { Button, Flex, Modal } from "antd";
-import type { SetStateAction } from "react";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
+import {
+  useDeleteCitizenshipMutation,
+  useLazyAllCitizenshipsQuery,
+} from "@/app/services/citizenships/citizenshipsApi";
+import { useOnModal } from "@/hooks/useOnModal";
 import {
   useDeleteLanguageMutation,
   useLazyAllLanguagesQuery,
 } from "@/app/services/languages/languagesApi";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
   localeRu: string;
   id: string;
-  modalType: "UPDATE" | "DELETE";
   page: number;
   limit: number;
+  type: "citizenship" | "languages";
 };
 
-const DeleteLanguage: React.FC<Props> = ({
-  isOpen,
-  setOpen,
+const DeleteCitizenship: React.FC<Props> = ({
   id,
   localeRu,
-  modalType,
   page,
   limit,
+  type,
 }) => {
   const { callMessage } = useUiContext();
+  const [deleteCitizenship] = useDeleteCitizenshipMutation();
   const [deleteLanguage] = useDeleteLanguageMutation();
-  const [triggerLanguages] = useLazyAllLanguagesQuery();
 
-  const onCancel = () => {
-    setOpen(false);
-  };
+  const [triggerLanguages] = useLazyAllLanguagesQuery();
+  const [triggerCitizenships] = useLazyAllCitizenshipsQuery();
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const handleDelete = async () => {
     try {
-      const { message } = await deleteLanguage(id).unwrap();
-      await triggerLanguages({ page, limit }).unwrap();
+      const { message } = await (type === "citizenship"
+        ? deleteCitizenship(id)
+        : deleteLanguage(id)
+      ).unwrap();
+      await (type === "citizenship"
+        ? triggerCitizenships({ page, limit })
+        : triggerLanguages({ page, limit })
+      ).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
@@ -47,9 +54,18 @@ const DeleteLanguage: React.FC<Props> = ({
   };
 
   return (
-    modalType === "DELETE" && (
+    <>
+      <Button
+        color="danger"
+        variant="outlined"
+        size="small"
+        icon={<DeleteOutlined />}
+        onClick={onOpen}
+      >
+        удалить
+      </Button>
       <Modal
-        title={`Вы уверены в удалении языка - '${localeRu}'`}
+        title={`Вы уверены в удалении - '${localeRu}'`}
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}
@@ -65,8 +81,8 @@ const DeleteLanguage: React.FC<Props> = ({
           </Button>
         </Flex>
       </Modal>
-    )
+    </>
   );
 };
 
-export default DeleteLanguage;
+export default DeleteCitizenship;

@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useEffect, type SetStateAction } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,13 +10,14 @@ import {
   useUpdateProductMutation,
 } from "@/app/services/products/productsApi";
 import ProductsForm from "@/components/forms/ProductsForm";
+import { EditOutlined } from "@ant-design/icons";
+import { useOnModal } from "@/hooks/useOnModal";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
-  name: string;
-  id: string;
-  modalType: "UPDATE" | "DELETE";
+  item: {
+    id: string;
+    name: string;
+  };
   loading: boolean;
   page: number;
   limit: number;
@@ -32,16 +33,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const UpdateProducts: React.FC<Props> = ({
-  isOpen,
-  setOpen,
-  id,
-  modalType,
-  name,
-  loading,
-  page,
-  limit,
-}) => {
+const UpdateProducts: React.FC<Props> = ({ item, loading, page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -55,24 +47,20 @@ const UpdateProducts: React.FC<Props> = ({
     mode: "onChange",
   });
 
+  const { onOpen, onCancel, isOpen } = useOnModal();
   const { callMessage } = useUiContext();
   const [updateProduct] = useUpdateProductMutation();
   const [triggerProduct] = useLazyAllProductsQuery();
 
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
-
   const onSubmit = async (data: FormValues) => {
     try {
       const nameResult =
-        data.name !== name && data.name?.length ? data.name : undefined;
+        data.name !== item.name && data.name?.length ? data.name : undefined;
 
       if (nameResult) {
         const { message } = await updateProduct({
           name: nameResult,
-          id,
+          id: item.id,
         }).unwrap();
         await triggerProduct({ page, limit }).unwrap();
         callMessage.success(message);
@@ -81,15 +69,25 @@ const UpdateProducts: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
   useEffect(() => {
-    reset({ name });
-  }, [name, reset]);
+    reset({ name: item.name });
+  }, [item.name, reset]);
 
   return (
-    modalType === "UPDATE" && (
+    <>
+      <Button
+        color="primary"
+        variant="outlined"
+        icon={<EditOutlined />}
+        onClick={onOpen}
+        size="small"
+      >
+        изменить
+      </Button>
       <Modal
         title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
@@ -109,7 +107,7 @@ const UpdateProducts: React.FC<Props> = ({
           text="Сохранить"
         />
       </Modal>
-    )
+    </>
   );
 };
 

@@ -1,29 +1,25 @@
 import { Button, Flex, Form, Input, Modal, Tabs } from "antd";
-import { useEffect, useState, type SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import {
-  useAllRoleTemplatesByIdQuery,
+  useLazyAllRoleTemplatesByIdQuery,
   useLazyAllRoleTemplatesQuery,
   useUpdateRoleTemplateMutation,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useLazyGetRolesNotInTemplateQuery } from "@/app/services/roles/rolesApi";
+import RolesGuard from "@/components/layout/RolesGuard";
+import { EditOutlined } from "@ant-design/icons";
+import { useOnModal } from "@/hooks/useOnModal";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
   name: string;
   id: string;
-  modalType: "UPDATE" | "DELETE";
-  roleTypes: {
-    value: string;
-    label: string;
-  }[];
   loading: boolean;
   page: number;
   limit: number;
@@ -42,11 +38,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const UpdateRoleTemplate: React.FC<Props> = ({
-  isOpen,
-  setOpen,
   id,
   name,
-  modalType,
   loading,
   page,
   limit,
@@ -67,18 +60,15 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   });
 
   const { callMessage } = useUiContext();
-  const { data } = useAllRoleTemplatesByIdQuery(id);
+  const [triggerRoleTemp, { data }] = useLazyAllRoleTemplatesByIdQuery();
   const [updateRoleTemplate] = useUpdateRoleTemplateMutation();
-  const [triggerRoleTemplate] = useLazyAllRoleTemplatesQuery();
+  const [triggerRoleTemplates] = useLazyAllRoleTemplatesQuery();
   const [triggerRolesNotInTemplate, { data: unusedRoles }] =
     useLazyGetRolesNotInTemplateQuery();
 
   const [key, setKey] = useState<"connect" | "disconnect">("disconnect");
 
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const usedRoles = data?.data?.roles ?? [];
 
@@ -106,7 +96,10 @@ const UpdateRoleTemplate: React.FC<Props> = ({
     if (key === "connect") {
       triggerRolesNotInTemplate(id);
     }
-  }, [key]);
+    if (isOpen) {
+      triggerRoleTemp(id);
+    }
+  }, [key, isOpen]);
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -122,12 +115,15 @@ const UpdateRoleTemplate: React.FC<Props> = ({
         ...resultData,
         id,
       }).unwrap();
-      await triggerRoleTemplate({ page, limit }).unwrap();
+      await triggerRoleTemplates({ page, limit }).unwrap();
+      await triggerRoleTemp(id).unwrap();
+      await triggerRolesNotInTemplate(id).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
@@ -136,14 +132,22 @@ const UpdateRoleTemplate: React.FC<Props> = ({
   }, [name, reset]);
 
   return (
-    modalType === "UPDATE" && (
+    <RolesGuard access={"update_templates"}>
+      <Button
+        color="primary"
+        variant="outlined"
+        icon={<EditOutlined />}
+        onClick={onOpen}
+        size="small"
+      >
+        изменить
+      </Button>
       <Modal
         title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}
         onCancel={onCancel}
-        // width={"80%"}
         loading={loading}
       >
         <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
@@ -199,7 +203,7 @@ const UpdateRoleTemplate: React.FC<Props> = ({
           </Flex>
         </Form>
       </Modal>
-    )
+    </RolesGuard>
   );
 };
 

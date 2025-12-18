@@ -67,18 +67,16 @@ const User = () => {
   ];
 
   return (
-    <>
-      <Tabs
-        defaultActiveKey="0"
-        type="card"
-        items={items.map((item, index) => {
-          return {
-            ...item,
-            key: `${index}`,
-          };
-        })}
-      />
-    </>
+    <Tabs
+      defaultActiveKey="0"
+      type="card"
+      items={items.map((item, index) => {
+        return {
+          ...item,
+          key: `${index}`,
+        };
+      })}
+    />
   );
 };
 

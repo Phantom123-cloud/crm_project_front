@@ -11,10 +11,11 @@ import {
 import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useEffect } from "react";
 import { useLazyAllRolesByTypeQuery } from "@/app/services/roles/rolesApi";
+import { PlusOutlined } from "@ant-design/icons";
+import { useOnModal } from "@/hooks/useOnModal";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
   page: number;
   limit: number;
 };
@@ -29,7 +30,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
+const AddRoleTemplate: React.FC<Props> = ({ page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -49,11 +50,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const [triggerRoleTemplates] = useLazyAllRoleTemplatesQuery();
   const [triggerAllRolesByType, { data: rolesData }] =
     useLazyAllRolesByTypeQuery();
-
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -64,6 +61,7 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
@@ -73,57 +71,69 @@ const AddRoleTemplate: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
     }
   }, [isOpen]);
   return (
-    <Modal
-      title="Добавить новый шаблон"
-      closable={{ "aria-label": "Custom Close Button" }}
-      open={isOpen}
-      footer={null}
-      onCancel={onCancel}
-    >
-      <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
-        <Form.Item
-          label="Имя"
-          validateStatus={errors.name ? "error" : ""}
-          help={errors.name?.message}
-          required
+    <RolesGuard access={"create_templates"}>
+      <div className="flex justify-end mb-10">
+        <Button
+          color="green"
+          variant="outlined"
+          icon={<PlusOutlined />}
+          onClick={onOpen}
         >
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => <Input {...field} />}
-          />
-        </Form.Item>
-        <Form.Item
-          validateStatus={errors.array ? "error" : ""}
-          help={errors.array?.message}
-          required
-          className="max-h-[700px] overflow-auto"
+          Добавить
+        </Button>
+        <Modal
+          title="Добавить новый шаблон"
+          closable={{ "aria-label": "Custom Close Button" }}
+          open={isOpen}
+          footer={null}
+          onCancel={onCancel}
         >
-          <CheckboxRolesGroupContoller
-            name="array"
-            control={control}
-            roles={rolesData?.data?.roles ?? []}
-          />
-        </Form.Item>
-
-        <Flex justify="space-between">
-          <Form.Item label={null}>
-            <Button
-              variant="solid"
-              color="blue"
-              htmlType="submit"
-              loading={isSubmitting}
+          <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
+            <Form.Item
+              label="Имя"
+              validateStatus={errors.name ? "error" : ""}
+              help={errors.name?.message}
+              required
             >
-              Добавить
-            </Button>
-          </Form.Item>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => <Input {...field} />}
+              />
+            </Form.Item>
+            <Form.Item
+              validateStatus={errors.array ? "error" : ""}
+              help={errors.array?.message}
+              required
+              className="max-h-[700px] overflow-auto"
+            >
+              <CheckboxRolesGroupContoller
+                name="array"
+                control={control}
+                roles={rolesData?.data?.roles ?? []}
+              />
+            </Form.Item>
 
-          <Button variant="solid" color="default" onClick={onCancel}>
-            Закрыть
-          </Button>
-        </Flex>
-      </Form>
-    </Modal>
+            <Flex justify="space-between">
+              <Form.Item label={null}>
+                <Button
+                  variant="solid"
+                  color="blue"
+                  htmlType="submit"
+                  loading={isSubmitting}
+                >
+                  Добавить
+                </Button>
+              </Form.Item>
+
+              <Button variant="solid" color="default" onClick={onCancel}>
+                Закрыть
+              </Button>
+            </Flex>
+          </Form>
+        </Modal>{" "}
+      </div>
+    </RolesGuard>
   );
 };
 

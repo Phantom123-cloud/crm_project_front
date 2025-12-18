@@ -9,14 +9,14 @@ import {
 } from "@/app/services/auth/authApi";
 import { errorMessages } from "@/utils/is-error-message";
 import { useNavigate } from "react-router-dom";
-import { socket } from "@/socket";
 
 const schema = z.object({
   email: z.email("Некоректный email"),
   password: z
     .string("")
     .nonempty("Обязательное поле")
-    .min(6, "Минимальная длина пароля - 6 символов"),
+    .min(6, "Минимальная длина пароля - 6 символов")
+    .max(20, "Максимальная длина пароля - 20 символов"),
   remember: z.boolean(),
 });
 

@@ -19,7 +19,7 @@ type Props = {
   required?: boolean;
 };
 
-const CitizenshipAndLanguagesForm: React.FC<Props> = ({
+const ReferenceItemForm: React.FC<Props> = ({
   handleSubmit,
   onSubmit,
   errors,
@@ -94,4 +94,4 @@ const CitizenshipAndLanguagesForm: React.FC<Props> = ({
   );
 };
 
-export default CitizenshipAndLanguagesForm;
+export default ReferenceItemForm;

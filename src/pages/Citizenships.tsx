@@ -1,48 +1,31 @@
-import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import CitizenshipsData from "@/components/data/CitizenshipsData";
-import AddCitizenship from "@/components/modals/add/AddCitizenship";
+import ReferenceItemData from "@/components/data/ReferenceItemData";
+import AddReferenceItem from "@/components/modals/add/AddReferenceItem";
 import RolesGuard from "@/components/layout/RolesGuard";
+import { usePaginationControle } from "@/hooks/usePaginationControle";
 import { useAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
 
 const Citizenships = () => {
-  const [isOpen, setOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const { onChange, page, limit } = usePaginationControle();
   const { data, isLoading } = useAllCitizenshipsQuery({ page, limit });
 
   return (
     <RolesGuard access={"view_citizenships"}>
-      <div>
-        <RolesGuard access={"create_citizenships"}>
-          <div className="flex justify-end mb-10">
-            <Button
-              color="green"
-              variant="outlined"
-              icon={<PlusOutlined />}
-              onClick={() => setOpen(true)}
-            >
-              Добавить
-            </Button>
-          </div>
-          <AddCitizenship
-            isOpen={isOpen}
-            setOpen={setOpen}
-            page={page}
-            limit={limit}
-          />
-        </RolesGuard>
-        <CitizenshipsData
-          citizenships={data?.data?.citizenships ?? []}
-          isLoading={isLoading}
-          page={page}
-          limit={limit}
-          setPage={setPage}
-          setLimit={setLimit}
-          total={data?.data?.total ?? 1}
-        />
-      </div>
+      <RolesGuard access={"create_citizenships"}>
+        <AddReferenceItem page={page} limit={limit} type={"citizenship"} />
+      </RolesGuard>
+      <ReferenceItemData
+        page={page}
+        limit={limit}
+        onChange={onChange}
+        access={{
+          update: "update_citizenships",
+          delete: "delete_citizenships",
+        }}
+        data={data?.data?.citizenships ?? []}
+        isLoading={isLoading}
+        total={data?.data?.total ?? 1}
+        type={"citizenship"}
+      />
     </RolesGuard>
   );
 };

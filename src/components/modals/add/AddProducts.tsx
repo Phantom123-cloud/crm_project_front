@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,10 +9,10 @@ import {
   useCreateProductMutation,
   useLazyAllProductsQuery,
 } from "@/app/services/products/productsApi";
+import { useOnModal } from "@/hooks/useOnModal";
+import { PlusOutlined } from "@ant-design/icons";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
   page: number;
   limit: number;
 };
@@ -27,11 +27,11 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddProducts: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
+const AddProducts: React.FC<Props> = ({ page, limit }) => {
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     reset,
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -43,11 +43,7 @@ const AddProducts: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const { callMessage } = useUiContext();
   const [createProduct] = useCreateProductMutation();
   const [triggerProducts] = useLazyAllProductsQuery();
-
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -58,28 +54,40 @@ const AddProducts: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
   return (
-    <Modal
-      title="Добавить новый продукт"
-      closable={{ "aria-label": "Custom Close Button" }}
-      open={isOpen}
-      footer={null}
-      onCancel={onCancel}
-    >
-      <ProductsForm
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        errors={errors}
-        control={control}
-        isSubmitting={isSubmitting}
-        required
+    <div className="flex justify-end mb-10">
+      <Button
+        color="green"
+        variant="outlined"
+        icon={<PlusOutlined />}
+        onClick={onOpen}
+      >
+        Добавить
+      </Button>
+      <Modal
+        title="Добавить новый продукт"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isOpen}
+        footer={null}
         onCancel={onCancel}
-        text="Сохранить"
-      />
-    </Modal>
+      >
+        <ProductsForm
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          errors={errors}
+          control={control}
+          isSubmitting={isSubmitting}
+          required
+          onCancel={onCancel}
+          isDirty={isDirty}
+          text="Сохранить"
+        />
+      </Modal>
+    </div>
   );
 };
 

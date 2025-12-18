@@ -4,10 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { Button, Flex, Form, Input, Select } from "antd";
+import { Button, Flex, Form, Input } from "antd";
 import { useLazyAllEmployeeTradingsQuery } from "@/app/services/employees/employeesApi";
 import { useEffect, useState } from "react";
 import { useLazyAllTripTypesSelectQuery } from "@/app/services/trip-types/tripTypesApi";
+import Select from "@/components/UI/selects/Select";
 
 const schema = z.object({
   dateFrom: z.string().nonempty("Обязательное поле"),
@@ -144,14 +145,7 @@ const CreateTrips = () => {
               onOpenChange={(isOpen) =>
                 setIsOpenSelect((prev) => ({ ...prev, tradings: isOpen }))
               }
-              {...field}
-              showSearch
-              optionFilterProp="label"
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
+              field={field}
               options={tradings}
               onChange={(value) => {
                 field.onChange(value);
@@ -175,14 +169,7 @@ const CreateTrips = () => {
               onOpenChange={(isOpen) =>
                 setIsOpenSelect((prev) => ({ ...prev, types: isOpen }))
               }
-              {...field}
-              showSearch
-              optionFilterProp="label"
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
+              field={field}
               options={typesSelect}
               onChange={(value) => {
                 field.onChange(value);

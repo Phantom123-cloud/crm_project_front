@@ -77,7 +77,7 @@ const LanguagesData: React.FC<Props> = ({
 
   const columns = [
     {
-      title: "Код языка",
+      title: "Код",
       dataIndex: "code",
       key: "code",
     },

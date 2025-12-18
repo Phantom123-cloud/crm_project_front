@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -8,15 +8,16 @@ import {
   useCreateRoleMutation,
   useLazyAllRoleQuery,
 } from "@/app/services/roles/rolesApi";
-import type { TSelect } from "@/types";
 import RoleForm from "@/components/forms/RoleForm";
+import { useOnModal } from "@/hooks/useOnModal";
+import { PlusOutlined } from "@ant-design/icons";
+import { useLazyAllSelectRolesTypeQuery } from "@/app/services/role-types/roleTypesApi";
+import { useEffect } from "react";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
   limit: number;
   page: number;
-  roleTypes: TSelect[];
 };
 
 const schema = z.object({
@@ -35,13 +36,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddRole: React.FC<Props> = ({
-  isOpen,
-  setOpen,
-  limit,
-  page,
-  roleTypes,
-}) => {
+const AddRole: React.FC<Props> = ({ limit, page }) => {
   const {
     handleSubmit,
     control,
@@ -59,11 +54,21 @@ const AddRole: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [createRole] = useCreateRoleMutation();
   const [triggerRole] = useLazyAllRoleQuery();
+  const { onOpen, onCancel, isOpen } = useOnModal();
+  const [triggerData, { data, isLoading }] = useLazyAllSelectRolesTypeQuery();
 
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const roleTypes = (data?.data ?? []).map((item) => {
+    return {
+      value: item.id,
+      label: item.name,
+    };
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      triggerData();
+    }
+  }, [isOpen]);
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -74,29 +79,43 @@ const AddRole: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
   return (
-    <Modal
-      title="Добавить новую роль"
-      closable={{ "aria-label": "Custom Close Button" }}
-      open={isOpen}
-      footer={null}
-      onCancel={onCancel}
-    >
-      <RoleForm
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        errors={errors}
-        control={control}
-        isSubmitting={isSubmitting}
-        onCancel={onCancel}
-        text={"Добавить"}
-        roleTypes={roleTypes}
-        required
-      />
-    </Modal>
+    <RolesGuard access={"create_roles"}>
+      <div className="flex justify-end mb-10">
+        <Button
+          color="green"
+          variant="outlined"
+          icon={<PlusOutlined />}
+          onClick={onOpen}
+        >
+          Добавить
+        </Button>
+        <Modal
+          title="Добавить новую роль"
+          closable={{ "aria-label": "Custom Close Button" }}
+          open={isOpen}
+          footer={null}
+          onCancel={onCancel}
+          loading={isLoading}
+        >
+          <RoleForm
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+            errors={errors}
+            control={control}
+            isSubmitting={isSubmitting}
+            onCancel={onCancel}
+            text={"Добавить"}
+            roleTypes={roleTypes}
+            required={true}
+          />
+        </Modal>
+      </div>
+    </RolesGuard>
   );
 };
 

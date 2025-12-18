@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { Button, Flex, Form, Input, Modal, Select } from "antd";
+import { Button, Flex, Form, Input, Modal } from "antd";
 import {
   useLazyAllRoleTemplatesByIdQuery,
   useLazyAllRoleTemplatesSelectQuery,
@@ -13,6 +13,7 @@ import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContolle
 import { useRegisterMutation } from "@/app/services/auth/authApi";
 import { useLazyGetRolesNotInTemplateQuery } from "@/app/services/roles/rolesApi";
 import RolesGuard from "@/components/layout/RolesGuard";
+import Select from "@/components/UI/selects/Select";
 
 const schema = z.object({
   email: z.email("Некоректный email"),
@@ -20,8 +21,8 @@ const schema = z.object({
   password: z
     .string()
     .nonempty("Обязательное поле")
-    .min(5, "Минимальная длина - 5")
-    .max(20, "Максимальная длина - 20"),
+    .min(6, "Минимальная длина - 6 символов")
+    .max(20, "Максимальная длина - 20 символов"),
 
   roleTemplatesId: z.string().nonempty("Обязательное поле"),
   arrayBlockedRoles: array(z.string()).optional(),
@@ -65,6 +66,7 @@ const RegisterUsers = () => {
   const [isOpenSelect, setIsOpenSelect] = useState(false);
 
   const [showButtonRules, setShowButtonRules] = useState(false);
+
   const [typeModal, setTypeModal] = useState<"ADD" | "DELETE" | null>(null);
   const onCancel = () => {
     setIsModalOpen(false);
@@ -115,17 +117,13 @@ const RegisterUsers = () => {
 
   useEffect(() => {
     if (isOpenSelect) {
-      console.log(templatesSelect);
-
       triggerRoleTemplatesSelect();
     }
-  }, [isOpenSelect]);
 
-  useEffect(() => {
     if (rolesByTemplateId) {
       getRolesByTemplateId(rolesByTemplateId);
     }
-  }, [rolesByTemplateId]);
+  }, [isOpenSelect, rolesByTemplateId]);
 
   return (
     <RolesGuard access={"register_users"}>
@@ -173,14 +171,7 @@ const RegisterUsers = () => {
                 <Select
                   loading={isLoading}
                   onOpenChange={(isOpen) => setIsOpenSelect(isOpen)}
-                  {...field}
-                  showSearch
-                  optionFilterProp="label"
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
-                  }
+                  field={field}
                   options={roleTemplates}
                   onChange={(value) => {
                     onTemplateIdChange(value);

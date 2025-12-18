@@ -1,60 +1,34 @@
-import { Table, Button } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import type { Templates } from "@/app/services/role-templates/roleTemplatesTypes";
+import { Table } from "antd";
 import DeleteRoleTemplate from "../modals/delete/DeleteRoleTemplate";
 import UpdateRoleTemplate from "../modals/update/UpdateRoleTemplate";
-import RolesGuard from "../layout/RolesGuard";
-import { useGetModalsInfo } from "@/hooks/useGetModalsInfo";
+import { useAllRoleTemplatesQuery } from "@/app/services/role-templates/roleTemplatesApi";
 
 type Props = {
-  templates: Templates[];
-  isLoading: boolean;
   page: number;
   limit: number;
-  setPage(page: number): void;
-  setLimit(page: number): void;
-  total: number;
+  onChange: (page: number, pageSize: number) => void;
 };
-const RoleTemplatesData: React.FC<Props> = ({
-  templates,
-  isLoading,
-  page,
-  limit,
-  setPage,
-  setLimit,
-  total,
-}) => {
-  const [isOpen, setOpen] = useState(false);
-  const { getInfo, itemInfo } = useGetModalsInfo(setOpen);
-  const dataSource = (templates ?? []).map((item) => {
+const RoleTemplatesData: React.FC<Props> = ({ page, limit, onChange }) => {
+  const { data, isLoading } = useAllRoleTemplatesQuery({ page, limit });
+  const dataSource = (data?.data?.templates ?? []).map((item) => {
     return {
       key: item.id,
       template: item.name,
       actions: (
         <div className="flex gap-5">
-          <RolesGuard access={"update_templates"}>
-            <Button
-              color="primary"
-              variant="outlined"
-              icon={<EditOutlined />}
-              onClick={() => getInfo(item, "UPDATE")}
-              size="small"
-            >
-              изменить
-            </Button>
-          </RolesGuard>
-          <RolesGuard access={"delete_templates"}>
-            <Button
-              color="danger"
-              variant="outlined"
-              icon={<DeleteOutlined />}
-              onClick={() => getInfo(item, "DELETE")}
-              size="small"
-            >
-              удалить
-            </Button>
-          </RolesGuard>
+          <UpdateRoleTemplate
+            name={item.name ?? ""}
+            id={item.id}
+            loading={isLoading}
+            page={page}
+            limit={limit}
+          />
+          <DeleteRoleTemplate
+            name={item.name ?? ""}
+            id={item.id}
+            page={page}
+            limit={limit}
+          />
         </div>
       ),
     };
@@ -73,49 +47,19 @@ const RoleTemplatesData: React.FC<Props> = ({
     },
   ];
 
-  const { name, id, modalType } = itemInfo;
-
   return (
-    <div>
-      <Table
-        loading={isLoading}
-        dataSource={dataSource}
-        columns={columns}
-        pagination={{
-          pageSize: limit,
-          total,
-          current: page,
-          onChange: (page, limit) => {
-            setPage(page);
-            setLimit(limit);
-          },
-          showSizeChanger: true,
-        }}
-      />
-      <DeleteRoleTemplate
-        isOpen={isOpen}
-        setOpen={setOpen}
-        name={name ?? ""}
-        id={id}
-        modalType={modalType}
-        page={page}
-        limit={limit}
-      />
-
-      {isOpen && (
-        <UpdateRoleTemplate
-          isOpen={isOpen}
-          setOpen={setOpen}
-          name={name ?? ""}
-          id={id}
-          modalType={modalType}
-          roleTypes={[]}
-          loading={isLoading}
-          page={page}
-          limit={limit}
-        />
-      )}
-    </div>
+    <Table
+      loading={isLoading}
+      dataSource={dataSource}
+      columns={columns}
+      pagination={{
+        pageSize: limit,
+        total: data?.data?.total ?? 1,
+        current: page,
+        onChange,
+        showSizeChanger: true,
+      }}
+    />
   );
 };
 
