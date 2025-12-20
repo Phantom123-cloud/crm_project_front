@@ -11,12 +11,12 @@ import {
 } from "@/app/services/users/usersApi";
 import { useAllRoleTemplatesSelectQuery } from "@/app/services/role-templates/roleTemplatesApi";
 import Title from "antd/es/typography/Title";
+import { useOnModal } from "@/hooks/useOnModal";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 type Props = {
   userId: string;
-  isOpen: boolean;
   roleTemplatesId: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const schema = z.object({
@@ -25,12 +25,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const UpdateRolesTemplate: React.FC<Props> = ({
-  userId,
-  isOpen,
-  setIsOpen,
-  roleTemplatesId,
-}) => {
+const UpdateRolesTemplate: React.FC<Props> = ({ userId, roleTemplatesId }) => {
   const {
     handleSubmit,
     control,
@@ -48,6 +43,7 @@ const UpdateRolesTemplate: React.FC<Props> = ({
   const [updateRoleTemplate] = useChangeRoleTemplateMutation();
   const [triggerUserData] = useLazyUserByIdQuery();
   const { callMessage } = useUiContext();
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -61,12 +57,8 @@ const UpdateRolesTemplate: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
-  };
-
-  const onCancel = () => {
-    setIsOpen(false);
-    reset();
   };
 
   useEffect(() => {
@@ -76,57 +68,66 @@ const UpdateRolesTemplate: React.FC<Props> = ({
   }, [isOpen]);
 
   return (
-    <Modal
-      title="Смена шаблона"
-      closable={{ "aria-label": "Custom Close Button" }}
-      open={isOpen}
-      footer={null}
-      onCancel={onCancel}
-      width={700}
-      loading={isLoading}
-    >
-      <Title level={3} type="danger">
-        При смене шаблона текущие индивидуальные настройки прав доступа будут
-        удалены
-      </Title>
+    <RolesGuard access={"update_roles_template"}>
+      <Button
+        color="danger"
+        variant="solid"
+        onClick={onOpen}
+      >
+        Сменить шаблон
+      </Button>
+      <Modal
+        title="Смена шаблона"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isOpen}
+        footer={null}
+        onCancel={onCancel}
+        width={700}
+        loading={isLoading}
+      >
+        <Title level={3} type="danger">
+          При смене шаблона текущие индивидуальные настройки прав доступа будут
+          удалены
+        </Title>
 
-      <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
-        <Form.Item
-          label={"Шаблон"}
-          validateStatus={errors.roleTemplatesId ? "error" : ""}
-          help={errors.roleTemplatesId?.message}
-        >
-          <Controller
-            name="roleTemplatesId"
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                options={data?.data?.templates.map((temlate) => ({
-                  value: temlate.id,
-                  label: temlate.name,
-                }))}
-              />
-            )}
-          />
-        </Form.Item>
-
-        <Flex justify="space-between">
-          <Button
-            variant="solid"
-            color="blue"
-            htmlType="submit"
-            loading={isSubmitting}
-            disabled={!isDirty}
+        <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
+          <Form.Item
+            label={"Шаблон"}
+            validateStatus={errors.roleTemplatesId ? "error" : ""}
+            help={errors.roleTemplatesId?.message}
           >
-            Сохранить
-          </Button>
-          <Button variant="solid" color="default" onClick={onCancel}>
-            Закрыть
-          </Button>
-        </Flex>
-      </Form>
-    </Modal>
+            <Controller
+              name="roleTemplatesId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={data?.data?.templates.map((temlate) => ({
+                    value: temlate.id,
+                    label: temlate.name,
+                  }))}
+                />
+              )}
+            />
+          </Form.Item>
+
+          <Flex justify="space-between">
+            <Button
+              variant="solid"
+              color="blue"
+              htmlType="submit"
+              loading={isSubmitting}
+              disabled={!isDirty}
+            >
+              Сохранить
+            </Button>
+            <Button variant="solid" color="default" onClick={onCancel}>
+              Закрыть
+            </Button>
+          </Flex>
+        </Form>
+      </Modal>
+    </RolesGuard>
   );
 };
 

@@ -12,11 +12,11 @@ import {
   useLazyUserByIdQuery,
   useUpdateUserRolesMutation,
 } from "@/app/services/users/usersApi";
+import RolesGuard from "@/components/layout/RolesGuard";
+import { useOnModal } from "@/hooks/useOnModal";
 
 type Props = {
   userId: string;
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 type Tabs = {
@@ -40,11 +40,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const UpdateRolesByUserId: React.FC<Props> = ({
-  userId,
-  isOpen,
-  setIsOpen,
-}) => {
+const UpdateRolesByUserId: React.FC<Props> = ({ userId }) => {
   const {
     handleSubmit,
     control,
@@ -118,13 +114,10 @@ const UpdateRolesByUserId: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
-
-  const onCancel = () => {
-    setIsOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   useEffect(() => {
     if (isOpen) {
@@ -133,62 +126,68 @@ const UpdateRolesByUserId: React.FC<Props> = ({
   }, [isOpen]);
 
   return (
-    <Modal
-      title="Действия с правами доступа"
-      closable={{ "aria-label": "Custom Close Button" }}
-      open={isOpen}
-      footer={null}
-      onCancel={onCancel}
-      width={700}
-      loading={isLoading}
-    >
-      <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
-        <Tabs
-          defaultActiveKey="blockCurrent"
-          items={tabItems.map((item) => {
-            return {
-              key: item.key,
-              label: item.label,
-              forceRender: true,
-              children: (
-                <Form.Item>
-                  <div className="flex justify-end">
-                    <Tooltip placement="topLeft" title={item.guide}>
-                      <Tag color="#cd201f">как пользоваться?</Tag>
-                    </Tooltip>
-                  </div>
-                  <div className="max-h-[700px] overflow-auto">
-                    <CheckboxRolesGroupContoller
-                      name={item.name}
-                      control={control}
-                      roles={item?.array as RolesObj[]}
-                    />
-                  </div>
-                </Form.Item>
-              ),
-            };
-          })}
-        />
+    <RolesGuard access={"update_account_roles"}>
+      <Button onClick={onOpen} type="primary">
+        Редактировать роли
+      </Button>
 
-        <Flex justify="space-between">
-          <Form.Item label={null}>
-            <Button
-              variant="solid"
-              color="blue"
-              htmlType="submit"
-              loading={isSubmitting}
-              disabled={!isDirty}
-            >
-              Сохранить
+      <Modal
+        title="Действия с правами доступа"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isOpen}
+        footer={null}
+        onCancel={onCancel}
+        width={700}
+        loading={isLoading}
+      >
+        <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
+          <Tabs
+            defaultActiveKey="blockCurrent"
+            items={tabItems.map((item) => {
+              return {
+                key: item.key,
+                label: item.label,
+                forceRender: true,
+                children: (
+                  <Form.Item>
+                    <div className="flex justify-end">
+                      <Tooltip placement="topLeft" title={item.guide}>
+                        <Tag color="#cd201f">как пользоваться?</Tag>
+                      </Tooltip>
+                    </div>
+                    <div className="max-h-[700px] overflow-auto">
+                      <CheckboxRolesGroupContoller
+                        name={item.name}
+                        control={control}
+                        roles={item?.array as RolesObj[]}
+                      />
+                    </div>
+                  </Form.Item>
+                ),
+              };
+            })}
+          />
+
+          <Flex justify="space-between">
+            <Form.Item label={null}>
+              <Button
+                variant="solid"
+                color="blue"
+                htmlType="submit"
+                loading={isSubmitting}
+                disabled={!isDirty}
+              >
+                Сохранить
+              </Button>
+            </Form.Item>
+
+            <Button variant="solid" color="default" onClick={onCancel}>
+              Закрыть
             </Button>
-          </Form.Item>
-
-          <Button variant="solid" color="default" onClick={onCancel}>
-            Закрыть
-          </Button>
-        </Flex>
-      </Form>
-    </Modal>
+          </Flex>
+        </Form>
+      </Modal>
+    </RolesGuard>
   );
 };
 

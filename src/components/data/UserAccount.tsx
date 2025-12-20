@@ -29,7 +29,6 @@ const UserAccount: React.FC<Props> = ({ email, userId, roleTemplatesId }) => {
   const [updateAccount] = useUpdateAccountCredentialsMutation();
   const [triggerUserData] = useLazyUserByIdQuery();
   const { callMessage } = useUiContext();
-  const [modalType, setModalType] = useState<"roles" | "templates">("roles");
 
   const {
     handleSubmit,
@@ -66,29 +65,15 @@ const UserAccount: React.FC<Props> = ({ email, userId, roleTemplatesId }) => {
       reset();
     }
   };
-  const [isOpen, setIsOpen] = useState(false);
-  const onOpen = (modalType: "roles" | "templates") => {
-    setModalType(modalType);
-    setIsOpen(true);
-  };
 
   return (
     <>
       <div className="flex justify-end gap-2">
-        <RolesGuard access={"update_account_roles"}>
-          <Button onClick={() => onOpen("roles")} type="primary">
-            Редактировать роли
-          </Button>
-        </RolesGuard>
-        <RolesGuard access={"update_roles_template"}>
-          <Button
-            color="danger"
-            variant="solid"
-            onClick={() => onOpen("templates")}
-          >
-            Сменить шаблон
-          </Button>
-        </RolesGuard>
+        <UpdateRolesByUserId userId={userId} />
+        <UpdateRolesTemplate
+          userId={userId}
+          roleTemplatesId={roleTemplatesId}
+        />
       </div>
 
       <Form
@@ -141,22 +126,6 @@ const UserAccount: React.FC<Props> = ({ email, userId, roleTemplatesId }) => {
           </Button>
         </Form.Item>
       </Form>
-
-      {modalType === "roles" && (
-        <UpdateRolesByUserId
-          userId={userId}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
-      )}
-      {modalType === "templates" && (
-        <UpdateRolesTemplate
-          userId={userId}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          roleTemplatesId={roleTemplatesId}
-        />
-      )}
     </>
   );
 };

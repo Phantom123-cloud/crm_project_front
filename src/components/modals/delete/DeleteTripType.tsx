@@ -1,5 +1,5 @@
 import { Button, Flex, Modal } from "antd";
-import type { SetStateAction } from "react";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useUiContext } from "@/UIContext";
 
 import { errorMessages } from "@/utils/is-error-message";
@@ -7,33 +7,21 @@ import {
   useDeleteTripTypesMutation,
   useLazyAllTripTypesQuery,
 } from "@/app/services/trip-types/tripTypesApi";
+import { useOnModal } from "@/hooks/useOnModal";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
   name: string;
   id: string;
-  modalType: "UPDATE" | "DELETE";
   page: number;
   limit: number;
 };
 
-const DeleteTripType: React.FC<Props> = ({
-  isOpen,
-  setOpen,
-  id,
-  name,
-  modalType,
-  page,
-  limit,
-}) => {
+const DeleteTripType: React.FC<Props> = ({ id, name, page, limit }) => {
   const { callMessage } = useUiContext();
   const [deleteTripType] = useDeleteTripTypesMutation();
   const [triggerTripTypes] = useLazyAllTripTypesQuery();
 
-  const onCancel = () => {
-    setOpen(false);
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const handleDelete = async () => {
     try {
@@ -48,7 +36,16 @@ const DeleteTripType: React.FC<Props> = ({
   };
 
   return (
-    modalType === "DELETE" && (
+    <>
+      <Button
+        color="danger"
+        size="small"
+        variant="outlined"
+        icon={<DeleteOutlined />}
+        onClick={onOpen}
+      >
+        удалить
+      </Button>
       <Modal
         title={`Вы уверены в удалении типа - '${name}'`}
         closable={{ "aria-label": "Custom Close Button" }}
@@ -66,7 +63,7 @@ const DeleteTripType: React.FC<Props> = ({
           </Button>
         </Flex>
       </Modal>
-    )
+    </>
   );
 };
 

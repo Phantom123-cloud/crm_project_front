@@ -1,13 +1,24 @@
 import WarehousesData from "@/components/data/WarehousesData";
-import AddButton from "@/components/UI/buttons/AddButton";
-import { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { useOnModal } from "@/hooks/useOnModal";
+import { Button } from "antd";
 
 const Warehouses = () => {
-  const [isOpen, setOpen] = useState(false);
+  const { onOpen, onCancel, isOpen } = useOnModal();
+
   return (
     <>
-      <AddButton onClick={() => setOpen(true)} text="Добавить" />
-      <WarehousesData isOpen={isOpen} setOpen={setOpen} />
+      <div className="flex justify-end mb-10">
+        <Button
+          color="green"
+          variant="outlined"
+          icon={<PlusOutlined />}
+          onClick={onOpen}
+        >
+          Добавить
+        </Button>
+      </div>
+      <WarehousesData isOpen={isOpen} onCancel={onCancel} />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { Button, Flex, Form, Input, Modal, Select } from "antd";
-import { useEffect, useState, type SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -12,14 +12,14 @@ import {
 import { useLazyAllEmployeeTradingsQuery } from "@/app/services/employees/employeesApi";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
   query: {
     page: number;
     limit: number;
     isActive?: boolean;
   };
   isExistCentral: boolean;
+  isOpen: boolean;
+  onCancel: () => void;
 };
 
 const schema = z.object({
@@ -34,10 +34,10 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const AddWarehouse: React.FC<Props> = ({
-  isOpen,
-  setOpen,
   query,
   isExistCentral,
+  isOpen,
+  onCancel,
 }) => {
   const {
     handleSubmit,
@@ -63,10 +63,6 @@ const AddWarehouse: React.FC<Props> = ({
       label: item.fullName ? item.fullName : item.user.email,
     };
   });
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -80,6 +76,7 @@ const AddWarehouse: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 

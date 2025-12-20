@@ -19,7 +19,6 @@ import {
 type Props = {
   page: number;
   limit: number;
-
   type: "citizenship" | "languages";
 };
 

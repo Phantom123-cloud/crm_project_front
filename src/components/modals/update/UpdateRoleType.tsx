@@ -1,5 +1,5 @@
-import { Modal } from "antd";
-import { useEffect, type SetStateAction } from "react";
+import { Button, Modal } from "antd";
+import { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,14 +10,14 @@ import {
 } from "@/app/services/role-types/roleTypesApi";
 import { errorMessages } from "@/utils/is-error-message";
 import RoleTypeForm from "@/components/forms/RoleTypeForm";
+import RolesGuard from "@/components/layout/RolesGuard";
+import { EditOutlined } from "@ant-design/icons";
+import { useOnModal } from "@/hooks/useOnModal";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
   name: string;
   descriptions: string;
   id: string;
-  modalType: "UPDATE" | "DELETE";
   loading: boolean;
   page: number;
   limit: number;
@@ -28,7 +28,7 @@ const schema = z.object({
     .string()
     .nonempty("Обязательное поле")
     .min(4, "Минимальная длина - 4")
-    .max(20, "Максимальная длина - 20"),
+    .max(30, "Максимальная длина - 30"),
   descriptions: z
     .string()
     .nonempty("Обязательное поле")
@@ -39,11 +39,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const UpdateRoleType: React.FC<Props> = ({
-  isOpen,
-  setOpen,
   id,
   name,
-  modalType,
   descriptions,
   loading,
   page,
@@ -66,11 +63,7 @@ const UpdateRoleType: React.FC<Props> = ({
   const { callMessage } = useUiContext();
   const [updateTypeRole] = useUpdateRolesTypeMutation();
   const [triggerRoleTypes] = useLazyAllRolesTypeQuery();
-
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -88,6 +81,7 @@ const UpdateRoleType: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
@@ -96,7 +90,16 @@ const UpdateRoleType: React.FC<Props> = ({
   }, [name, descriptions, reset]);
 
   return (
-    modalType === "UPDATE" && (
+    <RolesGuard access={"update_role_types"}>
+      <Button
+        color="primary"
+        size="small"
+        variant="outlined"
+        icon={<EditOutlined />}
+        onClick={onOpen}
+      >
+        изменить
+      </Button>
       <Modal
         title="Редактировать данные"
         closable={{ "aria-label": "Custom Close Button" }}
@@ -116,7 +119,7 @@ const UpdateRoleType: React.FC<Props> = ({
           text="Сохранить"
         />
       </Modal>
-    )
+    </RolesGuard>
   );
 };
 

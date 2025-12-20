@@ -1,7 +1,7 @@
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import { Button, Flex, Select, Table } from "antd";
-import { useEffect, type SetStateAction } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isDate } from "@/utils/is-date";
 import TagBoolean from "../UI/TagBoolean";
@@ -14,10 +14,10 @@ import AddWarehouse from "../modals/add/AddWarehouse";
 
 type Props = {
   isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
+  onCancel: () => void;
 };
 
-const WarehousesData: React.FC<Props> = ({ isOpen, setOpen }) => {
+const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
   const { query, changeSelect, setQuery } = useChangeTripDataSelect();
 
   const [triggerWarehouses, { data, isLoading }] =
@@ -145,10 +145,10 @@ const WarehousesData: React.FC<Props> = ({ isOpen, setOpen }) => {
       />
 
       <AddWarehouse
-        isOpen={isOpen}
-        setOpen={setOpen}
         query={query}
         isExistCentral={dataSource.length > 0}
+        isOpen={isOpen}
+        onCancel={onCancel}
       />
     </>
   );

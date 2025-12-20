@@ -7,14 +7,13 @@ import { errorMessages } from "@/utils/is-error-message";
 
 import { useAddLanguageToEmployeeMutation } from "@/app/services/employees/employeesApi";
 import { useLazyUserByIdQuery } from "@/app/services/users/usersApi";
-import { useLazyAllLanguagesQuery, useLazyAllLanguagesSelectQuery } from "@/app/services/languages/languagesApi";
+import { useLazyAllLanguagesSelectQuery } from "@/app/services/languages/languagesApi";
 import { useEffect, useState } from "react";
+import RolesGuard from "@/components/layout/RolesGuard";
+import { useOnModal } from "@/hooks/useOnModal";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
   userId: string;
-  typeModal: "language" | "contact";
   currentLanguages: string[];
 };
 
@@ -29,10 +28,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const AddLanguageToEmployee: React.FC<Props> = ({
-  isOpen,
-  setOpen,
   userId,
-  typeModal,
   currentLanguages,
 }) => {
   const {
@@ -57,10 +53,7 @@ const AddLanguageToEmployee: React.FC<Props> = ({
     }
   }, [isOpenSelect]);
 
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -74,11 +67,21 @@ const AddLanguageToEmployee: React.FC<Props> = ({
       callMessage.error(errorMessages(err));
     } finally {
       onCancel();
+      reset();
     }
   };
 
   return (
-    typeModal === "language" && (
+    <RolesGuard access={"update_accounts"}>
+      <div className="flex justify-end">
+        <Button
+          type="primary"
+          color="primary"
+          onClick={onOpen}
+        >
+          добавить
+        </Button>
+      </div>
       <Modal
         title="Добавить язык"
         closable={{ "aria-label": "Custom Close Button" }}
@@ -159,7 +162,7 @@ const AddLanguageToEmployee: React.FC<Props> = ({
           </Flex>
         </Form>
       </Modal>
-    )
+    </RolesGuard>
   );
 };
 

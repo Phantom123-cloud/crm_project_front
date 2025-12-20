@@ -10,7 +10,7 @@ import {
 } from "@/app/services/trips/tripsApi";
 import TagBoolean from "../UI/TagBoolean";
 import { useChangeTripDataSelect } from "@/hooks/useChangeTripDataSelect";
-
+// норм
 const TripsData = () => {
   const { query, changeSelect, setQuery } = useChangeTripDataSelect();
 

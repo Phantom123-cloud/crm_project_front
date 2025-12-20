@@ -1,5 +1,5 @@
 import { Button, Flex, Form, InputNumber, Modal, Select } from "antd";
-import { useEffect, useState, type SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";

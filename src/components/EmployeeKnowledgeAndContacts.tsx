@@ -4,7 +4,6 @@ import type {
 } from "@/app/services/users/usersType";
 import { Button, Divider } from "antd";
 import AddLanguageToEmployee from "./modals/add/AddLanguageToEmployee";
-import { useState } from "react";
 import AddContactNumber from "./modals/add/AddContactNumber";
 import {
   useDeleteContactNumberToEmployeeMutation,
@@ -41,16 +40,6 @@ const EmployeeKnowledgeAndContacts: React.FC<Props> = ({
   phones,
   userId,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [typeModal, setTypeModal] = useState<"language" | "contact">(
-    "language"
-  );
-
-  const openModal = (typeModal: "language" | "contact") => {
-    setTypeModal(typeModal);
-    setIsOpen(true);
-  };
-
   const [deleteContact] = useDeleteContactNumberToEmployeeMutation();
   const [deleteLanguage] = useDeleteLanguageToEmployeeMutation();
   const [triggerUserData] = useLazyUserByIdQuery();
@@ -101,17 +90,12 @@ const EmployeeKnowledgeAndContacts: React.FC<Props> = ({
             </div>
           ))}
         </div>
-        <RolesGuard access={"update_accounts"}>
-          <div className="flex justify-end">
-            <Button
-              type="primary"
-              color="primary"
-              onClick={() => openModal("language")}
-            >
-              добавить
-            </Button>
-          </div>
-        </RolesGuard>
+        <AddLanguageToEmployee
+          userId={userId}
+          currentLanguages={
+            foreignLanguages.map((item) => item.language.id) ?? []
+          }
+        />
       </div>
       <Divider variant="dashed" />
 
@@ -138,33 +122,7 @@ const EmployeeKnowledgeAndContacts: React.FC<Props> = ({
             </div>
           ))}
         </div>
-        <RolesGuard access={"update_accounts"}>
-          <div className="flex justify-end">
-            <Button
-              type="primary"
-              color="primary"
-              onClick={() => openModal("contact")}
-            >
-              добавить
-            </Button>
-          </div>
-        </RolesGuard>
-
-        <AddLanguageToEmployee
-          isOpen={isOpen}
-          setOpen={setIsOpen}
-          userId={userId}
-          typeModal={typeModal}
-          currentLanguages={
-            foreignLanguages.map((item) => item.language.id) ?? []
-          }
-        />
-        <AddContactNumber
-          isOpen={isOpen}
-          setOpen={setIsOpen}
-          userId={userId}
-          typeModal={typeModal}
-        />
+        <AddContactNumber userId={userId} />
       </div>
     </>
   );

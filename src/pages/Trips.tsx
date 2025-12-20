@@ -1,7 +1,8 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import AddButton from "@/components/UI/buttons/AddButton";
 import TripsData from "@/components/data/TripsData";
-// import RolesGuard from "@/components/layout/RolesGuard";
+import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
 const Trips = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -9,14 +10,17 @@ const Trips = () => {
 
   return (
     <>
-      {/* <RolesGuard access={"register_users"}> */}
-      <AddButton
-        onClick={() => navigate(isRegisterPage ? "/trips" : "create")}
-        text={isRegisterPage ? "Список" : "Добавить"}
-        Icon={isRegisterPage ? null : undefined}
-        color={isRegisterPage ? "volcano" : undefined}
-        variant={isRegisterPage ? "solid" : undefined}
-      />
+      <div className="flex justify-end mb-10">
+        <Button
+          color={isRegisterPage ? "volcano" : "green"}
+          variant={isRegisterPage ? "solid" : "outlined"}
+          onClick={() => navigate(isRegisterPage ? "/trips" : "create")}
+          icon={!isRegisterPage && <PlusOutlined />}
+        >
+          {isRegisterPage ? "Список" : "Добавить"}
+        </Button>
+      </div>
+
       {/* </RolesGuard> */}
       <Outlet />
       {/* <RolesGuard access={"view_users"}> */}

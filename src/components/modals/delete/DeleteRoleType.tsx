@@ -1,38 +1,26 @@
 import { Button, Flex, Modal } from "antd";
-import type { SetStateAction } from "react";
 import { useUiContext } from "@/UIContext";
 import {
   useDeleteRolesTypeMutation,
   useLazyAllRolesTypeQuery,
 } from "@/app/services/role-types/roleTypesApi";
 import { errorMessages } from "@/utils/is-error-message";
+import { useOnModal } from "@/hooks/useOnModal";
+import { DeleteOutlined } from "@ant-design/icons";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: SetStateAction<boolean>) => void;
   name: string;
   id: string;
-  modalType: "UPDATE" | "DELETE";
   page: number;
   limit: number;
 };
 
-const DeleteRoleType: React.FC<Props> = ({
-  isOpen,
-  setOpen,
-  id,
-  name,
-  modalType,
-  page,
-  limit,
-}) => {
+const DeleteRoleType: React.FC<Props> = ({ id, name, page, limit }) => {
   const { callMessage } = useUiContext();
   const [deleteRoleType] = useDeleteRolesTypeMutation();
   const [triggerRoleTypes] = useLazyAllRolesTypeQuery();
-
-  const onCancel = () => {
-    setOpen(false);
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const handleDelete = async () => {
     try {
@@ -47,7 +35,16 @@ const DeleteRoleType: React.FC<Props> = ({
   };
 
   return (
-    modalType === "DELETE" && (
+    <RolesGuard access={"delete_role_types"}>
+      <Button
+        color="danger"
+        size="small"
+        variant="outlined"
+        icon={<DeleteOutlined />}
+        onClick={onOpen}
+      >
+        удалить
+      </Button>
       <Modal
         title={`Вы уверены в удалении типа - '${name}'`}
         closable={{ "aria-label": "Custom Close Button" }}
@@ -65,7 +62,7 @@ const DeleteRoleType: React.FC<Props> = ({
           </Button>
         </Flex>
       </Modal>
-    )
+    </RolesGuard>
   );
 };
 

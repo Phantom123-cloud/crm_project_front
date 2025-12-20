@@ -1,5 +1,4 @@
-import { Modal } from "antd";
-import type { SetStateAction } from "react";
+import { Button, Modal } from "antd";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,10 +9,9 @@ import {
   useCreateTripTypesMutation,
   useLazyAllTripTypesQuery,
 } from "@/app/services/trip-types/tripTypesApi";
-
+import { useOnModal } from "@/hooks/useOnModal";
+import { PlusOutlined } from "@ant-design/icons";
 type Props = {
-  isOpen: boolean;
-  setOpen: (value: boolean) => void;
   page: number;
   limit: number;
 };
@@ -28,7 +26,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AddTripType: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
+const AddTripType: React.FC<Props> = ({ page, limit }) => {
   const {
     handleSubmit,
     control,
@@ -44,11 +42,7 @@ const AddTripType: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
   const { callMessage } = useUiContext();
   const [createTripType] = useCreateTripTypesMutation();
   const [triggerTripTypes] = useLazyAllTripTypesQuery();
-
-  const onCancel = () => {
-    setOpen(false);
-    reset();
-  };
+  const { onOpen, onCancel, isOpen } = useOnModal();
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -58,29 +52,42 @@ const AddTripType: React.FC<Props> = ({ isOpen, setOpen, page, limit }) => {
     } catch (err) {
       callMessage.error(errorMessages(err));
     } finally {
+      reset();
       onCancel();
     }
   };
 
   return (
-    <Modal
-      title="Добавить новый тип роли"
-      closable={{ "aria-label": "Custom Close Button" }}
-      open={isOpen}
-      footer={null}
-      onCancel={onCancel}
-    >
-      <TripTypeForm
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        errors={errors}
-        control={control}
-        isSubmitting={isSubmitting}
+    <>
+      <div className="flex justify-end mb-10">
+        <Button
+          color="green"
+          variant="outlined"
+          icon={<PlusOutlined />}
+          onClick={onOpen}
+        >
+          Добавить
+        </Button>
+      </div>
+      <Modal
+        title="Добавить новый тип роли"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isOpen}
+        footer={null}
         onCancel={onCancel}
-        text="Добавить"
-        required
-      />
-    </Modal>
+      >
+        <TripTypeForm
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          errors={errors}
+          control={control}
+          isSubmitting={isSubmitting}
+          onCancel={onCancel}
+          text="Добавить"
+          required
+        />
+      </Modal>
+    </>
   );
 };
 

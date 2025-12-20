@@ -56,7 +56,7 @@ const RegisterUsers = () => {
   ] = useLazyAllRoleTemplatesByIdQuery();
   const [
     triggerRolesNotInTemplate,
-    { data: unsedRoles, isLoading: isLoadUnsedRoles },
+    { data: unusedRoles, isLoading: isLoadunusedRoles },
   ] = useLazyGetRolesNotInTemplateQuery();
 
   const [rolesByTemplateId, setRolesByTemplateId] = useState<string | null>(
@@ -227,7 +227,7 @@ const RegisterUsers = () => {
             open={isModalOpen}
             footer={null}
             onCancel={onCancel}
-            loading={typeModal === "DELETE" ? isLoadRoles : isLoadUnsedRoles}
+            loading={typeModal === "DELETE" ? isLoadRoles : isLoadunusedRoles}
           >
             <Form.Item label={null} className="max-h-[700px] overflow-auto">
               <CheckboxRolesGroupContoller
@@ -238,7 +238,7 @@ const RegisterUsers = () => {
                 roles={
                   typeModal === "DELETE"
                     ? usedRoles?.data?.roles ?? []
-                    : unsedRoles?.data?.roles ?? []
+                    : unusedRoles?.data?.roles ?? []
                 }
               />
 
@@ -246,7 +246,7 @@ const RegisterUsers = () => {
               (usedRoles?.data?.roles ?? []).length === 0
                 ? "Шаблон не содержит ролей"
                 : typeModal === "ADD" &&
-                  (unsedRoles?.data?.roles ?? []).length === 0
+                  (unusedRoles?.data?.roles ?? []).length === 0
                 ? "В шаблоне уже все права"
                 : ""}
             </Form.Item>
