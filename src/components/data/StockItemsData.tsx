@@ -42,15 +42,17 @@ const StockItemsData: React.FC<Props> = ({
     useLazyAllStockMovementsQuery();
 
   const translateStatuses = (
-    status: "TRANSIT" | "RECEIVED" | "CANCELLED"
-  ): { text: string; color: "orange" | "green" | "danger" } => {
+    status: "TRANSIT" | "RECEIVED" | "CANCELLED" | "SCRAP"
+  ): { text: string; color: "orange" | "green" | "red" | "red-inverse" } => {
     switch (status) {
       case "TRANSIT":
         return { text: "В процессе", color: "orange" };
       case "RECEIVED":
         return { text: "Принято", color: "green" };
       case "CANCELLED":
-        return { text: "Отменено", color: "danger" };
+        return { text: "Отменено", color: "red" };
+      case "SCRAP":
+        return { text: "Списание-брак", color: "red-inverse" };
 
       default:
         return { text: "В процессе", color: "orange" };
@@ -76,6 +78,18 @@ const StockItemsData: React.FC<Props> = ({
 
       default:
         return "Приход";
+    }
+  };
+
+  const translatetFromSuppler = (from: "SPV" | "SUPPLER") => {
+    switch (from) {
+      case "SPV":
+        return "СПВ";
+      case "SUPPLER":
+        return "Поставщик";
+
+      default:
+        return "Поставщик";
     }
   };
 
@@ -106,8 +120,10 @@ const StockItemsData: React.FC<Props> = ({
         key: item.id,
         name: item.product.name,
         createdAt: isDate(item.createdAt),
-        from: item?.warehouseFrom?.name ?? "-",
-        to: item?.warehouseTo?.name ?? "",
+        from:
+          item?.warehouseFrom?.name ??
+          translatetFromSuppler(item?.fromSupplier),
+        to: item?.warehouseTo?.name ?? "-",
         type: translatetType(item.stockMovementType),
         status: <Tag color={color}>{text}</Tag>,
         quantity: item.quantity,
@@ -133,14 +149,14 @@ const StockItemsData: React.FC<Props> = ({
 
   const columnsStockData = [
     {
-      title: "Продукт",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
       title: "Дата операции",
       dataIndex: "createdAt",
       key: "createdAt",
+    },
+    {
+      title: "Продукт",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "К-во",

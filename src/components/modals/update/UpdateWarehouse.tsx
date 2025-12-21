@@ -16,7 +16,7 @@ type Props = {
   name: string;
   id: string;
   loading: boolean;
-  query: {
+  queryStockMove: {
     id: string;
     page: number;
     limit: number;
@@ -33,7 +33,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const UpdateWarehouse: React.FC<Props> = ({ id, name, loading, query }) => {
+const UpdateWarehouse: React.FC<Props> = ({ id, name, loading, queryStockMove }) => {
   const {
     handleSubmit,
     control,
@@ -71,7 +71,7 @@ const UpdateWarehouse: React.FC<Props> = ({ id, name, loading, query }) => {
           name: nameResult,
           id,
         }).unwrap();
-        await triggerWarehouse(query).unwrap();
+        await triggerWarehouse(queryStockMove).unwrap();
         callMessage.success(message);
       }
     } catch (err) {

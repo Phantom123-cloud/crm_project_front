@@ -3,7 +3,7 @@ import { useState } from "react";
 export const useChangeUserDataSelect = (isFullData: boolean) => {
   const initQuery = {
     page: 1,
-    limit: 20,
+    limit: 10,
     isOnline: undefined,
     isActive: true,
     isFullData,

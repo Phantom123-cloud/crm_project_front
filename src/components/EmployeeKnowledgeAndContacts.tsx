@@ -12,8 +12,8 @@ import {
 import { useLazyUserByIdQuery } from "@/app/services/users/usersApi";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import ColorTab from "./UI/ColorTabContactNumType";
-import ColorTabLanguagesLevel from "./UI/ColorTabLanguagesLevel";
+import ColorTab from "./UI/tabs/ColorTabContactNumType";
+import ColorTabLanguagesLevel from "./UI/tabs/ColorTabLanguagesLevel";
 import RolesGuard from "./layout/RolesGuard";
 
 type Props = {

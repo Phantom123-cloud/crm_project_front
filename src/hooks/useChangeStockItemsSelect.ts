@@ -3,7 +3,7 @@ import { useState } from "react";
 export const useChangeStockItemsSelect = () => {
   const initQuery = {
     page: 1,
-    limit: 20,
+    limit: 10,
     status: undefined,
   };
   const [query, setQuery] = useState<{

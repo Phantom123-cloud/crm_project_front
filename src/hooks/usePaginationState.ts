@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const usePaginationControle = (
+export const usePaginationState = (
   initPage?: number,
   initLimit?: number
 ) => {

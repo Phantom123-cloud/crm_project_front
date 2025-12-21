@@ -9,12 +9,13 @@ import { useChangeStockItemsSelect } from "@/hooks/useChangeStockItemsSelect";
 import StockItemsData from "@/components/data/StockItemsData";
 import StockMovementsModal from "@/components/modals/StockMovements";
 import UpdateWarehouse from "@/components/modals/update/UpdateWarehouse";
+import ScrapProduct from "@/components/modals/ScrapProduct";
 
 const Warehouse = () => {
   const { id } = useParams();
   const initQuery = {
     page: 1,
-    limit: 20,
+    limit: 10,
     id: id as string,
   };
   const [queryWarehouse, setQueryWarehouse] = useState<{
@@ -25,7 +26,11 @@ const Warehouse = () => {
   const [triggerWarehouseById, { data, isLoading }] =
     useLazyWarehouseByIdApiQuery();
   const isTrip = data?.data?.warehouse.type === "TRIP";
-  const { query, changeSelect, setQuery } = useChangeStockItemsSelect();
+  const {
+    query: queryStockMove,
+    changeSelect,
+    setQuery,
+  } = useChangeStockItemsSelect();
   const dataSourceWarehouse = (data?.data?.stockItems ?? []).map((item) => {
     return {
       key: item.id,
@@ -67,7 +72,7 @@ const Warehouse = () => {
       label: "Перемещения",
       children: (
         <StockItemsData
-          query={query}
+          query={queryStockMove}
           changeSelect={changeSelect}
           setQuery={setQuery}
           warehouseId={id as string}
@@ -91,21 +96,27 @@ const Warehouse = () => {
               loading={isLoading}
               name={data?.data?.warehouse.name ?? ""}
               id={id as string}
-              query={queryWarehouse}
+              queryStockMove={queryWarehouse}
             />
           )}
         </div>
         <div className="flex items-center gap-2">
           <StockMovementsModal
-            queryStockMove={query}
+            queryStockMove={queryStockMove}
             queryWarehouse={queryWarehouse}
             stockItems={data?.data?.stockItems ?? []}
           />
-
+          {!isTrip && (
+            <ScrapProduct
+              queryWarehouse={queryWarehouse}
+              stockItems={data?.data?.stockItems ?? []}
+              queryStockMove={queryStockMove}
+            />
+          )}
           {!isTrip && (
             <AddProductsByWarehouse
               queryWarehouse={queryWarehouse}
-              queryStock={query}
+              queryStockMove={queryStockMove}
             />
           )}
         </div>

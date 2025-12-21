@@ -9,11 +9,11 @@ import {
   useLazyAllRoleTemplatesSelectQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import { useEffect, useState } from "react";
-import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useRegisterMutation } from "@/app/services/auth/authApi";
 import { useLazyGetRolesNotInTemplateQuery } from "@/app/services/roles/rolesApi";
 import RolesGuard from "@/components/layout/RolesGuard";
 import Select from "@/components/UI/selects/Select";
+import CheckboxRolesGroupContoller from "@/components/UI/checkboxes/CheckboxRolesGroupContoller";
 
 const schema = z.object({
   email: z.email("Некоректный email"),

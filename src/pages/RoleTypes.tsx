@@ -1,10 +1,10 @@
 import RoleTypesData from "@/components/data/RoleTypesData";
 import AddRoleType from "@/components/modals/add/AddRoleType";
 import RolesGuard from "@/components/layout/RolesGuard";
-import { usePaginationControle } from "@/hooks/usePaginationControle";
+import { usePaginationState } from "@/hooks/usePaginationState";
 
 const RoleTypes = () => {
-  const { onChange, page, limit } = usePaginationControle();
+  const { onChange, page, limit } = usePaginationState();
 
   return (
     <RolesGuard access={"view_role_types"}>

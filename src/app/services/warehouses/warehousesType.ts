@@ -17,6 +17,7 @@ export type StockMovement = {
     id: string;
     name: string;
   };
+  fromSupplier: 'SPV'|'SUPPLER'
   quantity: number;
   warehouseFrom: { id: string; name: string };
   warehouseTo: { id: string; name: string };

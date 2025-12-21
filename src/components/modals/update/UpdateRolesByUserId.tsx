@@ -1,8 +1,7 @@
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
 import { useLazyFullInformationOnRolesQuery } from "@/app/services/roles/rolesApi";
 import { Button, Flex, Form, Modal, Tabs, Tag, Tooltip } from "antd";
-import { useEffect, type Dispatch, type SetStateAction } from "react";
-import CheckboxRolesGroupContoller from "../../CheckboxRolesGroupContoller";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +13,7 @@ import {
 } from "@/app/services/users/usersApi";
 import RolesGuard from "@/components/layout/RolesGuard";
 import { useOnModal } from "@/hooks/useOnModal";
+import CheckboxRolesGroupContoller from "@/components/UI/checkboxes/CheckboxRolesGroupContoller";
 
 type Props = {
   userId: string;

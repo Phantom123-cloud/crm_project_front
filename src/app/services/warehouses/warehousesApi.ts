@@ -124,14 +124,38 @@ export const warehousesApi = api.injectEndpoints({
       }),
     }),
 
+    scrapProduct: builder.mutation<
+      ApiResponse,
+      {
+        warehouseId: string;
+        productId: string;
+        quantity: number | null;
+      }
+    >({
+      query: ({ warehouseId, productId, quantity }) => ({
+        url: `/warehouses/scrap-product`,
+        method: METHODS.PUT,
+        params: {
+          warehouseId,
+          productId,
+        },
+        body: { quantity },
+      }),
+    }),
+
     addProductByWarehouse: builder.mutation<
       ApiResponse,
-      { productId: string; warehouseId: string; quantity: number | null }
+      {
+        productId: string;
+        warehouseId: string;
+        quantity: number | null;
+        from: "SPV" | "SUPPLER";
+      }
     >({
-      query: ({ productId, warehouseId, quantity }) => ({
+      query: ({ productId, warehouseId, quantity, from }) => ({
         url: `/warehouses/add-stock-item`,
         method: METHODS.PUT,
-        body: { quantity },
+        body: { quantity, from },
         params: { productId, warehouseId },
       }),
     }),
@@ -171,4 +195,5 @@ export const {
   useLazyAllWarehousesSelectQuery,
 
   useAcceptProductMutation,
+  useScrapProductMutation,
 } = warehousesApi;

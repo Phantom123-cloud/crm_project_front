@@ -1,10 +1,10 @@
 import RoleTemplatesData from "@/components/data/RoleTemplatesData";
 import AddRoleTemplate from "@/components/modals/add/AddRoleTemplate";
 import RolesGuard from "@/components/layout/RolesGuard";
-import { usePaginationControle } from "@/hooks/usePaginationControle";
+import { usePaginationState } from "@/hooks/usePaginationState";
 
 const RoleTemplates = () => {
-  const { onChange, page, limit } = usePaginationControle();
+  const { onChange, page, limit } = usePaginationState();
 
   return (
     <RolesGuard access={"view_templates"}>

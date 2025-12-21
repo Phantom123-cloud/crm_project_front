@@ -1,10 +1,10 @@
 import ProductsData from "@/components/data/ProductsData";
 import AddProducts from "@/components/modals/add/AddProducts";
 import { useAllProductsQuery } from "@/app/services/products/productsApi";
-import { usePaginationControle } from "@/hooks/usePaginationControle";
+import { usePaginationState } from "@/hooks/usePaginationState";
 
 const Products = () => {
-  const { onChange, page, limit } = usePaginationControle();
+  const { onChange, page, limit } = usePaginationState();
   const { data, isLoading } = useAllProductsQuery({ page, limit });
   return (
     <>

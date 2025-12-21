@@ -1,11 +1,11 @@
 import ReferenceItemData from "@/components/data/ReferenceItemData";
 import AddReferenceItem from "@/components/modals/add/AddReferenceItem";
 import RolesGuard from "@/components/layout/RolesGuard";
-import { usePaginationControle } from "@/hooks/usePaginationControle";
+import { usePaginationState } from "@/hooks/usePaginationState";
 import { useAllCitizenshipsQuery } from "@/app/services/citizenships/citizenshipsApi";
 
 const Citizenships = () => {
-  const { onChange, page, limit } = usePaginationControle();
+  const { onChange, page, limit } = usePaginationState();
   const { data, isLoading } = useAllCitizenshipsQuery({ page, limit });
 
   return (

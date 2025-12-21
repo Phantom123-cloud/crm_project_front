@@ -98,7 +98,11 @@ const AddWarehouse: React.FC<Props> = ({
       footer={null}
       onCancel={onCancel}
     >
-      <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
+      <Form
+        onFinish={handleSubmit(onSubmit)}
+        autoComplete="off"
+        // labelCol={{ span: 7 }}
+      >
         <Form.Item
           label="Имя"
           validateStatus={errors.name ? "error" : ""}

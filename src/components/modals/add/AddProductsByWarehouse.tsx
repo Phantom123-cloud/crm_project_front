@@ -18,7 +18,7 @@ type Props = {
     page: number;
     limit: number;
   };
-  queryStock: {
+  queryStockMove: {
     page: number;
     limit: number;
     status?: "TRANSIT" | "RECEIVED" | "CANCELLED";
@@ -27,6 +27,7 @@ type Props = {
 
 const schema = z.object({
   productId: z.string().nonempty("Обязательное поле"),
+  from: z.enum(["SPV", "SUPPLER"], "Обязательное поле"),
   quantity: z
     .int()
     .gte(1, "Значение должно быть больше 0")
@@ -40,7 +41,7 @@ type FormValues = z.infer<typeof schema>;
 
 const AddProductsByWarehouse: React.FC<Props> = ({
   queryWarehouse,
-  queryStock,
+  queryStockMove,
 }) => {
   const {
     handleSubmit,
@@ -51,6 +52,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
     resolver: zodResolver(schema),
     defaultValues: {
       productId: "",
+      from: "" as "SUPPLER",
       quantity: 0,
     },
   });
@@ -92,7 +94,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
       }).unwrap();
       await triggerWarehouseById(queryWarehouse).unwrap();
       await triggerStockMovements({
-        ...queryStock,
+        ...queryStockMove,
         warehouseId: queryWarehouse.id,
       }).unwrap();
       callMessage.success(message);
@@ -109,17 +111,13 @@ const AddProductsByWarehouse: React.FC<Props> = ({
         Внести поставку товара
       </Button>
       <Modal
-        title="Добавить новый продукт"
+        title="Внести поставку товара"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isModalOpen}
         footer={null}
         onCancel={onCancel}
       >
-        <Form
-          onFinish={handleSubmit(onSubmit)}
-          autoComplete="off"
-          labelCol={{ span: 6 }}
-        >
+        <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
           <Form.Item
             label="Продукт"
             validateStatus={errors.productId ? "error" : ""}
@@ -144,6 +142,28 @@ const AddProductsByWarehouse: React.FC<Props> = ({
                   onChange={(value) => {
                     field.onChange(value);
                   }}
+                />
+              )}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="От кого"
+            name={"from"}
+            validateStatus={errors.from ? "error" : ""}
+            help={errors.from?.message}
+            required
+          >
+            <Controller
+              name={"from"}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={[
+                    { value: "SUPLER", label: "Поставщик" },
+                    { value: "SPV", label: "СПВ" },
+                  ]}
                 />
               )}
             />

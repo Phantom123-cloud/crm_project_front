@@ -1,11 +1,11 @@
 import RolesGuard from "@/components/layout/RolesGuard";
 import { useAllLanguagesQuery } from "@/app/services/languages/languagesApi";
 import AddReferenceItem from "@/components/modals/add/AddReferenceItem";
-import { usePaginationControle } from "@/hooks/usePaginationControle";
+import { usePaginationState } from "@/hooks/usePaginationState";
 import ReferenceItemData from "@/components/data/ReferenceItemData";
 
 const Languages = () => {
-  const { onChange, page, limit } = usePaginationControle();
+  const { onChange, page, limit } = usePaginationState();
   const { data, isLoading } = useAllLanguagesQuery({ page, limit });
 
   return (

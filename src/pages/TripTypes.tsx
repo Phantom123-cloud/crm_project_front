@@ -1,11 +1,11 @@
 import TripTypesData from "@/components/data/TripTypesData";
 import AddTripType from "@/components/modals/add/AddTripType";
 import { useAllTripTypesQuery } from "@/app/services/trip-types/tripTypesApi";
-import { usePaginationControle } from "@/hooks/usePaginationControle";
+import { usePaginationState } from "@/hooks/usePaginationState";
 // import RolesGuard from "@/components/layout/RolesGuard";
 
 const TripTypes = () => {
-  const { onChange, page, limit } = usePaginationControle();
+  const { onChange, page, limit } = usePaginationState();
   const { data, isLoading } = useAllTripTypesQuery({ page, limit });
 
   return (

@@ -3,7 +3,7 @@ import { useState } from "react";
 export const useChangeTripDataSelect = () => {
   const initQuery = {
     page: 1,
-    limit: 20,
+    limit: 10,
     isActive: true,
   };
   const [query, setQuery] = useState<{

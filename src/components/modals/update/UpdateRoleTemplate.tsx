@@ -11,11 +11,11 @@ import {
   useUpdateRoleTemplateMutation,
 } from "@/app/services/role-templates/roleTemplatesApi";
 import type { RolesObj } from "@/app/services/role-templates/roleTemplatesTypes";
-import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useLazyGetRolesNotInTemplateQuery } from "@/app/services/roles/rolesApi";
 import RolesGuard from "@/components/layout/RolesGuard";
 import { EditOutlined } from "@ant-design/icons";
 import { useOnModal } from "@/hooks/useOnModal";
+import CheckboxRolesGroupContoller from "@/components/UI/checkboxes/CheckboxRolesGroupContoller";
 
 type Props = {
   name: string;

@@ -8,12 +8,12 @@ import {
   useCreateRoleTemplateMutation,
   useLazyAllRoleTemplatesQuery,
 } from "@/app/services/role-templates/roleTemplatesApi";
-import CheckboxRolesGroupContoller from "@/components/CheckboxRolesGroupContoller";
 import { useEffect } from "react";
 import { useLazyAllRolesByTypeQuery } from "@/app/services/roles/rolesApi";
 import { PlusOutlined } from "@ant-design/icons";
 import { useOnModal } from "@/hooks/useOnModal";
 import RolesGuard from "@/components/layout/RolesGuard";
+import CheckboxRolesGroupContoller from "@/components/UI/checkboxes/CheckboxRolesGroupContoller";
 
 type Props = {
   page: number;
