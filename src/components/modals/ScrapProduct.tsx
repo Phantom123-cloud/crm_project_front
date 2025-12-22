@@ -1,5 +1,4 @@
 import { Button, Flex, Form, InputNumber, Modal, Select } from "antd";
-import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -106,7 +105,7 @@ const ScrapProduct: React.FC<Props> = ({
         <Form
           onFinish={handleSubmit(onSubmit)}
           autoComplete="off"
-          // labelCol={{ span: 6 }}
+          labelCol={{ span: 6 }}
         >
           <Form.Item
             label="Продукт"

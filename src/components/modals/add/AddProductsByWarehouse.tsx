@@ -27,7 +27,7 @@ type Props = {
 
 const schema = z.object({
   productId: z.string().nonempty("Обязательное поле"),
-  from: z.enum(["SPV", "SUPPLER"], "Обязательное поле"),
+  fromOrTo: z.enum(["SPV", "SUPPLER"], "Обязательное поле"),
   quantity: z
     .int()
     .gte(1, "Значение должно быть больше 0")
@@ -52,7 +52,6 @@ const AddProductsByWarehouse: React.FC<Props> = ({
     resolver: zodResolver(schema),
     defaultValues: {
       productId: "",
-      from: "" as "SUPPLER",
       quantity: 0,
     },
   });
@@ -117,7 +116,11 @@ const AddProductsByWarehouse: React.FC<Props> = ({
         footer={null}
         onCancel={onCancel}
       >
-        <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
+        <Form
+          onFinish={handleSubmit(onSubmit)}
+          autoComplete="off"
+          labelCol={{ span: 6 }}
+        >
           <Form.Item
             label="Продукт"
             validateStatus={errors.productId ? "error" : ""}
@@ -150,18 +153,18 @@ const AddProductsByWarehouse: React.FC<Props> = ({
           <Form.Item
             label="От кого"
             name={"from"}
-            validateStatus={errors.from ? "error" : ""}
-            help={errors.from?.message}
+            validateStatus={errors.fromOrTo ? "error" : ""}
+            help={errors.fromOrTo?.message}
             required
           >
             <Controller
-              name={"from"}
+              name={"fromOrTo"}
               control={control}
               render={({ field }) => (
                 <Select
                   {...field}
                   options={[
-                    { value: "SUPLER", label: "Поставщик" },
+                    { value: "SUPPLER", label: "Поставщик" },
                     { value: "SPV", label: "СПВ" },
                   ]}
                 />

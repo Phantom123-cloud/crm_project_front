@@ -1,5 +1,4 @@
-import { Button, Flex, Form, InputNumber, Modal, Select } from "antd";
-import { useEffect } from "react";
+import { Button, Flex, Form, Input, InputNumber, Modal, Select } from "antd";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -7,9 +6,8 @@ import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import {
   useLazyAllStockMovementsQuery,
-  useLazyAllWarehousesSelectQuery,
   useLazyWarehouseByIdApiQuery,
-  useStockMovementsMutation,
+  useSaleProductMutation,
 } from "@/app/services/warehouses/warehousesApi";
 import type { ProductsByWarehouse } from "@/app/services/warehouses/warehousesType";
 import { useOnModal } from "@/hooks/useOnModal";
@@ -38,19 +36,17 @@ const schema = z.object({
       message: "Обязательное поле",
     }),
   productId: z.string().nonempty("Обязательное поле"),
-  toWarehouseId: z.string().nonempty("Обязательное поле"),
+  reason: z.string().nonempty("Обязательное поле"),
+  stockMovementType: z.enum(["SALE", "GIFT"], "Некоректные данные"),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-const StockMovementsModal: React.FC<Props> = ({
+const SaleProduct: React.FC<Props> = ({
   queryWarehouse,
   stockItems,
   queryStockMove,
 }) => {
-  const [triggerWarehouses, { data, isLoading }] =
-    useLazyAllWarehousesSelectQuery();
-
   const {
     handleSubmit,
     control,
@@ -61,19 +57,15 @@ const StockMovementsModal: React.FC<Props> = ({
     defaultValues: {
       quantity: 0,
       productId: "",
-      toWarehouseId: "",
+      reason: "",
+      stockMovementType: "SALE",
     },
   });
   const { callMessage } = useUiContext();
-  const [stockMovements] = useStockMovementsMutation();
+  const [saleProduct] = useSaleProductMutation();
   const [triggerCurrentWarehouse] = useLazyWarehouseByIdApiQuery();
   const [triggerStockMove] = useLazyAllStockMovementsQuery();
-  const warehouses = (data?.data ?? []).map((item) => {
-    return {
-      value: item.id,
-      label: item.name,
-    };
-  });
+
   const products = stockItems.map((product) => {
     return {
       value: product.product.id,
@@ -84,9 +76,9 @@ const StockMovementsModal: React.FC<Props> = ({
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const { message } = await stockMovements({
+      const { message } = await saleProduct({
         ...data,
-        fromWarehouseId: queryWarehouse.id,
+        warehouseId: queryWarehouse.id,
       }).unwrap();
       await triggerCurrentWarehouse(queryWarehouse).unwrap();
       await triggerStockMove({
@@ -102,16 +94,10 @@ const StockMovementsModal: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      triggerWarehouses(queryWarehouse.id);
-    }
-  }, [isOpen]);
-
   return (
     <>
-      <Button onClick={onOpen} variant="outlined" color="blue">
-        Переместить товар
+      <Button onClick={onOpen} variant="outlined" color="yellow">
+        Продажа
       </Button>
       <Modal
         title="Укажите данные для перемещения"
@@ -126,35 +112,6 @@ const StockMovementsModal: React.FC<Props> = ({
           labelCol={{ span: 6 }}
         >
           <Form.Item
-            label="Получатель"
-            validateStatus={errors.toWarehouseId ? "error" : ""}
-            help={errors.toWarehouseId?.message}
-            required
-          >
-            <Controller
-              name="toWarehouseId"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  loading={isLoading}
-                  {...field}
-                  showSearch
-                  optionFilterProp="label"
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
-                  }
-                  options={warehouses}
-                  onChange={(value) => {
-                    field.onChange(value);
-                  }}
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item
             label="Продукт"
             validateStatus={errors.productId ? "error" : ""}
             help={errors.productId?.message}
@@ -165,7 +122,6 @@ const StockMovementsModal: React.FC<Props> = ({
               control={control}
               render={({ field }) => (
                 <Select
-                  loading={isLoading}
                   {...field}
                   showSearch
                   optionFilterProp="label"
@@ -196,6 +152,40 @@ const StockMovementsModal: React.FC<Props> = ({
             />
           </Form.Item>
 
+          <Form.Item
+            label="Тип продажи"
+            validateStatus={errors.stockMovementType ? "error" : ""}
+            help={errors.stockMovementType?.message}
+            required
+          >
+            <Controller
+              name="stockMovementType"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={[
+                    { value: "SALE", label: "Продажа" },
+                    { value: "GIFT", label: "Подарок к договору" },
+                  ]}
+                />
+              )}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Договора"
+            validateStatus={errors.reason ? "error" : ""}
+            help={errors.reason?.message}
+            required={true}
+          >
+            <Controller
+              name="reason"
+              control={control}
+              render={({ field }) => <Input {...field} />}
+            />
+          </Form.Item>
+
           <Flex justify="space-between">
             <Form.Item label={null}>
               <Button
@@ -219,4 +209,4 @@ const StockMovementsModal: React.FC<Props> = ({
   );
 };
 
-export default StockMovementsModal;
+export default SaleProduct;

@@ -149,13 +149,37 @@ export const warehousesApi = api.injectEndpoints({
         productId: string;
         warehouseId: string;
         quantity: number | null;
-        from: "SPV" | "SUPPLER";
+        fromOrTo: "SPV" | "SUPPLER";
       }
     >({
-      query: ({ productId, warehouseId, quantity, from }) => ({
+      query: ({ productId, warehouseId, quantity, fromOrTo }) => ({
         url: `/warehouses/add-stock-item`,
         method: METHODS.PUT,
-        body: { quantity, from },
+        body: { quantity, fromOrTo },
+        params: { productId, warehouseId },
+      }),
+    }),
+
+    saleProduct: builder.mutation<
+      ApiResponse,
+      {
+        productId: string;
+        warehouseId: string;
+        quantity: number | null;
+        reason: string;
+        stockMovementType: "SALE" | "GIFT";
+      }
+    >({
+      query: ({
+        productId,
+        warehouseId,
+        quantity,
+        reason,
+        stockMovementType,
+      }) => ({
+        url: `/warehouses/sale-product`,
+        method: METHODS.PUT,
+        body: { quantity, reason, stockMovementType },
         params: { productId, warehouseId },
       }),
     }),
@@ -196,4 +220,6 @@ export const {
 
   useAcceptProductMutation,
   useScrapProductMutation,
+
+  useSaleProductMutation,
 } = warehousesApi;

@@ -10,6 +10,7 @@ import StockItemsData from "@/components/data/StockItemsData";
 import StockMovementsModal from "@/components/modals/StockMovements";
 import UpdateWarehouse from "@/components/modals/update/UpdateWarehouse";
 import ScrapProduct from "@/components/modals/ScrapProduct";
+import SaleProduct from "@/components/modals/SaleProduct";
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -102,6 +103,11 @@ const Warehouse = () => {
         </div>
         <div className="flex items-center gap-2">
           <StockMovementsModal
+            queryStockMove={queryStockMove}
+            queryWarehouse={queryWarehouse}
+            stockItems={data?.data?.stockItems ?? []}
+          />
+          <SaleProduct
             queryStockMove={queryStockMove}
             queryWarehouse={queryWarehouse}
             stockItems={data?.data?.stockItems ?? []}

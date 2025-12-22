@@ -65,6 +65,8 @@ const StockItemsData: React.FC<Props> = ({
       | "STOCK_TRANSFER"
       | "OUTBOUND_DELIVERY"
       | "SCRAP"
+      | "SALE"
+      | "GIFT"
   ) => {
     switch (stockMovementType) {
       case "GOODS_RECEIPT":
@@ -75,21 +77,27 @@ const StockItemsData: React.FC<Props> = ({
         return "Доставка";
       case "SCRAP":
         return "Списание-брак";
+      case "SALE":
+        return "Продажа";
+      case "GIFT":
+        return "Подарок к договору";
 
       default:
         return "Приход";
     }
   };
 
-  const translatetFromSuppler = (from: "SPV" | "SUPPLER") => {
+  const translatetFromSuppler = (from: "SPV" | "SUPPLER" | "CLIENT") => {
     switch (from) {
       case "SPV":
         return "СПВ";
       case "SUPPLER":
         return "Поставщик";
+      case "CLIENT":
+        return "Клиент";
 
       default:
-        return "Поставщик";
+        return "-";
     }
   };
 
@@ -120,10 +128,13 @@ const StockItemsData: React.FC<Props> = ({
         key: item.id,
         name: item.product.name,
         createdAt: isDate(item.createdAt),
+        reason: item.reason,
         from:
           item?.warehouseFrom?.name ??
-          translatetFromSuppler(item?.fromSupplier),
-        to: item?.warehouseTo?.name ?? "-",
+          translatetFromSuppler(item?.toWhomOrFromWhere),
+        to:
+          item?.warehouseTo?.name ??
+          translatetFromSuppler(item?.toWhomOrFromWhere),
         type: translatetType(item.stockMovementType),
         status: <Tag color={color}>{text}</Tag>,
         quantity: item.quantity,
@@ -177,6 +188,11 @@ const StockItemsData: React.FC<Props> = ({
       title: "Тип",
       dataIndex: "type",
       key: "type",
+    },
+    {
+      title: "Основание",
+      dataIndex: "reason",
+      key: "reason",
     },
     {
       title: "Статус",
