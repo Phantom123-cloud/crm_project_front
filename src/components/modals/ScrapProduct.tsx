@@ -93,10 +93,10 @@ const ScrapProduct: React.FC<Props> = ({
   return (
     <>
       <Button onClick={onOpen} variant="outlined" color="danger">
-        Списать товар
+        Списать
       </Button>
       <Modal
-        title="Укажите данные для перемещения"
+        title="Укажите данные для списания товара"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}

@@ -102,26 +102,26 @@ const Warehouse = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <StockMovementsModal
-            queryStockMove={queryStockMove}
-            queryWarehouse={queryWarehouse}
-            stockItems={data?.data?.stockItems ?? []}
-          />
           <SaleProduct
             queryStockMove={queryStockMove}
             queryWarehouse={queryWarehouse}
             stockItems={data?.data?.stockItems ?? []}
           />
+          <StockMovementsModal
+            queryStockMove={queryStockMove}
+            queryWarehouse={queryWarehouse}
+            stockItems={data?.data?.stockItems ?? []}
+          />
           {!isTrip && (
-            <ScrapProduct
+            <AddProductsByWarehouse
               queryWarehouse={queryWarehouse}
-              stockItems={data?.data?.stockItems ?? []}
               queryStockMove={queryStockMove}
             />
           )}
           {!isTrip && (
-            <AddProductsByWarehouse
+            <ScrapProduct
               queryWarehouse={queryWarehouse}
+              stockItems={data?.data?.stockItems ?? []}
               queryStockMove={queryStockMove}
             />
           )}

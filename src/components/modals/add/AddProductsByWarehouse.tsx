@@ -107,7 +107,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
   return (
     <>
       <Button onClick={showModal} variant="outlined" color="green">
-        Внести поставку товара
+        Добавить
       </Button>
       <Modal
         title="Внести поставку товара"

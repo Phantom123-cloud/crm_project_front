@@ -111,7 +111,7 @@ const StockMovementsModal: React.FC<Props> = ({
   return (
     <>
       <Button onClick={onOpen} variant="outlined" color="blue">
-        Переместить товар
+        Переместить
       </Button>
       <Modal
         title="Укажите данные для перемещения"

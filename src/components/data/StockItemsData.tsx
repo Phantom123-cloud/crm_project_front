@@ -3,6 +3,7 @@ import {
   useLazyAllStockMovementsQuery,
   useLazyWarehouseByIdApiQuery,
 } from "@/app/services/warehouses/warehousesApi";
+import type { StockMovementType } from "@/app/services/warehouses/warehousesType";
 import { useUiContext } from "@/UIContext";
 import { isDate } from "@/utils/is-date";
 import { errorMessages } from "@/utils/is-error-message";
@@ -59,15 +60,7 @@ const StockItemsData: React.FC<Props> = ({
     }
   };
 
-  const translatetType = (
-    stockMovementType:
-      | "GOODS_RECEIPT"
-      | "STOCK_TRANSFER"
-      | "OUTBOUND_DELIVERY"
-      | "SCRAP"
-      | "SALE"
-      | "GIFT"
-  ) => {
+  const translatetType = (stockMovementType: StockMovementType) => {
     switch (stockMovementType) {
       case "GOODS_RECEIPT":
         return "Приход";
@@ -81,6 +74,8 @@ const StockItemsData: React.FC<Props> = ({
         return "Продажа";
       case "GIFT":
         return "Подарок к договору";
+      case "DELIVERY":
+        return "Доставка";
 
       default:
         return "Приход";

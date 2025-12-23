@@ -10,6 +10,14 @@ export type Warehouse = {
     } | null;
   };
 };
+export type StockMovementType =
+  | "GOODS_RECEIPT"
+  | "STOCK_TRANSFER"
+  | "OUTBOUND_DELIVERY"
+  | "SCRAP"
+  | "DELIVERY"
+  | "SALE"
+  | "GIFT";
 
 export type StockMovement = {
   id: string;
@@ -22,13 +30,8 @@ export type StockMovement = {
   quantity: number;
   warehouseFrom: { id: string; name: string };
   warehouseTo: { id: string; name: string };
-
   status: "TRANSIT" | "RECEIVED" | "CANCELLED";
-  stockMovementType:
-    | "GOODS_RECEIPT"
-    | "STOCK_TRANSFER"
-    | "OUTBOUND_DELIVERY"
-    | "SCRAP";
+  stockMovementType: StockMovementType;
   createdAt: Date;
 };
 

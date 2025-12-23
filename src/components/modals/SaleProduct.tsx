@@ -37,7 +37,7 @@ const schema = z.object({
     }),
   productId: z.string().nonempty("Обязательное поле"),
   reason: z.string().nonempty("Обязательное поле"),
-  stockMovementType: z.enum(["SALE", "GIFT"], "Некоректные данные"),
+  stockMovementType: z.enum(["SALE", "GIFT", "DELIVERY"], "Некоректные данные"),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -100,7 +100,7 @@ const SaleProduct: React.FC<Props> = ({
         Продажа
       </Button>
       <Modal
-        title="Укажите данные для перемещения"
+        title="Укажите данные для оформления продажи"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isOpen}
         footer={null}
@@ -167,6 +167,7 @@ const SaleProduct: React.FC<Props> = ({
                   options={[
                     { value: "SALE", label: "Продажа" },
                     { value: "GIFT", label: "Подарок к договору" },
+                    { value: "DELIVERY", label: "Доставка" },
                   ]}
                 />
               )}

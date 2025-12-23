@@ -167,7 +167,7 @@ export const warehousesApi = api.injectEndpoints({
         warehouseId: string;
         quantity: number | null;
         reason: string;
-        stockMovementType: "SALE" | "GIFT";
+        stockMovementType: "SALE" | "GIFT" | "DELIVERY";
       }
     >({
       query: ({
