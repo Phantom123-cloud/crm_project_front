@@ -11,6 +11,7 @@ import StockMovementsModal from "@/components/modals/StockMovements";
 import UpdateWarehouse from "@/components/modals/update/UpdateWarehouse";
 import ScrapProduct from "@/components/modals/ScrapProduct";
 import SaleProduct from "@/components/modals/SaleProduct";
+import RolesGuard from "@/components/layout/RolesGuard";
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -26,7 +27,6 @@ const Warehouse = () => {
   }>(initQuery);
   const [triggerWarehouseById, { data, isLoading }] =
     useLazyWarehouseByIdApiQuery();
-  const isTrip = data?.data?.warehouse.type === "TRIP";
   const {
     query: queryStockMove,
     changeSelect,
@@ -92,39 +92,43 @@ const Warehouse = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
           <Title level={3}>{data?.data?.warehouse.name}</Title>
-          {!isTrip && (
+          <RolesGuard access={"update_name_warehouses"}>
             <UpdateWarehouse
               loading={isLoading}
               name={data?.data?.warehouse.name ?? ""}
               id={id as string}
               queryStockMove={queryWarehouse}
             />
-          )}
+          </RolesGuard>
         </div>
         <div className="flex items-center gap-2">
-          <SaleProduct
-            queryStockMove={queryStockMove}
-            queryWarehouse={queryWarehouse}
-            stockItems={data?.data?.stockItems ?? []}
-          />
-          <StockMovementsModal
-            queryStockMove={queryStockMove}
-            queryWarehouse={queryWarehouse}
-            stockItems={data?.data?.stockItems ?? []}
-          />
-          {!isTrip && (
+          <RolesGuard access={"sale_product_to_warehouse"}>
+            <SaleProduct
+              queryStockMove={queryStockMove}
+              queryWarehouse={queryWarehouse}
+              stockItems={data?.data?.stockItems ?? []}
+            />
+          </RolesGuard>
+          <RolesGuard access={"stock_movements"}>
+            <StockMovementsModal
+              queryStockMove={queryStockMove}
+              queryWarehouse={queryWarehouse}
+              stockItems={data?.data?.stockItems ?? []}
+            />
+          </RolesGuard>
+          <RolesGuard access={"add_product_to_warehouse"}>
             <AddProductsByWarehouse
               queryWarehouse={queryWarehouse}
               queryStockMove={queryStockMove}
             />
-          )}
-          {!isTrip && (
+          </RolesGuard>
+          <RolesGuard access={"scrap_product_to_warehouse"}>
             <ScrapProduct
               queryWarehouse={queryWarehouse}
               stockItems={data?.data?.stockItems ?? []}
               queryStockMove={queryStockMove}
             />
-          )}
+          </RolesGuard>
         </div>
       </div>
       <span className="mb-2">

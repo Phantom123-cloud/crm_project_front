@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import DeleteTripType from "../modals/delete/DeleteTripType";
 import UpdateTripType from "../modals/update/UpdateTripType";
+import RolesGuard from "../layout/RolesGuard";
 type Props = {
   tripTypes: { id: string; name: string }[];
   isLoading: boolean;
@@ -24,23 +25,23 @@ const TripTypesData: React.FC<Props> = ({
       name: item.name,
       actions: (
         <div className="flex gap-5">
-          {/* <RolesGuard access={"update_role_types"}> */}
-          <UpdateTripType
-            name={item.name}
-            id={item.id}
-            loading={isLoading}
-            page={page}
-            limit={limit}
-          />
-          {/* </RolesGuard> */}
-          {/* <RolesGuard access={"delete_role_types"}> */}
-          <DeleteTripType
-            name={item.name}
-            id={item.id}
-            page={page}
-            limit={limit}
-          />
-          {/* </RolesGuard> */}
+          <RolesGuard access={"update_trip_types"}>
+            <UpdateTripType
+              name={item.name}
+              id={item.id}
+              loading={isLoading}
+              page={page}
+              limit={limit}
+            />
+          </RolesGuard>
+          <RolesGuard access={"delete_trip_types"}>
+            <DeleteTripType
+              name={item.name}
+              id={item.id}
+              page={page}
+              limit={limit}
+            />
+          </RolesGuard>
         </div>
       ),
     };

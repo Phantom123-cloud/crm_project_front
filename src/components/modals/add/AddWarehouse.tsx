@@ -101,7 +101,7 @@ const AddWarehouse: React.FC<Props> = ({
       <Form
         onFinish={handleSubmit(onSubmit)}
         autoComplete="off"
-        // labelCol={{ span: 7 }}
+        labelCol={{ span: 7 }}
       >
         <Form.Item
           label="Имя"

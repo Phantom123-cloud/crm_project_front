@@ -11,6 +11,7 @@ import {
   useLazyAllWarehousesApiQuery,
 } from "@/app/services/warehouses/warehousesApi";
 import AddWarehouse from "../modals/add/AddWarehouse";
+import RolesGuard from "../layout/RolesGuard";
 
 type Props = {
   isOpen: boolean;
@@ -58,19 +59,21 @@ const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
         </Link>
       ),
       createdAt: isDate(item.createdAt),
-      ownerUser: item.user.employee?.fullName ?? "-",
+      ownerUser: item.user?.email ?? "-",
       type: trnslateTypes(item.type),
       isActive: <TagBoolean isBool={item.isActive} />,
       actions: (
-        <Button
-          color={item.isActive ? "danger" : "green"}
-          variant="outlined"
-          size="small"
-          onClick={() => onActions(item.id)}
-          disabled={item.type === "CENTRAL"}
-        >
-          {item.isActive ? "забло-ть" : "актив-ть"}
-        </Button>
+        <RolesGuard access={"warehouses_admin"}>
+          <Button
+            color={item.isActive ? "danger" : "green"}
+            variant="outlined"
+            size="small"
+            onClick={() => onActions(item.id)}
+            disabled={item.type === "CENTRAL"}
+          >
+            {item.isActive ? "забло-ть" : "актив-ть"}
+          </Button>
+        </RolesGuard>
       ),
     };
   });
@@ -143,13 +146,14 @@ const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
           showSizeChanger: true,
         }}
       />
-
-      <AddWarehouse
-        query={query}
-        isExistCentral={dataSource.length > 0}
-        isOpen={isOpen}
-        onCancel={onCancel}
-      />
+      <RolesGuard access={"create_warehouses"}>
+        <AddWarehouse
+          query={query}
+          isExistCentral={dataSource.length > 0}
+          isOpen={isOpen}
+          onCancel={onCancel}
+        />
+      </RolesGuard>
     </>
   );
 };

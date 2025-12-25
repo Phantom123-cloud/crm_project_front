@@ -5,9 +5,7 @@ export type Warehouse = {
   type: "CENTRAL" | "PERSONAL" | "TRIP";
   createdAt: Date;
   user: {
-    employee: {
-      fullName: string | null;
-    } | null;
+    email: string;
   };
 };
 export type StockMovementType =

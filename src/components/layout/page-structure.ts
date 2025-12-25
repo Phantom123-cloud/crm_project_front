@@ -44,6 +44,7 @@ export const pageStructure = (isAcces: (access: string) => boolean) => [
         },
       ]
     : []),
+
   ...(isAcces("view_users")
     ? [
         {
@@ -66,34 +67,59 @@ export const pageStructure = (isAcces: (access: string) => boolean) => [
     ? [{ label: "Языки", path: "languages", Icon: FontColorsOutlined }]
     : []),
 
-  {
-    label: "Выезда",
-    path: null,
-    Icon: CarOutlined,
-    children: [
-      {
-        label: "Список выездов",
-        path: "trips",
-      },
-      {
-        label: "Типы",
-        path: "trip-types",
-      },
-    ],
-  },
-  {
-    label: "Склады",
-    path: null,
-    Icon: Warehouse,
-    children: [
-      {
-        label: "Список складов",
-        path: "warehouses",
-      },
-      {
-        label: "Товар",
-        path: "products",
-      },
-    ],
-  },
+  ...(isAcces("view_trips")
+    ? [
+        {
+          label: "Выезда",
+          path: null,
+          Icon: CarOutlined,
+          children: [
+            ...(isAcces("view_trips")
+              ? [
+                  {
+                    label: "Список выездов",
+                    path: "trips",
+                  },
+                ]
+              : []),
+            ...(isAcces("view_trip_types")
+              ? [
+                  {
+                    label: "Типы",
+                    path: "trip-types",
+                  },
+                ]
+              : []),
+          ],
+        },
+      ]
+    : []),
+
+  ...(isAcces("view_warehouses")
+    ? [
+        {
+          label: "Склады",
+          path: null,
+          Icon: Warehouse,
+          children: [
+            ...(isAcces("view_warehouses")
+              ? [
+                  {
+                    label: "Список складов",
+                    path: "warehouses",
+                  },
+                ]
+              : []),
+            ...(isAcces("view_products")
+              ? [
+                  {
+                    label: "Товар",
+                    path: "products",
+                  },
+                ]
+              : []),
+          ],
+        },
+      ]
+    : []),
 ];

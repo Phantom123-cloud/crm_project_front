@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, Modal, Select } from "antd";
+import { Button, Flex, Form, Input, InputNumber, Modal, Select } from "antd";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -70,14 +70,24 @@ const AddContactNumber: React.FC<Props> = ({ userId }) => {
             labelCol={{ span: 5 }}
           >
             <Form.Item
-              label="Номер телефона"
+              label="Телефон"
               validateStatus={errors.number ? "error" : ""}
               help={errors.number?.message}
             >
               <Controller
                 name="number"
                 control={control}
-                render={({ field }) => <Input type="number" {...field} />}
+                render={({ field }) => (
+                  <Input
+                    placeholder="998967026997"
+                    style={{
+                      width: "100%",
+                    }}
+                    type="number"
+                    min="0"
+                    {...field}
+                  />
+                )}
               />
             </Form.Item>
 

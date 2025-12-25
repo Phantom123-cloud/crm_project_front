@@ -1,8 +1,8 @@
 import { Button, Flex, Form, InputNumber, Modal, Select } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import {
@@ -30,13 +30,7 @@ type Props = {
 };
 
 const schema = z.object({
-  quantity: z
-    .int()
-    .gte(1, "Значение должно быть больше 0")
-    .nullable()
-    .refine((v) => v !== null, {
-      message: "Обязательное поле",
-    }),
+  quantity: z.coerce.number().int().min(1, "Значение должно быть больше 0"),
   productId: z.string().nonempty("Обязательное поле"),
   toWarehouseId: z.string().nonempty("Обязательное поле"),
 });
@@ -54,12 +48,13 @@ const StockMovementsModal: React.FC<Props> = ({
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     reset,
-  } = useForm<FormValues>({
+    setValue,
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      quantity: 0,
+      quantity: 1,
       productId: "",
       toWarehouseId: "",
     },
@@ -78,8 +73,10 @@ const StockMovementsModal: React.FC<Props> = ({
     return {
       value: product.product.id,
       label: product.product.name,
+      maxCount: product.quantity,
     };
   });
+  const [maxCount, setMaxCount] = useState(0);
   const { onOpen, onCancel, isOpen } = useOnModal();
 
   const onSubmit = async (data: FormValues) => {
@@ -107,6 +104,12 @@ const StockMovementsModal: React.FC<Props> = ({
       triggerWarehouses(queryWarehouse.id);
     }
   }, [isOpen]);
+
+  const productId = useWatch({ control, name: "productId" });
+
+  useEffect(() => {
+    setValue("quantity", 1, { shouldValidate: true, shouldDirty: true });
+  }, [productId, setValue]);
 
   return (
     <>
@@ -177,6 +180,10 @@ const StockMovementsModal: React.FC<Props> = ({
                   options={products}
                   onChange={(value) => {
                     field.onChange(value);
+                    setMaxCount(
+                      products.find((item) => item.value === value)?.maxCount ??
+                        0
+                    );
                   }}
                 />
               )}
@@ -192,7 +199,18 @@ const StockMovementsModal: React.FC<Props> = ({
             <Controller
               name="quantity"
               control={control}
-              render={({ field }) => <InputNumber {...field} />}
+              render={({ field }) => (
+                <div className="flex items-center gap-5">
+                  <InputNumber {...field} max={maxCount} min={1}/>
+                  <Button
+                    variant="solid"
+                    color="danger"
+                    onClick={() => field.onChange(maxCount)}
+                  >
+                    max
+                  </Button>
+                </div>
+              )}
             />
           </Form.Item>
 
@@ -203,7 +221,7 @@ const StockMovementsModal: React.FC<Props> = ({
                 color="blue"
                 htmlType="submit"
                 loading={isSubmitting}
-                // disabled={!isDirty}
+                disabled={!isDirty}
               >
                 Добавить
               </Button>

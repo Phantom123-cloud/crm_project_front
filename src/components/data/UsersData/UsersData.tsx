@@ -39,6 +39,7 @@ const UsersData = () => {
         ? isActiveUser(id)
         : logoutUser(id)
       ).unwrap();
+      await triggerUsers(query).unwrap();
       callMessage.success(message);
     } catch (err) {
       callMessage.error(errorMessages(err));

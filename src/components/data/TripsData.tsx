@@ -10,6 +10,7 @@ import {
 } from "@/app/services/trips/tripsApi";
 import TagBoolean from "../UI/TagBoolean";
 import { useChangeTripDataSelect } from "@/hooks/useChangeTripDataSelect";
+import RolesGuard from "../layout/RolesGuard";
 // норм
 const TripsData = () => {
   const { query, changeSelect, setQuery } = useChangeTripDataSelect();
@@ -42,14 +43,16 @@ const TripsData = () => {
       tripTypes: item.tripTypes.name,
       isActive: <TagBoolean isBool={item.isActive} />,
       actions: (
-        <Button
-          color={item.isActive ? "danger" : "green"}
-          variant="outlined"
-          size="small"
-          onClick={() => onActions(item.id)}
-        >
-          {item.isActive ? "забло-ть" : "актив-ть"}
-        </Button>
+        <RolesGuard access={"change_trip_status"}>
+          <Button
+            color={item.isActive ? "danger" : "green"}
+            variant="outlined"
+            size="small"
+            onClick={() => onActions(item.id)}
+          >
+            {item.isActive ? "забло-ть" : "актив-ть"}
+          </Button>
+        </RolesGuard>
       ),
     };
   });

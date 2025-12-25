@@ -1,7 +1,7 @@
 import { Button, Flex, Form, InputNumber, Modal, Select } from "antd";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/app/services/warehouses/warehousesApi";
 import type { ProductsByWarehouse } from "@/app/services/warehouses/warehousesType";
 import { useOnModal } from "@/hooks/useOnModal";
+import { useEffect, useState } from "react";
 
 type Props = {
   queryWarehouse: {
@@ -28,13 +29,7 @@ type Props = {
 };
 
 const schema = z.object({
-  quantity: z
-    .int()
-    .gte(1, "Значение должно быть больше 0")
-    .nullable()
-    .refine((v) => v !== null, {
-      message: "Обязательное поле",
-    }),
+  quantity: z.coerce.number().int().min(1, "Значение должно быть больше 0"),
   productId: z.string().nonempty("Обязательное поле"),
 });
 
@@ -48,12 +43,13 @@ const ScrapProduct: React.FC<Props> = ({
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<FormValues>({
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      quantity: 0,
+      quantity: 1,
       productId: "",
     },
   });
@@ -61,14 +57,21 @@ const ScrapProduct: React.FC<Props> = ({
   const [scrapProduct] = useScrapProductMutation();
   const [triggerCurrentWarehouse] = useLazyWarehouseByIdApiQuery();
   const [triggerStockMove] = useLazyAllStockMovementsQuery();
+  const [maxCount, setMaxCount] = useState(0);
 
   const products = stockItems.map((product) => {
     return {
+      maxCount: product.quantity,
       value: product.product.id,
       label: product.product.name,
     };
   });
   const { onOpen, onCancel, isOpen } = useOnModal();
+
+  const productId = useWatch({ control, name: "productId" });
+  useEffect(() => {
+    setValue("quantity", 1, { shouldValidate: true, shouldDirty: true });
+  }, [productId, setValue]);
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -129,6 +132,10 @@ const ScrapProduct: React.FC<Props> = ({
                   options={products}
                   onChange={(value) => {
                     field.onChange(value);
+                    setMaxCount(
+                      products.find((item) => item.value === value)?.maxCount ??
+                        0
+                    );
                   }}
                 />
               )}
@@ -144,7 +151,18 @@ const ScrapProduct: React.FC<Props> = ({
             <Controller
               name="quantity"
               control={control}
-              render={({ field }) => <InputNumber {...field} />}
+              render={({ field }) => (
+                <div className="flex items-center gap-5">
+                  <InputNumber {...field} max={maxCount} min={1} />
+                  <Button
+                    variant="solid"
+                    color="danger"
+                    onClick={() => field.onChange(maxCount)}
+                  >
+                    max
+                  </Button>
+                </div>
+              )}
             />
           </Form.Item>
 
