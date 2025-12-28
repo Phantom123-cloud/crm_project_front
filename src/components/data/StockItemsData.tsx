@@ -236,6 +236,7 @@ const StockItemsData: React.FC<Props> = ({
           },
           showSizeChanger: true,
         }}
+         // locale={{ emptyText: "Нет данных" }}
       />
     </>
   );

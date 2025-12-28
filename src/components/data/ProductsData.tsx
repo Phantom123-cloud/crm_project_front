@@ -64,6 +64,7 @@ const ProductsData: React.FC<Props> = ({
         onChange,
         showSizeChanger: true,
       }}
+       // locale={{ emptyText: "Нет данных" }}
     />
   );
 };

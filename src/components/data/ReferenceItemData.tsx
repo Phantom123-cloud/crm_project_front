@@ -95,6 +95,7 @@ const ReferenceItemData: React.FC<Props> = ({
         onChange,
         showSizeChanger: true,
       }}
+       // locale={{ emptyText: "Нет данных" }}
     />
   );
 };

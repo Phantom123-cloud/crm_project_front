@@ -52,6 +52,7 @@ const WarehouseByIdData: React.FC<Props> = ({
           },
           showSizeChanger: true,
         }}
+         // locale={{ emptyText: "Нет данных" }}
       />
     </>
   );

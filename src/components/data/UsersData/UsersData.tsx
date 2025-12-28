@@ -200,6 +200,7 @@ const UsersData = () => {
           },
           showSizeChanger: true,
         }}
+         // locale={{ emptyText: "Нет данных" }}
       />
     </>
   );

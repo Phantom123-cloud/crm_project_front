@@ -153,6 +153,7 @@ const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
           },
           showSizeChanger: true,
         }}
+         // locale={{ emptyText: "Нет данных" }}
       />
       <RolesGuard access={"create_warehouses"}>
         <AddWarehouse

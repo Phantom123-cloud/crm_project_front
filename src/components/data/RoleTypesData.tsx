@@ -68,6 +68,7 @@ const RoleTypesData: React.FC<Props> = ({ page, limit, onChange }) => {
         onChange,
         showSizeChanger: true,
       }}
+       // locale={{ emptyText: "Нет данных" }}
     />
   );
 };

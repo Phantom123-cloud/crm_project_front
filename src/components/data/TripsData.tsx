@@ -129,6 +129,7 @@ const TripsData = () => {
           },
           showSizeChanger: true,
         }}
+         // locale={{ emptyText: "Нет данных" }}
       />
     </>
   );
