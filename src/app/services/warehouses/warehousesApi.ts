@@ -103,6 +103,17 @@ export const warehousesApi = api.injectEndpoints({
       }),
     }),
 
+    changeOwnerWarehouse: builder.mutation<
+      ApiResponse,
+      { ownerUserId: string; warehouseId: string }
+    >({
+      query: ({ warehouseId, ownerUserId }) => ({
+        url: `/warehouses/change-owher`,
+        method: METHODS.PUT,
+        params: { warehouseId, ownerUserId },
+      }),
+    }),
+
     stockMovements: builder.mutation<
       ApiResponse,
       {
@@ -222,4 +233,5 @@ export const {
   useScrapProductMutation,
 
   useSaleProductMutation,
+  useChangeOwnerWarehouseMutation,
 } = warehousesApi;

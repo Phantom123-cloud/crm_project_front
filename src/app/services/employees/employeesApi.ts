@@ -115,12 +115,12 @@ export const employeesApi = api.injectEndpoints({
           user: { email: string };
         }[]
       >,
-      { isNotAll: boolean }
+      { isNotAll: boolean; isViewWarehouses?: boolean }
     >({
-      query: ({ isNotAll }) => ({
+      query: ({ isNotAll, isViewWarehouses }) => ({
         url: `/employees/all-employee-tradings`,
         method: METHODS.GET,
-        params: { isNotAll },
+        params: { isNotAll, isViewWarehouses },
       }),
     }),
   }),

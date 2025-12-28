@@ -19,7 +19,7 @@ const Warehouses = () => {
           >
             Добавить
           </Button>
-        </div>{" "}
+        </div>
       </RolesGuard>
       <WarehousesData isOpen={isOpen} onCancel={onCancel} />
     </>

@@ -6,6 +6,7 @@ export type Warehouse = {
   createdAt: Date;
   user: {
     email: string;
+    id: string;
   };
 };
 export type StockMovementType =

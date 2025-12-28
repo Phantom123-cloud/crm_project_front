@@ -12,6 +12,7 @@ import {
 } from "@/app/services/warehouses/warehousesApi";
 import AddWarehouse from "../modals/add/AddWarehouse";
 import RolesGuard from "../layout/RolesGuard";
+import UpdateOwnerWarehouse from "../modals/update/UpdateOwnerWarehouse";
 
 type Props = {
   isOpen: boolean;
@@ -63,17 +64,24 @@ const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
       type: trnslateTypes(item.type),
       isActive: <TagBoolean isBool={item.isActive} />,
       actions: (
-        <RolesGuard access={"warehouses_admin"}>
-          <Button
-            color={item.isActive ? "danger" : "green"}
-            variant="outlined"
-            size="small"
-            onClick={() => onActions(item.id)}
-            disabled={item.type === "CENTRAL"}
-          >
-            {item.isActive ? "забло-ть" : "актив-ть"}
-          </Button>
-        </RolesGuard>
+        <div className="flex gap-2 items-center">
+          <UpdateOwnerWarehouse
+            queryWarehouse={query}
+            warehouseId={item.id}
+            user={item.user}
+          />
+          <RolesGuard access={"warehouses_admin"}>
+            <Button
+              color={item.isActive ? "danger" : "green"}
+              variant="outlined"
+              size="small"
+              onClick={() => onActions(item.id)}
+              disabled={item.type === "CENTRAL"}
+            >
+              {item.isActive ? "забло-ть" : "актив-ть"}
+            </Button>
+          </RolesGuard>
+        </div>
       ),
     };
   });

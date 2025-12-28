@@ -181,7 +181,7 @@ const AddProductsByWarehouse: React.FC<Props> = ({
             <Controller
               name="quantity"
               control={control}
-              render={({ field }) => <InputNumber {...field} />}
+              render={({ field }) => <InputNumber min={1} {...field} />}
             />
           </Form.Item>
 
