@@ -39,6 +39,7 @@ const Warehouse = () => {
       quantity: item.quantity,
     };
   });
+  const isCentralWarehouse = data?.data?.warehouse.type === "CENTRAL";
 
   const columnsWarehouse = [
     {
@@ -123,11 +124,13 @@ const Warehouse = () => {
             />
           </RolesGuard>
           <RolesGuard access={"scrap_product_to_warehouse"}>
-            <ScrapProduct
-              queryWarehouse={queryWarehouse}
-              stockItems={data?.data?.stockItems ?? []}
-              queryStockMove={queryStockMove}
-            />
+            {isCentralWarehouse && (
+              <ScrapProduct
+                queryWarehouse={queryWarehouse}
+                stockItems={data?.data?.stockItems ?? []}
+                queryStockMove={queryStockMove}
+              />
+            )}
           </RolesGuard>
         </div>
       </div>

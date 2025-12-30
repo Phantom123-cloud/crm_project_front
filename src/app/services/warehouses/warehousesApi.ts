@@ -5,6 +5,7 @@ import type {
   StockMovementsData,
   WarehouseById,
   WarehousesApiData,
+  WarehousesRemainder,
 } from "./warehousesType";
 
 export const warehousesApi = api.injectEndpoints({
@@ -71,6 +72,13 @@ export const warehousesApi = api.injectEndpoints({
           page,
           limit,
         },
+      }),
+    }),
+
+    warehousesRemainder: builder.query<ApiResponse<WarehousesRemainder>, void>({
+      query: () => ({
+        url: `/warehouses/report-warehouses-remainder`,
+        method: METHODS.GET,
       }),
     }),
 
@@ -234,4 +242,7 @@ export const {
 
   useSaleProductMutation,
   useChangeOwnerWarehouseMutation,
+
+  useLazyWarehousesRemainderQuery,
+  useWarehousesRemainderQuery,
 } = warehousesApi;

@@ -4,8 +4,8 @@ import {
   GlobalOutlined,
   LockOutlined,
   TeamOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
-import { Warehouse } from "lucide-react";
 
 export const pageStructure = (isAcces: (access: string) => boolean) => [
   ...(isAcces("view_roles")
@@ -100,7 +100,7 @@ export const pageStructure = (isAcces: (access: string) => boolean) => [
         {
           label: "Склады",
           path: null,
-          Icon: Warehouse,
+          Icon: HomeOutlined,
           children: [
             ...(isAcces("view_warehouses")
               ? [

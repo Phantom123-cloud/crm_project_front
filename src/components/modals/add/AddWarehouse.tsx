@@ -60,7 +60,7 @@ const AddWarehouse: React.FC<Props> = ({
   const tradings = (data?.data ?? []).map((item) => {
     return {
       value: item.userId,
-      label: item.fullName ? item.fullName : item.user.email,
+      label: item.user.email,
     };
   });
 

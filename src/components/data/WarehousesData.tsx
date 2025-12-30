@@ -1,6 +1,6 @@
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { Button, Flex, Select, Table } from "antd";
+import { Button, Flex, Select, Table, Tag } from "antd";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isDate } from "@/utils/is-date";
@@ -63,6 +63,11 @@ const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
       ownerUser: item.user?.email ?? "-",
       type: trnslateTypes(item.type),
       isActive: <TagBoolean isBool={item.isActive} />,
+      countTransit: (
+        <span style={{ color: item.countTransit > 0 ? "red" : "" }}>
+          {item.countTransit}
+        </span>
+      ),
       actions: (
         <div className="flex gap-2 items-center">
           <UpdateOwnerWarehouse
@@ -91,6 +96,11 @@ const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
       title: "Название",
       dataIndex: "name",
       key: "name",
+    },
+    {
+      title: "Товар в пути",
+      dataIndex: "countTransit",
+      key: "countTransit",
     },
     {
       title: "Добавлен",
@@ -153,7 +163,7 @@ const WarehousesData: React.FC<Props> = ({ isOpen, onCancel }) => {
           },
           showSizeChanger: true,
         }}
-         // locale={{ emptyText: "Нет данных" }}
+        // locale={{ emptyText: "Нет данных" }}
       />
       <RolesGuard access={"create_warehouses"}>
         <AddWarehouse

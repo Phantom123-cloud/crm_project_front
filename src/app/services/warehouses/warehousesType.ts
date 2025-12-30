@@ -8,6 +8,7 @@ export type Warehouse = {
     email: string;
     id: string;
   };
+  countTransit: number;
 };
 export type StockMovementType =
   | "GOODS_RECEIPT"
@@ -67,4 +68,21 @@ export type WarehouseById = {
   countPages: number;
   page: number;
   limit: number;
+};
+
+export type WarehousesRemainder = {
+  body: {
+    id: string;
+    name: string;
+    remainder: number;
+    scrapTotal: number;
+    warehouses: {
+      name: string;
+      countProduct: number;
+      warehouseId: string;
+      transit: number;
+      scrap: number;
+    }[];
+  }[];
+  header: string[];
 };

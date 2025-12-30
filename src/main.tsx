@@ -21,6 +21,7 @@ import CreateTrips from "./pages/CreateTrips.tsx";
 import Warehouses from "./pages/Warehouses.tsx";
 import Products from "./pages/Products.tsx";
 import Warehouse from "./pages/Warehouse.tsx";
+import RemainderWarehouses from "./pages/RemainderWarehouses.tsx";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
           {
             path: "warehouse/:id",
             element: <Warehouse />,
+          },
+          {
+            path: "report-warehouses-remainder",
+            element: <RemainderWarehouses />,
           },
           {
             path: "products",
