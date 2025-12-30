@@ -129,7 +129,8 @@ const Main = () => {
           <Outlet />
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          ©{new Date().getFullYear()} Created by SLP
+          ©{new Date().getFullYear()} Created by SLP <br />
+          v0.0.1 · beta
         </Footer>
       </Layout>
     </Layout>
