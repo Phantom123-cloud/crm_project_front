@@ -13,7 +13,7 @@ const Warehouses = () => {
     <>
       <div className="flex justify-end mb-10">
         <div className="flex gap-1 items-center">
-          <RolesGuard access={"create_warehouses"}>
+          <RolesGuard access={"view_report_warehouses"}>
             <Button
               color="gold"
               variant="outlined"
@@ -22,6 +22,8 @@ const Warehouses = () => {
             >
               Остатки
             </Button>
+          </RolesGuard>
+          <RolesGuard access={"create_warehouses"}>
             <Button
               color="green"
               variant="outlined"
