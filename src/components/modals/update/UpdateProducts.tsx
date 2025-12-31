@@ -1,5 +1,5 @@
 import { Button, Modal } from "antd";
-import { useEffect, type SetStateAction } from "react";
+import { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";

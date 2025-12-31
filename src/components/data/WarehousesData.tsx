@@ -1,6 +1,6 @@
 import { useUiContext } from "@/UIContext";
 import { errorMessages } from "@/utils/is-error-message";
-import { Button, Flex, Select, Table, Tag } from "antd";
+import { Button, Flex, Select, Table } from "antd";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isDate } from "@/utils/is-date";
