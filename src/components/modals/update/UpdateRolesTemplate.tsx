@@ -1,5 +1,5 @@
 import { Button, Flex, Form, Modal, Select } from "antd";
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -69,11 +69,7 @@ const UpdateRolesTemplate: React.FC<Props> = ({ userId, roleTemplatesId }) => {
 
   return (
     <RolesGuard access={"update_roles_template"}>
-      <Button
-        color="danger"
-        variant="solid"
-        onClick={onOpen}
-      >
+      <Button color="danger" variant="solid" onClick={onOpen}>
         Сменить шаблон
       </Button>
       <Modal
